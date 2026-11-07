@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex, nofollow">
+<title>Krabi Together</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* Night theme first; a warm paper theme for light mode. The map card stays a night map in both. */
+  :root {
+    --bg: #0a111e;
+    --bg-glow: rgba(98, 227, 181, 0.07);
+    --surface: #111b2c;
+    --surface-2: #15223a;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #eaf0f8;
+    --text-dim: #97a6bd;
+    --will: #f5bd4f;
+    --yana: #ff8466;
+    --together: #62e3b5;
+    --on-accent: #0a111e;
+    --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+
+    --map-bg: #0c1626;
+    --map-ocean-top: #10203a;
+    --map-ocean-bottom: #0a1424;
+    --map-land: #1a2a42;
+    --map-land-hi: #253c5e;
+    --map-border: rgba(255, 255, 255, 0.07);
+    --map-text: #eaf0f8;
+    --map-dim: #8ea0bb;
+    --will-map: #f5bd4f;
+    --yana-map: #ff8466;
+    --together-map: #62e3b5;
+
+    --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f1ea;
+      --bg-glow: rgba(19, 138, 100, 0.08);
+      --surface: #fffdf8;
+      --surface-2: #f8f4ec;
+      --border: rgba(20, 32, 51, 0.10);
+      --text: #142033;
+      --text-dim: #5a6a80;
+      --will: #a86b12;
+      --yana: #c8492d;
+      --together: #138a64;
+      --on-accent: #ffffff;
+      --shadow: 0 18px 50px rgba(20, 32, 51, 0.12);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    color: var(--text);
+    background:
+      radial-gradient(1100px 520px at 78% -8%, var(--bg-glow), transparent 70%),
+      radial-gradient(800px 420px at -10% 30%, rgba(245, 189, 79, 0.05), transparent 70%),
+      var(--bg);
+    line-height: 1.5;
+    padding-bottom: 96px; /* room for the booking bar */
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 28px; } }
+  h1, h2, h3 { margin: 0; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 800; line-height: 1.15; }
+  code { font-family: var(--mono); font-size: 0.86em; font-weight: 600; padding: 1px 6px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); white-space: nowrap; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 0 0 8px; font-family: var(--mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
+  }
+  .section-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--together); }
+  section { margin-top: 64px; min-width: 0; }
+
+  /* Hero */
+  .hero { padding: 48px 0 8px; }
+  .kicker { margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--text-dim); }
+  .kicker b { color: var(--text); font-weight: 600; }
+  .pill { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--together); font-weight: 600; }
+  h1 { font-size: clamp(38px, 6.4vw, 72px); font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; max-width: 14ch; }
+  h1 .meet { color: var(--will); }
+  h1 .fly { color: var(--together); }
+  .lead { margin: 18px 0 0; max-width: 60ch; font-size: clamp(16px, 1.6vw, 19px); color: var(--text-dim); }
+  .lead b { color: var(--text); font-weight: 600; }
+
+  .kpis { margin-top: 32px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 760px) { .kpis { grid-template-columns: 1.5fr 1fr 1fr; } }
+  .kpi { min-width: 0; padding: 18px 20px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); }
+  .kpi__value { display: block; font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .kpi__label { display: block; margin-top: 2px; color: var(--text-dim); font-size: 14px; }
+  .kpi--hero { background: linear-gradient(135deg, rgba(98, 227, 181, 0.16), rgba(98, 227, 181, 0.04) 60%), var(--surface); border-color: rgba(98, 227, 181, 0.30); box-shadow: var(--shadow); }
+  .kpi--hero .kpi__value { font-size: clamp(26px, 3.2vw, 40px); color: var(--together); }
+
+  /* Map card (always night colors) */
+  .map-card {
+    margin-top: 28px; padding: 18px; border-radius: 22px;
+    background: var(--map-bg); border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow); color: var(--map-text);
+  }
+  @media (min-width: 720px) { .map-card { padding: 24px; } }
+  .map-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px 24px; margin-bottom: 14px; }
+  .map-head .section-label { color: var(--map-dim); }
+  .map-head .section-label::before { background: var(--together-map); }
+  .map-head h2 { color: var(--map-text); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--map-dim); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend i { width: 22px; height: 3px; border-radius: 2px; background: var(--c); }
+  .map-caption { margin: 0 0 14px; color: var(--map-dim); font-size: 15px; max-width: 70ch; }
+  .map-caption b { color: var(--map-text); font-weight: 600; }
+
+  .map-stage { position: relative; border-radius: 14px; overflow: hidden; background: var(--map-ocean-bottom); min-height: 160px; }
+  #map { display: block; width: 100%; height: auto; font-family: var(--font); }
+  .map-fallback { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 24px; text-align: center; color: var(--map-dim); }
+  .map-fallback[hidden] { display: none; }
+  .sphere { fill: url(#ocean); }
+  .grat { fill: none; stroke: rgba(255, 255, 255, 0.045); stroke-width: 0.6; }
+  .country { fill: var(--map-land); stroke: var(--map-border); stroke-width: 0.5; }
+  .country--hi { fill: var(--map-land-hi); }
+  .route--will { --c: var(--will-map); }
+  .route--yana { --c: var(--yana-map); }
+  .route--together { --c: var(--together-map); }
+  .route-base { fill: none; stroke: var(--c); stroke-width: 1.4; stroke-dasharray: 2 6; stroke-linecap: round; opacity: 0.5; }
+  .route-glow { fill: none; stroke: var(--c); stroke-width: 9; stroke-linecap: round; opacity: 0.16; }
+  .route-line { fill: none; stroke: var(--c); stroke-width: 2.6; stroke-linecap: round; }
+  .port-dot { fill: var(--map-text); stroke: var(--map-bg); stroke-width: 2; }
+  .port-label, .note, .mark-label { paint-order: stroke; stroke: rgba(8, 14, 26, 0.88); stroke-width: 4px; stroke-linejoin: round; }
+  .port-label { font-size: 13px; fill: var(--map-text); }
+  .port-name { font-weight: 700; }
+  .port-code { font-family: var(--mono); font-weight: 600; fill: var(--map-dim); font-size: 11.5px; }
+  .note { font-size: 12.5px; font-weight: 700; fill: var(--together-map); }
+  .mark--will { --c: var(--will-map); }
+  .mark--yana { --c: var(--yana-map); }
+  .mark--together { --c: var(--together-map); }
+  .mark-ring { fill: none; stroke: var(--c); stroke-width: 2; opacity: 0.45; }
+  .mark-dot { fill: var(--c); stroke: var(--map-bg); stroke-width: 2; }
+  .mark-plane { fill: var(--c); stroke: var(--map-bg); stroke-width: 1.2; display: none; }
+  .mark.is-flying .mark-plane { display: inline; }
+  .mark.is-flying .mark-ring, .mark.is-flying .mark-dot { display: none; }
+  .mark-label { font-size: 12.5px; font-weight: 800; fill: var(--c); }
+
+  /* Player */
+  .player { margin-top: 14px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; }
+  .play {
+    width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer;
+    display: grid; place-items: center; background: var(--together-map); color: #0a111e;
+    transition: transform 0.15s ease;
+  }
+  .play:hover { transform: scale(1.06); }
+  .play svg { width: 20px; height: 20px; }
+  .scrub { position: relative; min-width: 0; }
+  .scrub input {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 28px; margin: 0;
+    background: transparent; cursor: pointer; --p: 0%;
+  }
+  .scrub input::-webkit-slider-runnable-track {
+    height: 6px; border-radius: 3px;
+    background: linear-gradient(to right, var(--together-map) var(--p), rgba(255, 255, 255, 0.14) var(--p));
+  }
+  .scrub input::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 20px; height: 20px; margin-top: -7px; border-radius: 50%;
+    background: #fff; border: 4px solid var(--together-map);
+  }
+  .scrub input::-moz-range-track { height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.14); }
+  .scrub input::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--together-map); }
+  .scrub input::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 4px solid var(--together-map); }
+  .track-marks { position: absolute; left: 10px; right: 10px; top: 50%; height: 0; pointer-events: none; }
+  .track-marks span { position: absolute; top: -8px; width: 2px; height: 16px; margin-left: -1px; border-radius: 1px; background: var(--c); opacity: 0.9; }
+
+  .clocks { margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  @media (min-width: 720px) { .clocks { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .clock { padding: 10px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); min-width: 0; }
+  .clock__city { display: block; font-size: 12px; color: var(--map-dim); }
+  .clock__time { display: block; font-family: var(--mono); font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; color: var(--map-text); }
+
+  .status { margin-top: 12px; display: grid; gap: 6px; }
+  .status__row { display: grid; grid-template-columns: 12px 48px 1fr; align-items: baseline; gap: 10px; font-size: 15px; }
+  .status__row i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); align-self: center; }
+  .status__row b { font-weight: 700; }
+  .status__row span { color: var(--map-text); min-width: 0; }
+
+  .moments { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .moment {
+    display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; cursor: pointer;
+    font: inherit; font-size: 13px; color: var(--map-text); background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.10); transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .moment:hover { background: rgba(255, 255, 255, 0.10); }
+  .moment.is-active { border-color: var(--c); background: rgba(255, 255, 255, 0.10); }
+  .moment i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+  .moment small { font-family: var(--mono); color: var(--map-dim); font-size: 12px; }
+  .who-will { --c: var(--will-map); }
+  .who-yana { --c: var(--yana-map); }
+  .who-together { --c: var(--together-map); }
+
+  /* Day by day */
+  .day-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 900px) { .day-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .day { min-width: 0; padding: 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); }
+  .day--meet { border-color: color-mix(in srgb, var(--yana) 45%, transparent); }
+  .day--together { border-color: color-mix(in srgb, var(--together) 50%, transparent); background: linear-gradient(160deg, color-mix(in srgb, var(--together) 12%, transparent), transparent 55%), var(--surface); }
+  .day header { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: end; margin-bottom: 14px; }
+  .day__dow { grid-row: span 2; font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); }
+  .day__date { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .day__title { color: var(--text-dim); font-size: 14px; }
+  .events { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .ev { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; padding-left: 12px; border-left: 3px solid var(--c); }
+  .ev--will { --c: var(--will); }
+  .ev--yana { --c: var(--yana); }
+  .ev--together { --c: var(--together); }
+  .ev time { font-family: var(--mono); font-weight: 600; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  .ev time small { display: block; color: var(--text-dim); font-weight: 400; font-size: 11.5px; }
+  .ev p { margin: 0; font-size: 15px; overflow-wrap: break-word; }
+
+  /* Tickets */
+  .ticket-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 900px) { .ticket-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .pass { --c: var(--will); position: relative; min-width: 0; display: grid; grid-template-columns: 1fr; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+  .pass--yana { --c: var(--yana); }
+  @media (min-width: 560px) { .pass { grid-template-columns: minmax(0, 1fr) 200px; } }
+  .pass::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--c); }
+  .pass__main { padding: 20px 20px 20px 26px; min-width: 0; }
+  .pass__top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .pass__name { font-size: 20px; font-weight: 800; }
+  .pass__airline { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); text-align: right; }
+  .pass__route { margin: 14px 0 16px; display: flex; align-items: center; gap: 10px; }
+  .pass__route .code { font-family: var(--mono); font-weight: 600; font-size: clamp(24px, 3.4vw, 32px); letter-spacing: 0.02em; }
+  .pass__route .hop { flex: 1; min-width: 16px; height: 0; border-top: 2px dashed color-mix(in srgb, var(--c) 70%, transparent); }
+  .segs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .segs li { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; align-items: baseline; font-size: 14px; color: var(--text-dim); }
+  .segs li code { justify-self: start; color: var(--text); }
+  .pass__stub {
+    position: relative; padding: 20px; display: grid; align-content: center; gap: 6px;
+    border-top: 2px dashed var(--border); background: var(--surface-2);
+  }
+  @media (min-width: 560px) { .pass__stub { border-top: 0; border-left: 2px dashed var(--border); } }
+  .pass__price { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .pass__note { font-size: 13px; color: var(--text-dim); }
+  .btn {
+    margin-top: 8px; display: inline-flex; justify-content: center; align-items: center; gap: 6px;
+    padding: 11px 16px; border-radius: 999px; background: var(--c); color: var(--on-accent);
+    font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap; transition: transform 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+
+  /* Why */
+  .bars { margin-top: 20px; display: grid; gap: 12px; }
+  .bar { min-width: 0; padding: 14px 16px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; align-items: center; }
+  .bar__label { font-weight: 700; font-size: 15px; }
+  .bar__value { font-family: var(--mono); font-weight: 600; font-size: 17px; font-variant-numeric: tabular-nums; }
+  .bar__track { grid-column: 1 / -1; height: 10px; border-radius: 5px; background: var(--surface-2); overflow: hidden; }
+  .bar__fill { display: block; height: 100%; width: var(--w); border-radius: 5px; background: color-mix(in srgb, var(--text-dim) 55%, transparent); transform-origin: left; animation: grow 1s cubic-bezier(.2, .7, .2, 1) both; animation-delay: 0.3s; }
+  .bar__sub { grid-column: 1 / -1; font-size: 13px; color: var(--text-dim); }
+  .bar--best { border-color: color-mix(in srgb, var(--together) 50%, transparent); }
+  .bar--best .bar__fill { background: var(--together); }
+  .bar--best .bar__value { color: var(--together); }
+  .tag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; margin-left: 8px; border-radius: 999px; color: var(--on-accent); background: var(--together); vertical-align: 2px; }
+
+  /* Tips */
+  .tip-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 640px) { .tip-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 980px) { .tip-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .tip { min-width: 0; padding: 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); }
+  .tip__num { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; margin-bottom: 10px; font-family: var(--mono); font-weight: 600; font-size: 13px; background: var(--surface-2); border: 1px solid var(--border); }
+  .tip h3 { font-size: 16px; font-weight: 700; }
+  .tip p { margin: 6px 0 0; font-size: 14.5px; color: var(--text-dim); }
+  .tip--info { background: linear-gradient(160deg, color-mix(in srgb, var(--together) 10%, transparent), transparent 60%), var(--surface); }
+  .fineprint { margin: 14px 0 0; font-size: 13.5px; color: var(--text-dim); max-width: 75ch; }
+
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13.5px; }
+
+  /* Booking bar */
+  .actions {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 10;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border-top: 1px solid var(--border);
+  }
+  .actions__inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .action {
+    --c: var(--will); min-width: 0; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    padding: 12px 16px; border-radius: 14px; text-decoration: none; color: var(--on-accent); background: var(--c);
+    font-weight: 700; font-size: 15px; transition: transform 0.15s ease;
+  }
+  .action:hover { transform: translateY(-1px); }
+  .action--yana { --c: var(--yana); }
+  .action span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .action b { font-family: var(--mono); font-size: 15px; }
+  @media (max-width: 480px) {
+    .action { padding: 12px; font-size: 14px; }
+    .action .wide { display: none; }
+  }
+
+  /* Entrance */
+  .reveal { animation: fadeUp 0.7s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 90ms); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .bar__fill { animation: none; }
+    .play, .btn, .action, .moment { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker reveal" style="--i:0">
+      <span>Trip plan</span><b>Sat Nov 28 to Mon Nov 30, 2026</b><span class="pill" id="countdown">Will leaves Sat Nov 28</span>
+    </p>
+    <h1 class="reveal" style="--i:1"><span class="meet">Meet in Abu Dhabi.</span> <span class="fly">Fly to Krabi together.</span></h1>
+    <p class="lead reveal" style="--i:2">
+      <b>Will</b> flies from Salt Lake City. <b>Yana</b> flies from Moscow. You spend <b>Sunday night together in Abu Dhabi</b>, then take the same Etihad flight to Krabi on Monday morning.
+    </p>
+    <div class="kpis">
+      <div class="kpi kpi--hero reveal" style="--i:3"><span class="kpi__value">Mon Nov 30, 6:10 PM</span><span class="kpi__label">You land in Krabi together</span></div>
+      <div class="kpi reveal" style="--i:4"><span class="kpi__value">1 night</span><span class="kpi__label">Together in Abu Dhabi, Sun Nov 29</span></div>
+      <div class="kpi reveal" style="--i:5"><span class="kpi__value">$2,129</span><span class="kpi__label">Both tickets, economy</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="map-card reveal" style="--i:6" aria-labelledby="map-title">
+    <div class="map-head">
+      <div>
+        <p class="section-label">Watch the trip</p>
+        <h2 id="map-title">Two trips become one in Abu Dhabi</h2>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i style="--c: var(--will-map)"></i>Will</span>
+        <span><i style="--c: var(--yana-map)"></i>Yana</span>
+        <span><i style="--c: var(--together-map)"></i>Together</span>
+      </div>
+    </div>
+    <p class="map-caption">Press play to watch both trips in real time. Will reaches Abu Dhabi on <b>Sunday at 12:35 PM</b>, Yana at <b>7:25 PM</b>, and you leave together on <b>Monday at 8:35 AM</b>.</p>
+    <div class="map-stage" id="map-stage">
+      <svg id="map" role="img" aria-labelledby="map-svg-title map-svg-desc">
+        <title id="map-svg-title">Route map</title>
+        <desc id="map-svg-desc">Will flies from Salt Lake City to Chicago to Abu Dhabi. Yana flies from Moscow to Abu Dhabi. Together they fly from Abu Dhabi to Krabi.</desc>
+      </svg>
+      <p class="map-fallback" id="map-fallback" hidden>The map could not load. The plan below has every flight and time.</p>
+    </div>
+    <div class="player">
+      <button class="play" id="play" type="button" aria-label="Play the trip"></button>
+      <div class="scrub">
+        <input id="scrub" type="range" min="0" max="100" step="1" value="0" aria-label="Trip time">
+        <div class="track-marks" id="track-marks" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="clocks" id="clocks"></div>
+    <div class="status" aria-live="polite">
+      <div class="status__row who-will"><i></i><b>Will</b><span id="status-will"></span></div>
+      <div class="status__row who-yana"><i></i><b>Yana</b><span id="status-yana"></span></div>
+    </div>
+    <div class="moments" id="moments"></div>
+  </section>
+
+  <section aria-labelledby="days-title">
+    <p class="section-label">Day by day · local times</p>
+    <h2 id="days-title">Three days, one meeting point</h2>
+    <div class="day-grid">
+      <article class="day reveal" style="--i:1">
+        <header><span class="day__dow">Sat</span><span class="day__date">Nov 28</span><span class="day__title">Will starts</span></header>
+        <ol class="events">
+          <li class="ev ev--will"><time>7:08 AM<small>Salt Lake City</small></time><p>Will leaves Salt Lake City on American <code>AA 1141</code>.</p></li>
+          <li class="ev ev--will"><time>11:30 AM<small>Chicago</small></time><p>Lands in Chicago. 1 h 45 min to change planes.</p></li>
+          <li class="ev ev--will"><time>1:15 PM<small>Chicago</small></time><p>Leaves on Etihad <code>EY 10</code>, overnight to Abu Dhabi.</p></li>
+        </ol>
+      </article>
+      <article class="day day--meet reveal" style="--i:2">
+        <header><span class="day__dow">Sun</span><span class="day__date">Nov 29</span><span class="day__title">Meet in Abu Dhabi</span></header>
+        <ol class="events">
+          <li class="ev ev--will"><time>12:35 PM<small>Abu Dhabi</small></time><p>Will lands in Abu Dhabi and checks in to the hotel.</p></li>
+          <li class="ev ev--yana"><time>12:35 PM<small>Moscow</small></time><p>Yana leaves Moscow Sheremetyevo on Etihad <code>EY 842</code>.</p></li>
+          <li class="ev ev--yana"><time>7:25 PM<small>Abu Dhabi</small></time><p>Yana lands in Abu Dhabi. Your night together starts.</p></li>
+        </ol>
+      </article>
+      <article class="day day--together reveal" style="--i:3">
+        <header><span class="day__dow">Mon</span><span class="day__date">Nov 30</span><span class="day__title">Fly to Krabi together</span></header>
+        <ol class="events">
+          <li class="ev ev--together"><time>6:35 AM<small>Abu Dhabi</small></time><p>Be at Abu Dhabi airport, Terminal A.</p></li>
+          <li class="ev ev--together"><time>8:35 AM<small>Abu Dhabi</small></time><p>Etihad <code>EY 424</code> to Krabi. Nonstop, 6 h 35 min.</p></li>
+          <li class="ev ev--together"><time>6:10 PM<small>Krabi</small></time><p>You land in Krabi.</p></li>
+        </ol>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="tickets-title">
+    <p class="section-label">Tickets · one each</p>
+    <h2 id="tickets-title">Two tickets, the same last flight</h2>
+    <div class="ticket-grid">
+      <article class="pass reveal" style="--i:1">
+        <div class="pass__main">
+          <div class="pass__top"><span class="pass__name">Will</span><span class="pass__airline">American + Etihad</span></div>
+          <div class="pass__route" aria-label="Salt Lake City to Abu Dhabi to Krabi"><span class="code">SLC</span><span class="hop"></span><span class="code">AUH</span><span class="hop"></span><span class="code">KBV</span></div>
+          <ul class="segs">
+            <li><code>AA 1141</code><span>Sat Nov 28 · SLC 7:08 AM to Chicago 11:30 AM</span></li>
+            <li><code>EY 10</code><span>Sat Nov 28 · Chicago 1:15 PM to AUH 12:35 PM Sun</span></li>
+            <li><code>EY 424</code><span>Mon Nov 30 · AUH 8:35 AM to KBV 6:10 PM</span></li>
+          </ul>
+        </div>
+        <div class="pass__stub">
+          <span class="pass__price">$1,387</span>
+          <span class="pass__note">1 checked bag included</span>
+          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjRqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener">Book with Etihad</a>
+        </div>
+      </article>
+      <article class="pass pass--yana reveal" style="--i:2">
+        <div class="pass__main">
+          <div class="pass__top"><span class="pass__name">Yana</span><span class="pass__airline">Etihad</span></div>
+          <div class="pass__route" aria-label="Moscow to Abu Dhabi to Krabi"><span class="code">SVO</span><span class="hop"></span><span class="code">AUH</span><span class="hop"></span><span class="code">KBV</span></div>
+          <ul class="segs">
+            <li><code>EY 842</code><span>Sun Nov 29 · SVO 12:35 PM to AUH 7:25 PM</span></li>
+            <li><code>EY 424</code><span>Mon Nov 30 · AUH 8:35 AM to KBV 6:10 PM</span></li>
+          </ul>
+        </div>
+        <div class="pass__stub">
+          <span class="pass__price">$742</span>
+          <span class="pass__note">No checked bag on the Moscow flight</span>
+          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjRqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener">Book with Etihad</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="why-title">
+    <p class="section-label">Why this plan</p>
+    <h2 id="why-title">It costs the least of three options</h2>
+    <div class="bars">
+      <div class="bar bar--best reveal" style="--i:1">
+        <span class="bar__label">One night in Abu Dhabi, one ticket each<span class="tag">This plan</span></span>
+        <span class="bar__value">$2,129</span>
+        <span class="bar__track"><span class="bar__fill" style="--w: 88.1%"></span></span>
+        <span class="bar__sub">You land in Krabi on Mon Nov 30 at 6:10 PM.</span>
+      </div>
+      <div class="bar reveal" style="--i:2">
+        <span class="bar__label">No night: change planes in Abu Dhabi</span>
+        <span class="bar__value">$2,373</span>
+        <span class="bar__track"><span class="bar__fill" style="--w: 98.2%"></span></span>
+        <span class="bar__sub">You land in Krabi on Tue Dec 1 at 6:35 AM, after a night flight.</span>
+      </div>
+      <div class="bar reveal" style="--i:3">
+        <span class="bar__label">Same flights, separate tickets</span>
+        <span class="bar__value">$2,417</span>
+        <span class="bar__track"><span class="bar__fill" style="--w: 100%"></span></span>
+        <span class="bar__sub">No airline help if a flight is late.</span>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="tips-title">
+    <p class="section-label">Before you go</p>
+    <h2 id="tips-title">Things to do</h2>
+    <div class="tip-grid">
+      <article class="tip reveal" style="--i:1"><span class="tip__num">1</span><h3>Book both tickets</h3><p>Use the two buttons. One ticket each means Etihad rebooks you if a flight is late.</p></article>
+      <article class="tip reveal" style="--i:2"><span class="tip__num">2</span><h3>Book a hotel near the airport</h3><p>One night, Sun Nov 29. The flight leaves at 8:35 AM. Not booked yet.</p></article>
+      <article class="tip reveal" style="--i:3"><span class="tip__num">3</span><h3>Sit together</h3><p>You have two bookings. Choose seats next to each other on EY 424 in both.</p></article>
+      <article class="tip reveal" style="--i:4"><span class="tip__num">4</span><h3>Bags</h3><p>Will has 1 checked bag. Yana must add a bag for the Moscow flight if she needs one.</p></article>
+      <article class="tip reveal" style="--i:5"><span class="tip__num">5</span><h3>Payment</h3><p>If Yana's Russian card does not work on etihad.com, Will can pay with his card.</p></article>
+      <article class="tip tip--info reveal" style="--i:6"><h3>Entry to the UAE</h3><p>Will gets a free visa when he lands. Yana needs no visa: Russian citizens can stay up to 90 days.</p></article>
+    </div>
+    <p class="fineprint">Etihad's free stopover hotel does not apply to this plan. It needs a round-trip Etihad ticket and at least 24 hours in Abu Dhabi.</p>
+  </section>
+
+  <footer>
+    Prices are from Google Flights booking pages, checked Nov 7, 2026. Fares can change. All times are local. Nothing is booked yet.
+  </footer>
+</main>
+
+<nav class="actions" aria-label="Book the tickets">
+  <div class="actions__inner">
+    <a class="action" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjRqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener"><span>Book Will<span class="wide">'s ticket</span></span><b>$1,387</b></a>
+    <a class="action action--yana" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjRqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener"><span>Book Yana<span class="wide">'s ticket</span></span><b>$742</b></a>
+  </div>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const log = (...a) => console.log('[trip]', ...a);
+  const fail = (...a) => console.error('[trip]', ...a);
+  const bootStart = performance.now();
+  log('init: start', { d3: !!window.d3, topojson: !!window.topojson });
+
+  // Real flights, in UTC. Local times on the page come from Intl with each city's time zone.
+  const AIRPORTS = {
+    SLC: { name: 'Salt Lake City', coord: [-111.98, 40.79], label: { anchor: 'middle', dx: 0, dy: 24 } },
+    ORD: { name: 'Chicago', coord: [-87.90, 41.98], label: { anchor: 'middle', dx: 0, dy: -14 } },
+    SVO: { name: 'Moscow', coord: [37.41, 55.97], label: { anchor: 'start', dx: 12, dy: 4 } },
+    AUH: { name: 'Abu Dhabi', coord: [54.65, 24.43], label: { anchor: 'middle', dx: 0, dy: 27 } },
+    KBV: { name: 'Krabi', coord: [98.99, 8.10], label: { anchor: 'middle', dx: 0, dy: 27 } },
+  };
+  const at = iso => Date.parse(iso);
+  const LEGS = [
+    { who: 'will', from: 'SLC', to: 'ORD', flight: 'AA 1141', dep: at('2026-11-28T14:08:00Z'), arr: at('2026-11-28T17:30:00Z') },
+    { who: 'will', from: 'ORD', to: 'AUH', flight: 'EY 10', dep: at('2026-11-28T19:15:00Z'), arr: at('2026-11-29T08:35:00Z') },
+    { who: 'yana', from: 'SVO', to: 'AUH', flight: 'EY 842', dep: at('2026-11-29T09:35:00Z'), arr: at('2026-11-29T15:25:00Z') },
+    { who: 'together', from: 'AUH', to: 'KBV', flight: 'EY 424', dep: at('2026-11-30T04:35:00Z'), arr: at('2026-11-30T11:10:00Z') },
+  ];
+  const [W1, W2, Y1, T1] = LEGS;
+  const START = at('2026-11-28T13:30:00Z');
+  const END = at('2026-11-30T11:40:00Z');
+  const PLAY_MS = 26000; // the whole trip plays in 26 seconds
+  const MIN = 60000;
+  const TZ = { SLC: 'America/Denver', MOW: 'Europe/Moscow', AUH: 'Asia/Dubai', KBV: 'Asia/Bangkok' };
+  const CLOCKS = [['Salt Lake City', TZ.SLC], ['Moscow', TZ.MOW], ['Abu Dhabi', TZ.AUH], ['Krabi', TZ.KBV]];
+  const MOMENTS = [
+    { who: 'will', label: 'Will leaves Salt Lake City', t: W1.dep, tz: TZ.SLC },
+    { who: 'will', label: 'Will lands in Abu Dhabi', t: W2.arr, tz: TZ.AUH },
+    { who: 'yana', label: 'Yana leaves Moscow', t: Y1.dep, tz: TZ.MOW },
+    { who: 'yana', label: 'Yana lands in Abu Dhabi', t: Y1.arr, tz: TZ.AUH },
+    { who: 'together', label: 'You fly to Krabi together', t: T1.dep, tz: TZ.AUH },
+    { who: 'together', label: 'You land in Krabi', t: T1.arr, tz: TZ.KBV },
+  ];
+  const HIGHLIGHT = new Set(['840', '643', '784', '764']); // USA, Russia, UAE, Thailand
+  const PLANE = 'M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z';
+  const ICONS = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>',
+    replay: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>',
+  };
+
+  const fmtCache = {};
+  const fmt = (tz, t) => (fmtCache[tz] = fmtCache[tz] || new Intl.DateTimeFormat('en-US', { timeZone: tz, weekday: 'short', hour: 'numeric', minute: '2-digit' })).format(t);
+  const clamp01 = x => Math.max(0, Math.min(1, x));
+  const frac = (leg, t) => clamp01((t - leg.dep) / (leg.arr - leg.dep));
+  const flying = (leg, t) => t >= leg.dep && t < leg.arr;
+
+  function statusWill(t) {
+    if (t < W1.dep) return 'In Salt Lake City. Leaves at 7:08 AM.';
+    if (t < W1.arr) return 'Flying to Chicago on AA 1141.';
+    if (t < W2.dep) return 'Changing planes in Chicago.';
+    if (t < W2.arr) return 'Flying overnight to Abu Dhabi on EY 10.';
+    if (t < Y1.arr) return 'In Abu Dhabi. Yana lands at 7:25 PM.';
+    if (t < T1.dep) return 'Together with Yana in Abu Dhabi.';
+    if (t < T1.arr) return 'Flying to Krabi with Yana on EY 424.';
+    return 'In Krabi.';
+  }
+  function statusYana(t) {
+    if (t < Y1.dep) return 'In Moscow. Leaves Sunday at 12:35 PM.';
+    if (t < Y1.arr) return 'Flying to Abu Dhabi on EY 842.';
+    if (t < T1.dep) return 'Together with Will in Abu Dhabi.';
+    if (t < T1.arr) return 'Flying to Krabi with Will on EY 424.';
+    return 'In Krabi.';
+  }
+  // Who is where: separate markers until Yana lands, then one shared marker.
+  function markersAt(t) {
+    if (t < Y1.arr) {
+      const will = flying(W1, t) ? { leg: W1, f: frac(W1, t) }
+        : flying(W2, t) ? { leg: W2, f: frac(W2, t) }
+        : { port: t < W1.dep ? 'SLC' : t < W2.dep ? 'ORD' : 'AUH' };
+      const yana = flying(Y1, t) ? { leg: Y1, f: frac(Y1, t) } : { port: 'SVO' };
+      return [{ key: 'will', ...will }, { key: 'yana', ...yana }];
+    }
+    return [{ key: 'together', ...(flying(T1, t) ? { leg: T1, f: frac(T1, t) } : { port: t < T1.dep ? 'AUH' : 'KBV' }) }];
+  }
+  function noteAt(t) {
+    if (t >= W2.arr && t < Y1.arr) return 'Will waits for Yana';
+    if (t >= Y1.arr && t < T1.dep) return 'Night together';
+    return '';
+  }
+
+  // ---------- DOM ----------
+  const $ = id => document.getElementById(id);
+  const playBtn = $('play'), scrub = $('scrub'), statusWillEl = $('status-will'), statusYanaEl = $('status-yana');
+  scrub.max = String(Math.round((END - START) / MIN));
+
+  const clockEls = CLOCKS.map(([city]) => {
+    const el = document.createElement('div');
+    el.className = 'clock';
+    el.innerHTML = `<span class="clock__city">${city}</span><span class="clock__time"></span>`;
+    $('clocks').appendChild(el);
+    return el.querySelector('.clock__time');
+  });
+  const momentEls = MOMENTS.map(m => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = `moment who-${m.who}`;
+    b.innerHTML = `<i></i>${m.label} <small>${fmt(m.tz, m.t)}</small>`;
+    b.addEventListener('click', () => { log('moment', m.label); pause(); setTime(m.t + MIN); });
+    $('moments').appendChild(b);
+    return b;
+  });
+  for (const m of MOMENTS) {
+    const s = document.createElement('span');
+    s.className = `who-${m.who}`;
+    s.style.left = `${(100 * (m.t - START)) / (END - START)}%`;
+    $('track-marks').appendChild(s);
+  }
+  (function countdown() {
+    // Calendar days from the viewer's own date to Sat Nov 28, so Nov 7 reads "21 days" at any hour, in any city.
+    const d = new Date();
+    const days = Math.round((Date.UTC(2026, 10, 28) - Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())) / 86400000);
+    const el = $('countdown');
+    if (days > 1) el.textContent = `Will leaves in ${days} days`;
+    else if (days === 1) el.textContent = 'Will leaves tomorrow';
+    else if (Date.now() < W1.dep) el.textContent = 'Will leaves today';
+    else if (Date.now() < T1.arr) el.textContent = 'Trip in progress';
+    else el.textContent = 'Trip done';
+    log('countdown', el.textContent);
+  })();
+
+  // ---------- Map ----------
+  const map = { ready: false };
+  const stage = $('map-stage');
+  const interps = new Map();
+  const interp = leg => {
+    if (!interps.has(leg)) interps.set(leg, d3.geoInterpolate(AIRPORTS[leg.from].coord, AIRPORTS[leg.to].coord));
+    return interps.get(leg);
+  };
+  const lineOf = leg => ({ type: 'LineString', coordinates: [AIRPORTS[leg.from].coord, AIRPORTS[leg.to].coord] });
+  const FIT = {
+    type: 'GeometryCollection',
+    geometries: [{ type: 'MultiPoint', coordinates: [[-124, 4], [108, 4], [-124, 62], [108, 62]] }, ...LEGS.map(lineOf)],
+  };
+  function partial(leg, f) {
+    if (f <= 0) return null;
+    const ip = interp(leg), n = Math.max(2, Math.ceil(72 * f));
+    return map.path({ type: 'LineString', coordinates: d3.range(n + 1).map(i => ip((f * i) / n)) });
+  }
+
+  function render(countries) {
+    const t0 = performance.now();
+    const svg = d3.select('#map');
+    const w = Math.max(280, Math.round(stage.clientWidth));
+    const narrow = w < 560;
+    const h = Math.round(w * (narrow ? 0.56 : 0.44));
+    const projection = d3.geoNaturalEarth1().rotate([6.5, 0]).fitExtent([[14, 14], [w - 14, h - 14]], FIT);
+    Object.assign(map, { projection, path: d3.geoPath(projection), w, h, narrow });
+    svg.selectAll('*:not(title):not(desc)').remove();
+    svg.attr('viewBox', `0 0 ${w} ${h}`).attr('width', w).attr('height', h);
+    svg.append('defs').html('<linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10203a"/><stop offset="1" stop-color="#0a1424"/></linearGradient>');
+    svg.append('path').attr('class', 'sphere').attr('d', map.path({ type: 'Sphere' }));
+    svg.append('path').attr('class', 'grat').attr('d', map.path(d3.geoGraticule10()));
+    if (countries) {
+      svg.append('g').selectAll('path').data(countries).join('path')
+        .attr('class', d => (HIGHLIGHT.has(String(d.id)) ? 'country country--hi' : 'country'))
+        .attr('d', map.path);
+    }
+    svg.append('g').selectAll('path').data(LEGS).join('path')
+      .attr('class', d => `route-base route--${d.who}`).attr('d', d => map.path(lineOf(d)));
+    map.glow = svg.append('g').selectAll('path').data(LEGS).join('path').attr('class', d => `route-glow route--${d.who}`);
+    map.line = svg.append('g').selectAll('path').data(LEGS).join('path').attr('class', d => `route-line route--${d.who}`);
+
+    const ports = svg.append('g').selectAll('g').data(Object.entries(AIRPORTS)).join('g')
+      .attr('transform', ([, a]) => `translate(${projection(a.coord)})`);
+    ports.append('circle').attr('class', 'port-dot').attr('r', 3.6);
+    const label = ports.append('text').attr('class', 'port-label')
+      .attr('text-anchor', ([, a]) => a.label.anchor).attr('x', ([, a]) => a.label.dx).attr('y', ([, a]) => a.label.dy);
+    if (!narrow) label.append('tspan').attr('class', 'port-name').text(([, a]) => `${a.name} `);
+    label.append('tspan').attr('class', 'port-code').text(([code]) => code);
+
+    const auh = projection(AIRPORTS.AUH.coord);
+    // Left of Abu Dhabi, so it never meets the marker label on the right.
+    map.note = svg.append('text').attr('class', 'note').attr('text-anchor', 'end').attr('x', auh[0] - 16).attr('y', auh[1] + 4);
+
+    const marks = svg.append('g');
+    map.marks = {};
+    for (const [key, name] of [['will', 'Will'], ['yana', 'Yana'], ['together', 'Will + Yana']]) {
+      const g = marks.append('g').attr('class', `mark mark--${key}`).style('display', 'none');
+      g.append('circle').attr('class', 'mark-ring').attr('r', 11);
+      g.append('circle').attr('class', 'mark-dot').attr('r', 5.5);
+      g.append('g').attr('class', 'plane-rot').append('path').attr('class', 'mark-plane').attr('d', PLANE).attr('transform', 'translate(-11.5,-12)');
+      if (!narrow) g.append('text').attr('class', 'mark-label').attr('x', 14).attr('y', -11).text(name);
+      map.marks[key] = g;
+    }
+    map.ready = true;
+    log('render', { w, h, narrow, countries: countries ? countries.length : 0, ms: Math.round(performance.now() - t0) });
+  }
+
+  function updateMap(t) {
+    if (!map.ready) return;
+    map.glow.attr('d', d => partial(d, frac(d, t)));
+    map.line.attr('d', d => partial(d, frac(d, t)));
+    const list = markersAt(t);
+    const shown = new Set(list.map(m => m.key));
+    for (const key of Object.keys(map.marks)) map.marks[key].style('display', shown.has(key) ? null : 'none');
+    for (const m of list) {
+      let xy, angle = 0;
+      if (m.leg) {
+        const ip = interp(m.leg);
+        xy = map.projection(ip(m.f));
+        const a = map.projection(ip(Math.max(0, m.f - 0.01))), b = map.projection(ip(Math.min(1, m.f + 0.01)));
+        angle = (Math.atan2(b[1] - a[1], b[0] - a[0]) * 180) / Math.PI + 90; // the icon points up
+      } else {
+        xy = map.projection(AIRPORTS[m.port].coord);
+      }
+      map.marks[m.key].attr('transform', `translate(${xy[0]},${xy[1]})`).classed('is-flying', !!m.leg);
+      map.marks[m.key].select('.plane-rot').attr('transform', `rotate(${angle})`);
+      const nearRight = xy[0] > map.w - 110; // flip the name to the left near the right edge (Krabi)
+      map.marks[m.key].select('.mark-label').attr('text-anchor', nearRight ? 'end' : 'start').attr('x', nearRight ? -14 : 14);
+    }
+    const note = noteAt(t);
+    map.note.text(note).style('display', note ? null : 'none');
+  }
+
+  // ---------- Time + playback ----------
+  let now = START, playing = false, lastFrame = 0, lastPhase = '', autoplayTimer = 0;
+  function setTime(t) {
+    now = Math.max(START, Math.min(END, t));
+    const minutes = Math.round((now - START) / MIN);
+    scrub.value = String(minutes);
+    scrub.style.setProperty('--p', `${(100 * minutes) / Number(scrub.max)}%`);
+    clockEls.forEach((el, i) => { el.textContent = fmt(CLOCKS[i][1], now); });
+    const sw = statusWill(now), sy = statusYana(now);
+    statusWillEl.textContent = sw;
+    statusYanaEl.textContent = sy;
+    scrub.setAttribute('aria-valuetext', `${fmt(TZ.AUH, now)} Abu Dhabi time. Will: ${sw} Yana: ${sy}`);
+    let active = -1;
+    MOMENTS.forEach((m, i) => { if (now >= m.t) active = i; });
+    momentEls.forEach((el, i) => el.classList.toggle('is-active', i === active));
+    if (sw + sy !== lastPhase) { lastPhase = sw + sy; log('phase', { abuDhabi: fmt(TZ.AUH, now), will: sw, yana: sy }); }
+    updateMap(now);
+  }
+  function setIcon() {
+    const ended = now >= END;
+    playBtn.innerHTML = playing ? ICONS.pause : ended ? ICONS.replay : ICONS.play;
+    playBtn.setAttribute('aria-label', playing ? 'Pause' : ended ? 'Play again' : 'Play the trip');
+  }
+  function frame(ts) {
+    if (!playing) return;
+    const dt = Math.min(100, ts - lastFrame);
+    lastFrame = ts;
+    setTime(now + (dt * (END - START)) / PLAY_MS);
+    if (now >= END) { playing = false; setIcon(); log('playback: done'); return; }
+    requestAnimationFrame(frame);
+  }
+  function play() {
+    clearTimeout(autoplayTimer);
+    if (playing) return;
+    if (now >= END) setTime(START);
+    playing = true;
+    lastFrame = performance.now();
+    setIcon();
+    log('playback: play', fmt(TZ.AUH, now));
+    requestAnimationFrame(frame);
+  }
+  function pause() {
+    clearTimeout(autoplayTimer); // a tap before autoplay starts must win over autoplay
+    if (!playing) return;
+    playing = false;
+    setIcon();
+    log('playback: pause', fmt(TZ.AUH, now));
+  }
+  playBtn.addEventListener('click', () => (playing ? pause() : play()));
+  scrub.addEventListener('input', () => { pause(); setTime(START + Number(scrub.value) * MIN); });
+
+  // ---------- Boot ----------
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function start(countries) {
+    render(countries);
+    let resizeTimer = 0, lastWidth = stage.clientWidth;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (Math.abs(stage.clientWidth - lastWidth) < 2) return;
+        lastWidth = stage.clientWidth;
+        render(countries);
+        updateMap(now);
+      }, 150);
+    });
+    if (reduceMotion) { setTime(END); setIcon(); log('boot: reduced motion, showing the final state'); return; }
+    setTime(START);
+    setIcon();
+    autoplayTimer = setTimeout(play, 700);
+    log('boot: ready', { ms: Math.round(performance.now() - bootStart) });
+  }
+
+  setIcon();
+  setTime(START);
+  if (!window.d3) {
+    fail('d3 did not load; the map is off, the rest of the page works');
+    $('map-fallback').hidden = false;
+    return;
+  }
+  const worldUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json';
+  const fetchStart = performance.now();
+  log('fetch: world map', worldUrl);
+  fetch(worldUrl)
+    .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .then(world => {
+      log('fetch: world map ok', { ms: Math.round(performance.now() - fetchStart) });
+      const countries = window.topojson ? topojson.feature(world, world.objects.countries).features : null;
+      if (!countries) fail('topojson did not load; drawing routes without countries');
+      start(countries);
+    })
+    .catch(e => { fail('fetch: world map failed; drawing routes without countries', e); start(null); });
+})();
+</script>
+</body>
+</html>
