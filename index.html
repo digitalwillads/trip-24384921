@@ -85,8 +85,20 @@
   .section-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--together); }
   section { margin-top: 64px; min-width: 0; }
 
+  /* Site nav (same on every page) */
+  .site-nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .site-nav__inner { display: flex; align-items: center; gap: 12px; height: 56px; }
+  .brand { flex: none; font-weight: 800; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
+  .brand::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--together); margin-right: 8px; vertical-align: 1px; }
+  .tabs { margin-left: auto; min-width: 0; display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs a { flex: none; padding: 6px 12px; border-radius: 999px; font-size: 13.5px; font-weight: 600; text-decoration: none; color: var(--text-dim); white-space: nowrap; }
+  .tabs a:hover { color: var(--text); }
+  .tabs a[aria-current="page"] { background: var(--together); color: var(--on-accent); }
+  @media (max-width: 760px) { .brand span { display: none; } }
+
   /* Hero */
-  .hero { padding: 48px 0 8px; }
+  .hero { padding: 40px 0 8px; }
   .kicker { margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--text-dim); }
   .kicker b { color: var(--text); font-weight: 600; }
   .pill { padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); color: var(--together); font-weight: 600; }
@@ -316,6 +328,19 @@
 </head>
 <body>
 
+<nav class="site-nav" aria-label="Trip pages">
+  <div class="wrap site-nav__inner">
+    <a class="brand" href="index.html"><span>Krabi Together</span></a>
+    <div class="tabs">
+      <a href="index.html" aria-current="page">Flights</a>
+      <a href="island.html">To Phi Phi</a>
+      <a href="ideas-krabi.html">Krabi ideas</a>
+      <a href="ideas-phiphi.html">Phi Phi ideas</a>
+      <a href="home.html">Going home</a>
+    </div>
+  </div>
+</nav>
+
 <header class="hero">
   <div class="wrap">
     <p class="kicker reveal" style="--i:0">
@@ -499,6 +524,8 @@
   const fail = (...a) => console.error('[trip]', ...a);
   const bootStart = performance.now();
   log('init: start', { d3: !!window.d3, topojson: !!window.topojson });
+  const tabs = document.querySelector('.tabs'), current = tabs && tabs.querySelector('[aria-current="page"]');
+  if (current) tabs.scrollLeft = current.offsetLeft - (tabs.clientWidth - current.clientWidth) / 2;
 
   // Real flights, in UTC. Local times on the page come from Intl with each city's time zone.
   const AIRPORTS = {

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex, nofollow">
+<title>Krabi Ideas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ideas.css">
+</head>
+<body data-page="krabi">
+
+<nav class="site-nav" aria-label="Trip pages">
+  <div class="wrap site-nav__inner">
+    <a class="brand" href="index.html"><span>Krabi Together</span></a>
+    <div class="tabs">
+      <a href="index.html">Flights</a>
+      <a href="island.html">To Phi Phi</a>
+      <a href="ideas-krabi.html" aria-current="page">Krabi ideas</a>
+      <a href="ideas-phiphi.html">Phi Phi ideas</a>
+      <a href="home.html">Going home</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker reveal" style="--i:0"><span>Page 3</span><b>Things to do from Ao Nang</b></p>
+    <h1 class="reveal" style="--i:1"><span class="a">Krabi ideas.</span> <span class="b">Pick, then talk.</span></h1>
+    <p class="lead reveal" style="--i:2">Ideas for your days in Ao Nang. Tap an idea to see the details, then leave a comment. <b>Will</b> and <b>Yana</b> both see every comment, on any device.</p>
+  </div>
+</header>
+
+<div class="who">
+  <div class="wrap who__inner">
+    <span class="who__label">Who is on this device?</span>
+    <span class="who__pick" role="group" aria-label="Who is commenting">
+      <button type="button" data-name="Will" aria-pressed="false">Will</button>
+      <button type="button" data-name="Yana" aria-pressed="false">Yana</button>
+    </span>
+    <span class="who__status" id="who-status" aria-live="polite">Loading comments...</span>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <p>Facts checked against 2025-2026 sources, Nov 7, 2026: authenticthaikrabi.com, backpackerswanderlust.com, cookly.me, hongislandkrabi.com, kohtourkrabi.com, muchbetteradventures.com, solosophie.com, thongyibthongyod.com, travelguidestip.com, tripscout.family.blog, tripthaitour.com, visitthailandtoday.com. Fees and times change.</p>
+    <p>Comments are saved on a small server, so you both see them on any device. Anyone with this page's link can read and write them, so keep private things out.</p>
+  </footer>
+</main>
+
+<dialog class="panel" id="panel" aria-labelledby="panel-title">
+  <div class="panel__inner">
+    <div class="panel__head">
+      <span class="card__icon" id="panel-icon"></span>
+      <div><span class="card__tag" id="panel-tag"></span><h2 class="panel__title" id="panel-title"></h2></div>
+      <button class="close" type="button" id="panel-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="panel__body">
+      <p class="panel__blurb" id="panel-blurb"></p>
+      <dl class="facts" id="panel-facts"></dl>
+      <div>
+        <h3 class="thread__title">Your talk</h3>
+        <ol class="thread" id="thread"></ol>
+        <p class="empty" id="thread-empty">No comments yet. Start the talk.</p>
+      </div>
+      <p class="sources" id="panel-sources"></p>
+    </div>
+    <form class="composer" id="composer">
+      <div class="composer__row">
+        <textarea id="comment-text" maxlength="1000" rows="1" placeholder="Write a comment" aria-label="Comment"></textarea>
+        <button class="send" id="send" type="submit" disabled>Send</button>
+      </div>
+      <p class="composer__hint" id="composer-hint"></p>
+    </form>
+  </div>
+</dialog>
+
+<script type="application/json" id="ideas-data">[{"slug": "railay", "title": "Railay and Phra Nang Cave Beach", "tag": "Beach", "blurb": "Railay is a beach area walled in by cliffs, so you reach it only by boat. Phra Nang Cave Beach has soft sand, calm water and a cave shrine.", "how": "Take a shared longtail from Ao Nang Beach, a ride of 10 to 15 minutes.", "time": "Half day", "cost": "Longtail ฿100 per person each way, about ฿150 after 18:00", "tip": "Reach Phra Nang Cave Beach before 10:30, when the tour boats start to arrive.", "sources": ["https://thongyibthongyod.com/blog/railay-beach-day-trip/", "https://www.backpackerswanderlust.com/railay-beach-to-ao-nang-thailand/"]}, {"slug": "four-islands", "title": "4 Islands boat tour", "tag": "Boat trip", "blurb": "A boat tour to Poda, Chicken and Tup islands, with a stop at Phra Nang Cave Beach. At low tide a sandbar joins the islands, and you can walk on it.", "how": "Most tours pick you up at your Ao Nang hotel between 08:00 and 09:00.", "time": "Half or full day", "cost": "Longtail tour about ฿600 to ฿800, plus ฿400 park fee in cash", "tip": "Pick a tour timed for low tide, because the sandbar shows for only 2 to 3 hours.", "sources": ["https://www.tripthaitour.com/blog/krabi-4-island-tour", "https://travelguidestip.com/krabi-travel-budget-2026-how-much-does-it-cost/", "https://thongyibthongyod.com/blog/things-to-do-ao-nang/"]}, {"slug": "hong-islands", "title": "Hong Islands tour", "tag": "Boat trip", "blurb": "A boat tour to Hong Lagoon, a calm pool of sea water closed in by tall cliffs. The day also has snorkel stops, a sandbar and a stair climb to a viewpoint.", "how": "Speedboat and longtail tours pick you up at your Ao Nang hotel in the morning.", "time": "Full day", "cost": "Speedboat tour about ฿1,800, plus ฿300 park fee in cash", "tip": "Wear sandals with good grip for the steep stairs to the viewpoint.", "sources": ["https://www.tripthaitour.com/blog/krabi-hong-islands-tour", "https://hongislandkrabi.com/plan-your-trip/national-park-fees", "https://thongyibthongyod.com/blog/things-to-do-ao-nang/"]}, {"slug": "tiger-cave-temple", "title": "Tiger Cave Temple climb", "tag": "Hike", "blurb": "A forest monastery with about 1,260 steps up to a gold Buddha at the top. From the top you can see in every direction over Krabi.", "how": "It is about 20 km, or 30 minutes, from Ao Nang by taxi, Grab or scooter.", "time": "Half day", "cost": "Free, donations welcome", "tip": "Start the climb at 05:00 to 06:00, before the heat and the crowds.", "sources": ["https://thongyibthongyod.com/blog/tiger-cave-temple-krabi/", "https://www.muchbetteradventures.com/magazine/tiger-cave-temple-thailand-staircase/"]}, {"slug": "emerald-pool", "title": "Emerald Pool and hot springs", "tag": "Nature", "blurb": "Swim in a clear green pool fed by springs, in a forest reserve inland. Then soak in warm pools at a hot spring waterfall nearby.", "how": "Join a tour or hire a driver, because the pool is about 70 km, or 1.5 hours, from Ao Nang.", "time": "Full day", "cost": "Entry ฿400 at the Emerald Pool and ฿200 at the hot springs", "tip": "Arrive at 08:30 when the gates open, before the tour vans come at about 10:00.", "sources": ["https://www.visitthailandtoday.com/guides/emerald-pool-krabi", "https://www.solosophie.com/krabi-hot-springs/"]}, {"slug": "walking-street", "title": "Krabi Town Walking Street", "tag": "Culture", "blurb": "Krabi's biggest night market fills a lane in Krabi Town every Friday to Sunday, from 17:00 to about 22:00. Food stalls sell small Thai dishes, and a stage has music and dance.", "how": "Take the white songthaew from Ao Nang to Krabi Town, or a taxi.", "time": "Evening", "cost": "Free entry; songthaew ฿60 by day, ฿80 after 18:00", "tip": "In high season the last songthaew back to Ao Nang runs at about 22:00.", "sources": ["https://www.visitthailandtoday.com/guides/krabi-night-markets"]}, {"slug": "mangrove-kayak", "title": "Mangrove kayaking at Ao Thalane", "tag": "Nature", "blurb": "Paddle with a guide through narrow mangrove channels between limestone cliffs. The water is flat and sheltered, so you need no experience.", "how": "Tours pick you up in Ao Nang for the 30 to 40 minute drive.", "time": "Half day", "cost": "Half-day tour about ฿900 with hotel pickup", "tip": "Check the tide, because at low tide you may need to get out and push the kayak.", "sources": ["https://thongyibthongyod.com/blog/things-to-do-ao-nang/", "https://tripscout.family.blog/2026/02/17/krabi-kayaking-review-ao-thalane-khaothong-hill/", "https://kohtourkrabi.com/tours/kayaking-ao-thalane", "https://travelguidestip.com/krabi-travel-budget-2026-how-much-does-it-cost/"]}, {"slug": "cooking-class", "title": "Thai cooking class", "tag": "Food", "blurb": "Cook several Thai dishes, such as pad thai and green curry, with a local teacher. You eat what you cook and take the recipes home.", "how": "Many Ao Nang schools pick you up at your hotel.", "time": "2 to 4 hours", "cost": "About ฿900 to ฿1,800 per person", "tip": "Classes run in the morning, afternoon or evening, so one fits around a beach day.", "sources": ["https://authenticthaikrabi.com/", "https://www.cookly.me/cooking-class/krabi/"]}, {"slug": "nopparat-thara-sunset", "title": "Sunset at Nopparat Thara Beach", "tag": "Beach", "blurb": "A long, quiet beach just north of Ao Nang, inside a national park with no jet skis. It faces west, so you watch the sun set over the sea.", "how": "Walk 10 to 15 minutes northwest from Ao Nang's main beach.", "time": "Evening", "cost": "Free; beach stalls sell dishes for ฿50 to ฿100", "tip": "Arrive at about 16:30, and if the tide is low, walk the sand flats out toward the islets.", "sources": ["https://thongyibthongyod.com/blog/nopparat-thara-beach-guide/"]}]</script>
+<script src="ideas.js"></script>
+</body>
+</html>

@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex, nofollow">
+<title>Going Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a111e;
+    --bg-glow: rgba(98, 227, 181, 0.07);
+    --surface: #111b2c;
+    --surface-2: #15223a;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #eaf0f8;
+    --text-dim: #97a6bd;
+    --will: #f5bd4f;
+    --yana: #ff8466;
+    --together: #62e3b5;
+    --on-accent: #0a111e;
+    --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    --map-bg: #0c1626;
+    --map-text: #eaf0f8;
+    --map-dim: #8ea0bb;
+    --will-map: #f5bd4f;
+    --yana-map: #ff8466;
+    --together-map: #62e3b5;
+    --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f1ea;
+      --bg-glow: rgba(19, 138, 100, 0.08);
+      --surface: #fffdf8;
+      --surface-2: #f8f4ec;
+      --border: rgba(20, 32, 51, 0.10);
+      --text: #142033;
+      --text-dim: #5a6a80;
+      --will: #a86b12;
+      --yana: #c8492d;
+      --together: #138a64;
+      --on-accent: #ffffff;
+      --shadow: 0 18px 50px rgba(20, 32, 51, 0.12);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; font-family: var(--font); color: var(--text); line-height: 1.5; padding-bottom: 96px;
+    background:
+      radial-gradient(1100px 520px at 78% -8%, var(--bg-glow), transparent 70%),
+      radial-gradient(800px 420px at -10% 30%, rgba(255, 132, 102, 0.05), transparent 70%),
+      var(--bg);
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 28px; } }
+  h1, h2, h3 { margin: 0; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 800; line-height: 1.15; }
+  section { margin-top: 64px; min-width: 0; }
+  code { font-family: var(--mono); font-size: 0.86em; font-weight: 600; padding: 1px 6px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); white-space: nowrap; }
+  .section-label { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 8px; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
+  .section-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--together); }
+
+  /* Site nav (same on every page) */
+  .site-nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .site-nav__inner { display: flex; align-items: center; gap: 12px; height: 56px; }
+  .brand { flex: none; font-weight: 800; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
+  .brand::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--together); margin-right: 8px; vertical-align: 1px; }
+  .tabs { margin-left: auto; min-width: 0; display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs a { flex: none; padding: 6px 12px; border-radius: 999px; font-size: 13.5px; font-weight: 600; text-decoration: none; color: var(--text-dim); white-space: nowrap; }
+  .tabs a:hover { color: var(--text); }
+  .tabs a[aria-current="page"] { background: var(--together); color: var(--on-accent); }
+  @media (max-width: 760px) { .brand span { display: none; } }
+
+  /* Hero */
+  .hero { padding: 40px 0 8px; }
+  .kicker { margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--text-dim); }
+  .kicker b { color: var(--text); font-weight: 600; }
+  h1 { font-size: clamp(38px, 6.4vw, 72px); font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; max-width: 15ch; }
+  h1 .a { color: var(--together); }
+  h1 .b { color: var(--yana); }
+  .lead { margin: 18px 0 0; max-width: 62ch; font-size: clamp(16px, 1.6vw, 19px); color: var(--text-dim); }
+  .lead b { color: var(--text); font-weight: 600; }
+
+  .daypick { margin-top: 28px; display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); max-width: 100%; }
+  .daypick button { cursor: pointer; text-align: left; padding: 10px 16px; border-radius: 12px; border: 0; font: inherit; color: var(--text-dim); background: transparent; min-width: 0; }
+  .daypick button b { display: block; font-size: 16px; color: var(--text); font-weight: 700; }
+  .daypick button span { font-family: var(--mono); font-size: 12.5px; }
+  .daypick button[aria-pressed="true"] { background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--together); }
+  .daypick button[aria-pressed="true"] span { color: var(--together); }
+
+  .kpis { margin-top: 16px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 760px) { .kpis { grid-template-columns: 1.4fr 1fr 1fr; } }
+  .kpi { min-width: 0; padding: 18px 20px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); }
+  .kpi__value { display: block; font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .kpi__label { display: block; margin-top: 2px; color: var(--text-dim); font-size: 14px; }
+  .kpi--hero { background: linear-gradient(135deg, rgba(98, 227, 181, 0.16), rgba(98, 227, 181, 0.04) 60%), var(--surface); border-color: rgba(98, 227, 181, 0.30); box-shadow: var(--shadow); }
+  .kpi--hero .kpi__value { color: var(--together); }
+
+  /* Map card */
+  .map-card { margin-top: 28px; padding: 18px; border-radius: 22px; background: var(--map-bg); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: var(--shadow); color: var(--map-text); }
+  @media (min-width: 720px) { .map-card { padding: 24px; } }
+  .map-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px 24px; margin-bottom: 14px; }
+  .map-head .section-label { color: var(--map-dim); }
+  .map-head .section-label::before { background: var(--together-map); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--map-dim); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend i { width: 22px; height: 3px; border-radius: 2px; background: var(--c); }
+  .map-caption { margin: 0 0 14px; color: var(--map-dim); font-size: 15px; max-width: 70ch; }
+  .map-caption b { color: var(--map-text); font-weight: 600; }
+  .map-stage { position: relative; border-radius: 14px; overflow: hidden; background: #0a1424; min-height: 160px; }
+  #map { display: block; width: 100%; height: auto; font-family: var(--font); }
+  .map-fallback { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 24px; text-align: center; color: var(--map-dim); }
+  .map-fallback[hidden] { display: none; }
+  .sphere { fill: url(#ocean); }
+  .grat { fill: none; stroke: rgba(255, 255, 255, 0.045); stroke-width: 0.6; }
+  .country { fill: #1a2a42; stroke: rgba(255, 255, 255, 0.07); stroke-width: 0.5; }
+  .country--hi { fill: #253c5e; }
+  .route--will { --c: var(--will-map); }
+  .route--yana { --c: var(--yana-map); }
+  .route--together { --c: var(--together-map); }
+  .route-base { fill: none; stroke: var(--c); stroke-width: 1.4; stroke-dasharray: 2 6; stroke-linecap: round; opacity: 0.5; }
+  .route-glow { fill: none; stroke: var(--c); stroke-width: 9; stroke-linecap: round; opacity: 0.16; }
+  .route-line { fill: none; stroke: var(--c); stroke-width: 2.6; stroke-linecap: round; }
+  .port-dot { fill: var(--map-text); stroke: var(--map-bg); stroke-width: 2; }
+  .port-label, .note, .mark-label { paint-order: stroke; stroke: rgba(8, 14, 26, 0.88); stroke-width: 4px; stroke-linejoin: round; }
+  .port-label { font-size: 13px; fill: var(--map-text); }
+  .port-name { font-weight: 700; }
+  .port-code { font-family: var(--mono); font-weight: 600; fill: var(--map-dim); font-size: 11.5px; }
+  .note { font-size: 12.5px; font-weight: 700; fill: var(--together-map); }
+  .mark--will { --c: var(--will-map); }
+  .mark--yana { --c: var(--yana-map); }
+  .mark--together { --c: var(--together-map); }
+  .mark-ring { fill: none; stroke: var(--c); stroke-width: 2; opacity: 0.45; }
+  .mark-dot { fill: var(--c); stroke: var(--map-bg); stroke-width: 2; }
+  .mark-plane { fill: var(--c); stroke: var(--map-bg); stroke-width: 1.2; display: none; }
+  .mark.is-flying .mark-plane { display: inline; }
+  .mark.is-flying .mark-ring, .mark.is-flying .mark-dot { display: none; }
+  .mark-label { font-size: 12.5px; font-weight: 800; fill: var(--c); }
+  .player { margin-top: 14px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; }
+  .play { width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center; background: var(--together-map); color: #0a111e; transition: transform 0.15s ease; }
+  .play:hover { transform: scale(1.06); }
+  .play svg { width: 20px; height: 20px; }
+  .scrub { position: relative; min-width: 0; }
+  .scrub input { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; margin: 0; background: transparent; cursor: pointer; --p: 0%; }
+  .scrub input::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: linear-gradient(to right, var(--together-map) var(--p), rgba(255, 255, 255, 0.14) var(--p)); }
+  .scrub input::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -7px; border-radius: 50%; background: #fff; border: 4px solid var(--together-map); }
+  .scrub input::-moz-range-track { height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.14); }
+  .scrub input::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--together-map); }
+  .scrub input::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: #fff; border: 4px solid var(--together-map); }
+  .track-marks { position: absolute; left: 10px; right: 10px; top: 50%; height: 0; pointer-events: none; }
+  .track-marks span { position: absolute; top: -8px; width: 2px; height: 16px; margin-left: -1px; border-radius: 1px; background: var(--c); opacity: 0.9; }
+  .clocks { margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  @media (min-width: 720px) { .clocks { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .clock { padding: 10px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.06); min-width: 0; }
+  .clock__city { display: block; font-size: 12px; color: var(--map-dim); }
+  .clock__time { display: block; font-family: var(--mono); font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; color: var(--map-text); }
+  .status { margin-top: 12px; display: grid; gap: 6px; }
+  .status__row { display: grid; grid-template-columns: 12px 48px 1fr; align-items: baseline; gap: 10px; font-size: 15px; }
+  .status__row i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); align-self: center; }
+  .status__row b { font-weight: 700; }
+  .status__row span { color: var(--map-text); min-width: 0; }
+  .moments { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .moment { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; cursor: pointer; font: inherit; font-size: 13px; color: var(--map-text); background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.10); transition: background 0.15s ease; }
+  .moment:hover { background: rgba(255, 255, 255, 0.10); }
+  .moment.is-active { border-color: var(--c); background: rgba(255, 255, 255, 0.10); }
+  .moment i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+  .moment small { font-family: var(--mono); color: var(--map-dim); font-size: 12px; }
+  .who-will { --c: var(--will-map); }
+  .who-yana { --c: var(--yana-map); }
+  .who-together { --c: var(--together-map); }
+
+  /* Timeline */
+  .day-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 900px) { .day-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .day { min-width: 0; padding: 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); }
+  .day--split { border-color: color-mix(in srgb, var(--yana) 45%, transparent); }
+  .day header { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: end; margin-bottom: 14px; }
+  .day__dow { grid-row: span 2; font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); }
+  .day__date { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .day__title { color: var(--text-dim); font-size: 14px; }
+  .events { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+  .ev { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; padding-left: 12px; border-left: 3px solid var(--c); }
+  .ev--will { --c: var(--will); }
+  .ev--yana { --c: var(--yana); }
+  .ev--together { --c: var(--together); }
+  .ev time { font-family: var(--mono); font-weight: 600; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  .ev time small { display: block; color: var(--text-dim); font-weight: 400; font-size: 11.5px; }
+  .ev p { margin: 0; font-size: 15px; overflow-wrap: break-word; }
+
+  /* Tickets */
+  .ticket-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 900px) { .ticket-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .pass { --c: var(--will); position: relative; min-width: 0; display: grid; grid-template-columns: 1fr; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+  .pass--yana { --c: var(--yana); }
+  @media (min-width: 560px) { .pass { grid-template-columns: minmax(0, 1fr) 200px; } }
+  .pass::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--c); }
+  .pass__main { padding: 20px 20px 20px 26px; min-width: 0; }
+  .pass__top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+  .pass__name { font-size: 20px; font-weight: 800; }
+  .pass__airline { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); text-align: right; }
+  .pass__route { margin: 14px 0 16px; display: flex; align-items: center; gap: 10px; }
+  .pass__route .code { font-family: var(--mono); font-weight: 600; font-size: clamp(24px, 3.4vw, 32px); letter-spacing: 0.02em; }
+  .pass__route .hop { flex: 1; min-width: 16px; height: 0; border-top: 2px dashed color-mix(in srgb, var(--c) 70%, transparent); }
+  .segs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .segs li { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 10px; align-items: baseline; font-size: 14px; color: var(--text-dim); }
+  .segs li code { justify-self: start; color: var(--text); }
+  .pass__stub { position: relative; padding: 20px; display: grid; align-content: center; gap: 6px; border-top: 2px dashed var(--border); background: var(--surface-2); }
+  @media (min-width: 560px) { .pass__stub { border-top: 0; border-left: 2px dashed var(--border); } }
+  .pass__price { font-size: 34px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .pass__note { font-size: 13px; color: var(--text-dim); }
+  .btn { margin-top: 8px; display: inline-flex; justify-content: center; align-items: center; padding: 11px 16px; border-radius: 999px; background: var(--c); color: var(--on-accent); font-weight: 700; font-size: 14px; text-decoration: none; white-space: nowrap; transition: transform 0.15s ease; }
+  .btn:hover { transform: translateY(-1px); }
+
+  /* Compare */
+  .table-wrap { margin-top: 20px; overflow-x: auto; border-radius: 16px; border: 1px solid var(--border); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; min-width: 520px; }
+  th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 14.5px; }
+  th { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); font-weight: 600; background: var(--surface-2); }
+  tr:last-child td { border-bottom: 0; }
+  td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; font-family: var(--mono); }
+  tr.is-picked td { background: color-mix(in srgb, var(--together) 9%, transparent); }
+  .tag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; margin-left: 8px; border-radius: 999px; color: var(--on-accent); background: var(--together); vertical-align: 2px; white-space: nowrap; }
+
+  .tip-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 720px) { .tip-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .tip { min-width: 0; padding: 18px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); }
+  .tip h3 { font-size: 16px; font-weight: 700; }
+  .tip p { margin: 6px 0 0; font-size: 14.5px; color: var(--text-dim); }
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13.5px; }
+  footer p { margin: 0 0 6px; }
+
+  .actions { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-top: 1px solid var(--border); }
+  .actions__inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .action { --c: var(--will); min-width: 0; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 14px; text-decoration: none; color: var(--on-accent); background: var(--c); font-weight: 700; font-size: 15px; transition: transform 0.15s ease; }
+  .action:hover { transform: translateY(-1px); }
+  .action--yana { --c: var(--yana); }
+  .action span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .action b { font-family: var(--mono); font-size: 15px; }
+  @media (max-width: 480px) { .action { padding: 12px; font-size: 14px; } .action .wide { display: none; } }
+
+  .reveal { animation: fadeUp 0.7s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 90ms); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .reveal { animation: none; } .play, .btn, .action, .moment { transition: none; } }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Trip pages">
+  <div class="wrap site-nav__inner">
+    <a class="brand" href="index.html"><span>Krabi Together</span></a>
+    <div class="tabs">
+      <a href="index.html">Flights</a>
+      <a href="island.html">To Phi Phi</a>
+      <a href="ideas-krabi.html">Krabi ideas</a>
+      <a href="ideas-phiphi.html">Phi Phi ideas</a>
+      <a href="home.html" aria-current="page">Going home</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker reveal" style="--i:0"><span>Page 5</span><b>Phi Phi to Krabi to Abu Dhabi, then home</b></p>
+    <h1 class="reveal" style="--i:1"><span class="a">Leave together.</span> <span class="b">Split in Abu Dhabi.</span></h1>
+    <p class="lead reveal" style="--i:2">
+      On your last day, a boat takes you from Phi Phi to Krabi Town, and a taxi takes you to the airport. You fly <b>Etihad EY 425 to Abu Dhabi together</b>. There, <b>Yana flies on to Moscow</b> and <b>Will flies on to New York</b>.
+    </p>
+    <div class="daypick reveal" style="--i:3" role="group" aria-label="Day you leave Krabi">
+      <button type="button" data-day="0" aria-pressed="true"><b>Leave Thu Dec 10</b><span>$1,215 for both</span></button>
+      <button type="button" data-day="1" aria-pressed="false"><b>Leave Fri Dec 11</b><span>$1,995 for both</span></button>
+    </div>
+    <div class="kpis">
+      <div class="kpi kpi--hero reveal" style="--i:4"><span class="kpi__value" data-bind="kpiLeave">Thu Dec 10, 8:55 PM</span><span class="kpi__label">Etihad EY 425 from Krabi, together</span></div>
+      <div class="kpi reveal" style="--i:5"><span class="kpi__value" data-bind="kpiTotal">$1,215</span><span class="kpi__label">Both tickets home, economy</span></div>
+      <div class="kpi reveal" style="--i:6"><span class="kpi__value" data-bind="kpiDiff">Saves $780</span><span class="kpi__label" data-bind="kpiDiffLabel">Against leaving on Fri Dec 11</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="map-card reveal" style="--i:7" aria-labelledby="map-title">
+    <div class="map-head">
+      <div>
+        <p class="section-label">Watch the trip home</p>
+        <h2 id="map-title">One flight together, then two</h2>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i style="--c: var(--together-map)"></i>Together</span>
+        <span><i style="--c: var(--yana-map)"></i>Yana</span>
+        <span><i style="--c: var(--will-map)"></i>Will</span>
+      </div>
+    </div>
+    <p class="map-caption">Press play to watch the flights home in real time. You land in Abu Dhabi together at <b>12:55 AM</b>. Yana leaves at <b>2:55 AM</b> and Will at <b>3:35 AM</b>.</p>
+    <div class="map-stage" id="map-stage">
+      <svg id="map" role="img" aria-labelledby="map-svg-title map-svg-desc">
+        <title id="map-svg-title">Route map home</title>
+        <desc id="map-svg-desc">Will and Yana fly from Krabi to Abu Dhabi together. Yana then flies to Moscow and Will flies to New York.</desc>
+      </svg>
+      <p class="map-fallback" id="map-fallback" hidden>The map could not load. The plan below has every flight and time.</p>
+    </div>
+    <div class="player">
+      <button class="play" id="play" type="button" aria-label="Play the trip home"></button>
+      <div class="scrub">
+        <input id="scrub" type="range" min="0" max="100" step="1" value="0" aria-label="Trip time">
+        <div class="track-marks" id="track-marks" aria-hidden="true"></div>
+      </div>
+    </div>
+    <div class="clocks" id="clocks"></div>
+    <div class="status" aria-live="polite">
+      <div class="status__row who-will"><i></i><b>Will</b><span id="status-will"></span></div>
+      <div class="status__row who-yana"><i></i><b>Yana</b><span id="status-yana"></span></div>
+    </div>
+    <div class="moments" id="moments"></div>
+  </section>
+
+  <section aria-labelledby="days-title">
+    <p class="section-label">The last day · local times</p>
+    <h2 id="days-title">From the beach to two homes</h2>
+    <div class="day-grid">
+      <article class="day reveal" style="--i:1">
+        <header><span class="day__dow" data-bind="dow0">Thu</span><span class="day__date" data-bind="date0">Dec 10</span><span class="day__title">Phi Phi to Krabi airport</span></header>
+        <ol class="events">
+          <li class="ev ev--together"><time>Morning<small>Phi Phi</small></time><p>Boat from Tonsai Pier to Krabi Town (Klong Jilad pier), about 2 hours. Boats run from morning to mid-afternoon.</p></li>
+          <li class="ev ev--together"><time>Afternoon<small>Krabi</small></time><p>Taxi from the pier to Krabi airport, about 30 minutes. Be at the airport by about 6:00 PM.</p></li>
+          <li class="ev ev--together"><time>8:55 PM<small>Krabi</small></time><p>Etihad <code>EY 425</code> to Abu Dhabi, together. 7 hours.</p></li>
+        </ol>
+      </article>
+      <article class="day day--split reveal" style="--i:2">
+        <header><span class="day__dow" data-bind="dow1">Fri</span><span class="day__date" data-bind="date1">Dec 11</span><span class="day__title">Abu Dhabi, then home</span></header>
+        <ol class="events">
+          <li class="ev ev--together"><time>12:55 AM<small>Abu Dhabi</small></time><p>Land in Abu Dhabi. You wait together in the terminal.</p></li>
+          <li class="ev ev--yana"><time>2:55 AM<small>Abu Dhabi</small></time><p>Yana flies Etihad <code>EY 841</code> to Moscow and lands at 7:45 AM.</p></li>
+          <li class="ev ev--will"><time>3:35 AM<small>Abu Dhabi</small></time><p>Will flies Etihad <code>EY 1</code> to New York and lands at 9:00 AM.</p></li>
+        </ol>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="tickets-title">
+    <p class="section-label">Tickets home · one each</p>
+    <h2 id="tickets-title">The same first flight, then your own</h2>
+    <div class="ticket-grid">
+      <article class="pass reveal" style="--i:1">
+        <div class="pass__main">
+          <div class="pass__top"><span class="pass__name">Will</span><span class="pass__airline">Etihad</span></div>
+          <div class="pass__route" aria-label="Krabi to Abu Dhabi to New York"><span class="code">KBV</span><span class="hop"></span><span class="code">AUH</span><span class="hop"></span><span class="code">JFK</span></div>
+          <ul class="segs">
+            <li><code>EY 425</code><span><span data-bind="dow0">Thu</span> · KBV 8:55 PM to AUH 12:55 AM</span></li>
+            <li><code>EY 1</code><span><span data-bind="dow1">Fri</span> · AUH 3:35 AM to JFK 9:00 AM</span></li>
+          </ul>
+        </div>
+        <div class="pass__stub">
+          <span class="pass__price" data-bind="willPrice">$533</span>
+          <span class="pass__note">24 h 5 min. No checked bag: add one if you need it.</span>
+          <a class="btn" data-bind-href="willLink" href="#" target="_blank" rel="noopener">Book with Etihad</a>
+        </div>
+      </article>
+      <article class="pass pass--yana reveal" style="--i:2">
+        <div class="pass__main">
+          <div class="pass__top"><span class="pass__name">Yana</span><span class="pass__airline">Etihad</span></div>
+          <div class="pass__route" aria-label="Krabi to Abu Dhabi to Moscow"><span class="code">KBV</span><span class="hop"></span><span class="code">AUH</span><span class="hop"></span><span class="code">SVO</span></div>
+          <ul class="segs">
+            <li><code>EY 425</code><span><span data-bind="dow0">Thu</span> · KBV 8:55 PM to AUH 12:55 AM</span></li>
+            <li><code>EY 841</code><span><span data-bind="dow1">Fri</span> · AUH 2:55 AM to SVO 7:45 AM</span></li>
+          </ul>
+        </div>
+        <div class="pass__stub">
+          <span class="pass__price" data-bind="yanaPrice">$682</span>
+          <span class="pass__note">14 h 50 min. No checked bag: add one if she needs it.</span>
+          <a class="btn" data-bind-href="yanaLink" href="#" target="_blank" rel="noopener">Book with Etihad</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="compare-title">
+    <p class="section-label">Which day</p>
+    <h2 id="compare-title">Thursday costs $780 less</h2>
+    <div class="table-wrap reveal" style="--i:1">
+      <table>
+        <thead><tr><th>Leave Krabi</th><th class="num">Will</th><th class="num">Yana</th><th class="num">Both</th></tr></thead>
+        <tbody>
+          <tr data-row="0"><td><b>Thu Dec 10</b><span class="tag">Cheaper</span></td><td class="num">$533</td><td class="num">$682</td><td class="num"><b>$1,215</b></td></tr>
+          <tr data-row="1"><td><b>Fri Dec 11</b></td><td class="num">$1,293</td><td class="num">$702</td><td class="num"><b>$1,995</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section aria-labelledby="tips-title">
+    <p class="section-label">Good to know</p>
+    <h2 id="tips-title">Before you fly home</h2>
+    <div class="tip-grid">
+      <article class="tip reveal" style="--i:1"><h3>Leave Phi Phi early</h3><p>The flight leaves at 8:55 PM. Take a boat that reaches Krabi Town by mid-afternoon, so a late boat does not cost you the flight.</p></article>
+      <article class="tip reveal" style="--i:2"><h3>Separate tickets home</h3><p>Each ticket is complete on its own, so a delay on one does not affect the other. Choose seats next to each other on EY 425.</p></article>
+      <article class="tip reveal" style="--i:3"><h3>Payment</h3><p>If Yana's Russian card does not work on etihad.com, Will can pay with his card.</p></article>
+    </div>
+  </section>
+
+  <footer>
+    <p>Flights and prices: Google Flights booking pages ("Book with Etihad"), checked Nov 7, 2026. Boats from Phi Phi: visitthailandtoday.com and shathailand.com (2026).</p>
+    <p>Fares change, so confirm them when you book. All times are local. Nothing is booked yet.</p>
+  </footer>
+</main>
+
+<nav class="actions" aria-label="Book the tickets home">
+  <div class="actions__inner">
+    <a class="action" data-bind-href="willLink" href="#" target="_blank" rel="noopener"><span>Book Will<span class="wide">'s ticket home</span></span><b data-bind="willPrice">$533</b></a>
+    <a class="action action--yana" data-bind-href="yanaLink" href="#" target="_blank" rel="noopener"><span>Book Yana<span class="wide">'s ticket home</span></span><b data-bind="yanaPrice">$682</b></a>
+  </div>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const log = (...a) => console.log('[home]', ...a);
+  const fail = (...a) => console.error('[home]', ...a);
+  const bootStart = performance.now();
+  log('init: start', { d3: !!window.d3, topojson: !!window.topojson });
+
+  // Two choices of day. Prices and links read on Google's booking pages, Nov 7, 2026.
+  const DAYS = [
+    { label: 'Thu Dec 10', dow: ['Thu', 'Fri'], date: ['Dec 10', 'Dec 11'], will: '$533', yana: '$682', total: '$1,215',
+      willLink: 'https://www.google.com/travel/flights?hl=en&gl=us&curr=USD&tfs=CBwQAhpeEgoyMDI2LTEyLTEwIh8KA0tCVhIKMjAyNi0xMi0xMBoDQVVIKgJFWTIDNDI1Ih0KA0FVSBIKMjAyNi0xMi0xMRoDSkZLKgJFWTIBMWoHCAESA0tCVnIHCAESA0pGS0ABSAFwAZgBAg',
+      yanaLink: 'https://www.google.com/travel/flights?hl=en&gl=us&curr=USD&tfs=CBwQAhpgEgoyMDI2LTEyLTEwIh8KA0tCVhIKMjAyNi0xMi0xMBoDQVVIKgJFWTIDNDI1Ih8KA0FVSBIKMjAyNi0xMi0xMRoDU1ZPKgJFWTIDODQxagcIARIDS0JWcgcIARIDU1ZPQAFIAXABmAEC' },
+    { label: 'Fri Dec 11', dow: ['Fri', 'Sat'], date: ['Dec 11', 'Dec 12'], will: '$1,293', yana: '$702', total: '$1,995',
+      willLink: 'https://www.google.com/travel/flights?hl=en&gl=us&curr=USD&tfs=CBwQAhpeEgoyMDI2LTEyLTExIh8KA0tCVhIKMjAyNi0xMi0xMRoDQVVIKgJFWTIDNDI1Ih0KA0FVSBIKMjAyNi0xMi0xMhoDSkZLKgJFWTIBMWoHCAESA0tCVnIHCAESA0pGS0ABSAFwAZgBAg',
+      yanaLink: 'https://www.google.com/travel/flights?hl=en&gl=us&curr=USD&tfs=CBwQAhpgEgoyMDI2LTEyLTExIh8KA0tCVhIKMjAyNi0xMi0xMRoDQVVIKgJFWTIDNDI1Ih8KA0FVSBIKMjAyNi0xMi0xMhoDU1ZPKgJFWTIDODQxagcIARIDS0JWcgcIARIDU1ZPQAFIAXABmAEC' },
+  ];
+  const DAY_MS = 86400000, MIN = 60000;
+  const AIRPORTS = {
+    KBV: { name: 'Krabi', coord: [98.99, 8.10], label: { anchor: 'middle', dx: 0, dy: 26 } },
+    AUH: { name: 'Abu Dhabi', coord: [54.65, 24.43], label: { anchor: 'middle', dx: 0, dy: 27 } },
+    SVO: { name: 'Moscow', coord: [37.41, 55.97], label: { anchor: 'start', dx: 12, dy: 4 } },
+    JFK: { name: 'New York', coord: [-73.78, 40.64], label: { anchor: 'middle', dx: 0, dy: 26 } },
+  };
+  const at = iso => Date.parse(iso);
+  // Thursday times in UTC; Friday is the same flights one day later.
+  const BASE = [
+    { who: 'together', from: 'KBV', to: 'AUH', flight: 'EY 425', dep: at('2026-12-10T13:55:00Z'), arr: at('2026-12-10T20:55:00Z') },
+    { who: 'yana', from: 'AUH', to: 'SVO', flight: 'EY 841', dep: at('2026-12-10T22:55:00Z'), arr: at('2026-12-11T04:45:00Z') },
+    { who: 'will', from: 'AUH', to: 'JFK', flight: 'EY 1', dep: at('2026-12-10T23:35:00Z'), arr: at('2026-12-11T14:00:00Z') },
+  ];
+  const TZ = { KBV: 'Asia/Bangkok', AUH: 'Asia/Dubai', MOW: 'Europe/Moscow', NYC: 'America/New_York' };
+  const CLOCKS = [['Krabi', TZ.KBV], ['Abu Dhabi', TZ.AUH], ['Moscow', TZ.MOW], ['New York', TZ.NYC]];
+  const HIGHLIGHT = new Set(['764', '784', '643', '840']);
+  const PLANE = 'M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z';
+  const ICONS = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>',
+    pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 5h4v14H7zm6 0h4v14h-4z"/></svg>',
+    replay: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>',
+  };
+  const PLAY_MS = 20000;
+
+  let day = 0, LEGS, T1, Y1, W1, START, END, MOMENTS;
+  function setDay(i) {
+    day = i;
+    const shift = i * DAY_MS;
+    LEGS = BASE.map(l => ({ ...l, dep: l.dep + shift, arr: l.arr + shift }));
+    [T1, Y1, W1] = LEGS;
+    START = T1.dep - 60 * MIN;
+    END = W1.arr + 30 * MIN;
+    MOMENTS = [
+      { who: 'together', label: 'Leave Krabi together', t: T1.dep, tz: TZ.KBV },
+      { who: 'together', label: 'Land in Abu Dhabi', t: T1.arr, tz: TZ.AUH },
+      { who: 'yana', label: 'Yana leaves for Moscow', t: Y1.dep, tz: TZ.AUH },
+      { who: 'will', label: 'Will leaves for New York', t: W1.dep, tz: TZ.AUH },
+      { who: 'yana', label: 'Yana lands in Moscow', t: Y1.arr, tz: TZ.MOW },
+      { who: 'will', label: 'Will lands in New York', t: W1.arr, tz: TZ.NYC },
+    ];
+    const d = DAYS[i], other = DAYS[1 - i];
+    const bind = (key, value) => document.querySelectorAll(`[data-bind="${key}"]`).forEach(el => { el.textContent = value; });
+    bind('dow0', d.dow[0]); bind('dow1', d.dow[1]); bind('date0', d.date[0]); bind('date1', d.date[1]);
+    bind('willPrice', d.will); bind('yanaPrice', d.yana); bind('kpiTotal', d.total);
+    bind('kpiLeave', `${d.label}, 8:55 PM`);
+    const diff = Number(other.total.replace(/[$,]/g, '')) - Number(d.total.replace(/[$,]/g, ''));
+    bind('kpiDiff', diff > 0 ? `Saves $${diff.toLocaleString('en-US')}` : `Costs $${(-diff).toLocaleString('en-US')} more`);
+    bind('kpiDiffLabel', `Against leaving on ${other.label}`);
+    document.querySelectorAll('[data-bind-href="willLink"]').forEach(a => { a.href = d.willLink; });
+    document.querySelectorAll('[data-bind-href="yanaLink"]').forEach(a => { a.href = d.yanaLink; });
+    document.querySelectorAll('.daypick button').forEach(b => b.setAttribute('aria-pressed', String(Number(b.dataset.day) === i)));
+    document.querySelectorAll('tr[data-row]').forEach(tr => tr.classList.toggle('is-picked', Number(tr.dataset.row) === i));
+    log('day', d.label, { will: d.will, yana: d.yana, total: d.total });
+  }
+
+  const fmtCache = {};
+  const fmt = (tz, t) => (fmtCache[tz] = fmtCache[tz] || new Intl.DateTimeFormat('en-US', { timeZone: tz, weekday: 'short', hour: 'numeric', minute: '2-digit' })).format(t);
+  const clamp01 = x => Math.max(0, Math.min(1, x));
+  const frac = (leg, t) => clamp01((t - leg.dep) / (leg.arr - leg.dep));
+  const flying = (leg, t) => t >= leg.dep && t < leg.arr;
+
+  function statusWill(t) {
+    if (t < T1.dep) return 'In Krabi. EY 425 leaves at 8:55 PM.';
+    if (t < T1.arr) return 'Flying to Abu Dhabi with Yana on EY 425.';
+    if (t < Y1.dep) return 'In Abu Dhabi with Yana.';
+    if (t < W1.dep) return 'In Abu Dhabi. EY 1 to New York leaves at 3:35 AM.';
+    if (t < W1.arr) return 'Flying to New York on EY 1.';
+    return 'In New York.';
+  }
+  function statusYana(t) {
+    if (t < T1.dep) return 'In Krabi. EY 425 leaves at 8:55 PM.';
+    if (t < T1.arr) return 'Flying to Abu Dhabi with Will on EY 425.';
+    if (t < Y1.dep) return 'In Abu Dhabi with Will. EY 841 leaves at 2:55 AM.';
+    if (t < Y1.arr) return 'Flying to Moscow on EY 841.';
+    return 'In Moscow.';
+  }
+  // One shared marker until Yana leaves Abu Dhabi, then one each.
+  function markersAt(t) {
+    if (t < Y1.dep) return [{ key: 'together', ...(flying(T1, t) ? { leg: T1, f: frac(T1, t) } : { port: t < T1.dep ? 'KBV' : 'AUH' }) }];
+    return [
+      { key: 'yana', ...(flying(Y1, t) ? { leg: Y1, f: frac(Y1, t) } : { port: 'SVO' }) },
+      { key: 'will', ...(flying(W1, t) ? { leg: W1, f: frac(W1, t) } : { port: t < W1.dep ? 'AUH' : 'JFK' }) },
+    ];
+  }
+  const noteAt = t => (t >= T1.arr && t < Y1.dep ? 'Together until 2:55 AM' : '');
+
+  // ---------- DOM ----------
+  const $ = id => document.getElementById(id);
+  const playBtn = $('play'), scrub = $('scrub'), statusWillEl = $('status-will'), statusYanaEl = $('status-yana');
+  const clockEls = CLOCKS.map(([city]) => {
+    const el = document.createElement('div');
+    el.className = 'clock';
+    el.innerHTML = `<span class="clock__city">${city}</span><span class="clock__time"></span>`;
+    $('clocks').appendChild(el);
+    return el.querySelector('.clock__time');
+  });
+  let momentEls = [];
+  function buildMoments() {
+    $('moments').innerHTML = '';
+    $('track-marks').innerHTML = '';
+    momentEls = MOMENTS.map(m => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = `moment who-${m.who}`;
+      b.innerHTML = `<i></i>${m.label} <small>${fmt(m.tz, m.t)}</small>`;
+      b.addEventListener('click', () => { log('moment', m.label); pause(); setTime(m.t + MIN); });
+      $('moments').appendChild(b);
+      const s = document.createElement('span');
+      s.className = `who-${m.who}`;
+      s.style.left = `${(100 * (m.t - START)) / (END - START)}%`;
+      $('track-marks').appendChild(s);
+      return b;
+    });
+    scrub.max = String(Math.round((END - START) / MIN));
+  }
+
+  // ---------- Map ----------
+  const map = { ready: false };
+  const stage = $('map-stage');
+  const interp = leg => d3.geoInterpolate(AIRPORTS[leg.from].coord, AIRPORTS[leg.to].coord);
+  const lineOf = leg => ({ type: 'LineString', coordinates: [AIRPORTS[leg.from].coord, AIRPORTS[leg.to].coord] });
+  const FIT = { type: 'GeometryCollection', geometries: [{ type: 'MultiPoint', coordinates: [[-82, 2], [106, 2], [-82, 64], [106, 64]] }, ...BASE.map(lineOf)] };
+  function partial(leg, f) {
+    if (f <= 0) return null;
+    const ip = interp(leg), n = Math.max(2, Math.ceil(72 * f));
+    return map.path({ type: 'LineString', coordinates: d3.range(n + 1).map(i => ip((f * i) / n)) });
+  }
+  function render(countries) {
+    const t0 = performance.now();
+    const svg = d3.select('#map');
+    const w = Math.max(280, Math.round(stage.clientWidth));
+    const narrow = w < 560;
+    const h = Math.round(w * (narrow ? 0.56 : 0.44));
+    const projection = d3.geoNaturalEarth1().rotate([-12, 0]).fitExtent([[14, 14], [w - 14, h - 14]], FIT);
+    Object.assign(map, { projection, path: d3.geoPath(projection), w, h, narrow });
+    svg.selectAll('*:not(title):not(desc)').remove();
+    svg.attr('viewBox', `0 0 ${w} ${h}`).attr('width', w).attr('height', h);
+    svg.append('defs').html('<linearGradient id="ocean" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10203a"/><stop offset="1" stop-color="#0a1424"/></linearGradient>');
+    svg.append('path').attr('class', 'sphere').attr('d', map.path({ type: 'Sphere' }));
+    svg.append('path').attr('class', 'grat').attr('d', map.path(d3.geoGraticule10()));
+    if (countries) {
+      svg.append('g').selectAll('path').data(countries).join('path')
+        .attr('class', d => (HIGHLIGHT.has(String(d.id)) ? 'country country--hi' : 'country')).attr('d', map.path);
+    }
+    svg.append('g').selectAll('path').data(BASE).join('path').attr('class', d => `route-base route--${d.who}`).attr('d', d => map.path(lineOf(d)));
+    map.glow = svg.append('g').selectAll('path').data(BASE).join('path').attr('class', d => `route-glow route--${d.who}`);
+    map.line = svg.append('g').selectAll('path').data(BASE).join('path').attr('class', d => `route-line route--${d.who}`);
+    const ports = svg.append('g').selectAll('g').data(Object.entries(AIRPORTS)).join('g').attr('transform', ([, a]) => `translate(${projection(a.coord)})`);
+    ports.append('circle').attr('class', 'port-dot').attr('r', 3.6);
+    const label = ports.append('text').attr('class', 'port-label').attr('text-anchor', ([, a]) => a.label.anchor).attr('x', ([, a]) => a.label.dx).attr('y', ([, a]) => a.label.dy);
+    if (!narrow) label.append('tspan').attr('class', 'port-name').text(([, a]) => `${a.name} `);
+    label.append('tspan').attr('class', 'port-code').text(([code]) => code);
+    const auh = projection(AIRPORTS.AUH.coord);
+    map.note = svg.append('text').attr('class', 'note').attr('text-anchor', 'end').attr('x', auh[0] - 16).attr('y', auh[1] + 4);
+    const marks = svg.append('g');
+    map.marks = {};
+    for (const [key, name] of [['together', 'Will + Yana'], ['yana', 'Yana'], ['will', 'Will']]) {
+      const g = marks.append('g').attr('class', `mark mark--${key}`).style('display', 'none');
+      g.append('circle').attr('class', 'mark-ring').attr('r', 11);
+      g.append('circle').attr('class', 'mark-dot').attr('r', 5.5);
+      g.append('g').attr('class', 'plane-rot').append('path').attr('class', 'mark-plane').attr('d', PLANE).attr('transform', 'translate(-11.5,-12)');
+      if (!narrow) g.append('text').attr('class', 'mark-label').attr('x', 14).attr('y', -11).text(name);
+      map.marks[key] = g;
+    }
+    map.ready = true;
+    log('render', { w, h, narrow, countries: countries ? countries.length : 0, ms: Math.round(performance.now() - t0) });
+  }
+  function updateMap(t) {
+    if (!map.ready) return;
+    map.glow.attr('d', d => partial(d, frac(LEGS[BASE.indexOf(d)], t)));
+    map.line.attr('d', d => partial(d, frac(LEGS[BASE.indexOf(d)], t)));
+    const list = markersAt(t);
+    const shown = new Set(list.map(m => m.key));
+    for (const key of Object.keys(map.marks)) map.marks[key].style('display', shown.has(key) ? null : 'none');
+    for (const m of list) {
+      let xy, angle = 0;
+      if (m.leg) {
+        const ip = interp(m.leg);
+        xy = map.projection(ip(m.f));
+        const a = map.projection(ip(Math.max(0, m.f - 0.01))), b = map.projection(ip(Math.min(1, m.f + 0.01)));
+        angle = (Math.atan2(b[1] - a[1], b[0] - a[0]) * 180) / Math.PI + 90; // the icon points up
+      } else {
+        xy = map.projection(AIRPORTS[m.port].coord);
+      }
+      const g = map.marks[m.key];
+      g.attr('transform', `translate(${xy[0]},${xy[1]})`).classed('is-flying', !!m.leg);
+      g.select('.plane-rot').attr('transform', `rotate(${angle})`);
+      const nearRight = xy[0] > map.w - 110;
+      g.select('.mark-label').attr('text-anchor', nearRight ? 'end' : 'start').attr('x', nearRight ? -14 : 14);
+    }
+    const note = noteAt(t);
+    map.note.text(note).style('display', note ? null : 'none');
+  }
+
+  // ---------- Time + playback ----------
+  let now = 0, playing = false, lastFrame = 0, lastPhase = '', autoplayTimer = 0;
+  function setTime(t) {
+    now = Math.max(START, Math.min(END, t));
+    const minutes = Math.round((now - START) / MIN);
+    scrub.value = String(minutes);
+    scrub.style.setProperty('--p', `${(100 * minutes) / Number(scrub.max)}%`);
+    clockEls.forEach((el, i) => { el.textContent = fmt(CLOCKS[i][1], now); });
+    const sw = statusWill(now), sy = statusYana(now);
+    statusWillEl.textContent = sw;
+    statusYanaEl.textContent = sy;
+    scrub.setAttribute('aria-valuetext', `${fmt(TZ.AUH, now)} Abu Dhabi time. Will: ${sw} Yana: ${sy}`);
+    let active = -1;
+    MOMENTS.forEach((m, i) => { if (now >= m.t) active = i; });
+    momentEls.forEach((el, i) => el.classList.toggle('is-active', i === active));
+    if (sw + sy !== lastPhase) { lastPhase = sw + sy; log('phase', { abuDhabi: fmt(TZ.AUH, now), will: sw, yana: sy }); }
+    updateMap(now);
+  }
+  function setIcon() {
+    const ended = now >= END;
+    playBtn.innerHTML = playing ? ICONS.pause : ended ? ICONS.replay : ICONS.play;
+    playBtn.setAttribute('aria-label', playing ? 'Pause' : ended ? 'Play again' : 'Play the trip home');
+  }
+  function frame(ts) {
+    if (!playing) return;
+    const dt = Math.min(100, ts - lastFrame);
+    lastFrame = ts;
+    setTime(now + (dt * (END - START)) / PLAY_MS);
+    if (now >= END) { playing = false; setIcon(); log('playback: done'); return; }
+    requestAnimationFrame(frame);
+  }
+  function play() {
+    clearTimeout(autoplayTimer);
+    if (playing) return;
+    if (now >= END) setTime(START);
+    playing = true;
+    lastFrame = performance.now();
+    setIcon();
+    log('playback: play', fmt(TZ.AUH, now));
+    requestAnimationFrame(frame);
+  }
+  function pause() {
+    clearTimeout(autoplayTimer); // a tap before autoplay starts must win over autoplay
+    if (!playing) return;
+    playing = false;
+    setIcon();
+    log('playback: pause', fmt(TZ.AUH, now));
+  }
+  playBtn.addEventListener('click', () => (playing ? pause() : play()));
+  scrub.addEventListener('input', () => { pause(); setTime(START + Number(scrub.value) * MIN); });
+  document.querySelectorAll('.daypick button').forEach(b => b.addEventListener('click', () => {
+    const offset = now - START; // keep the same moment of the trip on the new day
+    pause();
+    setDay(Number(b.dataset.day));
+    buildMoments();
+    setTime(START + offset);
+  }));
+
+  // ---------- Boot ----------
+  setDay(0);
+  buildMoments();
+  setIcon();
+  setTime(START);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function start(countries) {
+    render(countries);
+    let resizeTimer = 0, lastWidth = stage.clientWidth;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (Math.abs(stage.clientWidth - lastWidth) < 2) return;
+        lastWidth = stage.clientWidth;
+        render(countries);
+        updateMap(now);
+      }, 150);
+    });
+    if (reduceMotion) { setTime(END); setIcon(); log('boot: reduced motion, showing the final state'); return; }
+    setTime(START);
+    setIcon();
+    autoplayTimer = setTimeout(play, 700);
+    log('boot: ready', { ms: Math.round(performance.now() - bootStart) });
+  }
+  const tabs = document.querySelector('.tabs'), current = tabs && tabs.querySelector('[aria-current="page"]');
+  if (current) tabs.scrollLeft = current.offsetLeft - (tabs.clientWidth - current.clientWidth) / 2;
+  if (!window.d3) { fail('d3 did not load; the map is off, the rest of the page works'); $('map-fallback').hidden = false; return; }
+  const worldUrl = 'https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json';
+  const fetchStart = performance.now();
+  log('fetch: world map', worldUrl);
+  fetch(worldUrl)
+    .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .then(world => {
+      log('fetch: world map ok', { ms: Math.round(performance.now() - fetchStart) });
+      const countries = window.topojson ? topojson.feature(world, world.objects.countries).features : null;
+      if (!countries) fail('topojson did not load; drawing routes without countries');
+      start(countries);
+    })
+    .catch(e => { fail('fetch: world map failed; drawing routes without countries', e); start(null); });
+})();
+</script>
+</body>
+</html>

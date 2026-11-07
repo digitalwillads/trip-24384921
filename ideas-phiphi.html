@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex, nofollow">
+<title>Phi Phi Ideas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="ideas.css">
+</head>
+<body data-page="phiphi">
+
+<nav class="site-nav" aria-label="Trip pages">
+  <div class="wrap site-nav__inner">
+    <a class="brand" href="index.html"><span>Krabi Together</span></a>
+    <div class="tabs">
+      <a href="index.html">Flights</a>
+      <a href="island.html">To Phi Phi</a>
+      <a href="ideas-krabi.html">Krabi ideas</a>
+      <a href="ideas-phiphi.html" aria-current="page">Phi Phi ideas</a>
+      <a href="home.html">Going home</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker reveal" style="--i:0"><span>Page 4</span><b>Things to do on Koh Phi Phi</b></p>
+    <h1 class="reveal" style="--i:1"><span class="a">Phi Phi ideas.</span> <span class="b">Pick, then talk.</span></h1>
+    <p class="lead reveal" style="--i:2">Ideas for your island days. Tap an idea to see the details, then leave a comment. <b>Will</b> and <b>Yana</b> both see every comment, on any device.</p>
+  </div>
+</header>
+
+<div class="who">
+  <div class="wrap who__inner">
+    <span class="who__label">Who is on this device?</span>
+    <span class="who__pick" role="group" aria-label="Who is commenting">
+      <button type="button" data-name="Will" aria-pressed="false">Will</button>
+      <button type="button" data-name="Yana" aria-pressed="false">Yana</button>
+    </span>
+    <span class="who__status" id="who-status" aria-live="polite">Loading comments...</span>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <p>Facts checked against 2025-2026 sources, Nov 7, 2026: blueviewdivers.com, escapemoments.travel.blog, global-gallivanting.com, insidesamui.com, smartenplus.co.th, thailandbeaches.org, thailande-et-asie.com, thailandwanderlust.com, theskylive.com, tisland.travel, travelguidestip.com, travelwithpau.com, us.trip.com, youtube.com. Fees and times change.</p>
+    <p>Comments are saved on a small server, so you both see them on any device. Anyone with this page's link can read and write them, so keep private things out.</p>
+  </footer>
+</main>
+
+<dialog class="panel" id="panel" aria-labelledby="panel-title">
+  <div class="panel__inner">
+    <div class="panel__head">
+      <span class="card__icon" id="panel-icon"></span>
+      <div><span class="card__tag" id="panel-tag"></span><h2 class="panel__title" id="panel-title"></h2></div>
+      <button class="close" type="button" id="panel-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="panel__body">
+      <p class="panel__blurb" id="panel-blurb"></p>
+      <dl class="facts" id="panel-facts"></dl>
+      <div>
+        <h3 class="thread__title">Your talk</h3>
+        <ol class="thread" id="thread"></ol>
+        <p class="empty" id="thread-empty">No comments yet. Start the talk.</p>
+      </div>
+      <p class="sources" id="panel-sources"></p>
+    </div>
+    <form class="composer" id="composer">
+      <div class="composer__row">
+        <textarea id="comment-text" maxlength="1000" rows="1" placeholder="Write a comment" aria-label="Comment"></textarea>
+        <button class="send" id="send" type="submit" disabled>Send</button>
+      </div>
+      <p class="composer__hint" id="composer-hint"></p>
+    </form>
+  </div>
+</dialog>
+
+<script type="application/json" id="ideas-data">[{"slug": "maya-bay-pileh", "title": "Maya Bay and Pileh Lagoon by longtail", "tag": "Boat trip", "blurb": "A longtail trip around Phi Phi Leh to Maya Bay, Pileh Lagoon and Viking Cave. You can swim in Pileh Lagoon, but at Maya Bay you may only wade to your knees.", "how": "Tours leave Tonsai Pier, and at Maya Bay you land at the back and walk 5 to 10 minutes on a boardwalk.", "time": "Half day", "cost": "Shared longtail about ฿600 to ฿1,000, plus ฿400 park fee", "tip": "Take an early boat, because the first boats reach Maya Bay around 07:00, before the day-trip crowds.", "sources": ["https://www.tisland.travel/en/blog/maya-bay-otkryvaetsya-1-oktyabrya-2026", "https://www.global-gallivanting.com/koh-phi-phi-travel-guide-is-it-worth-visiting/", "https://thailande-et-asie.com/en/ko-phi-phi-en-une-journee-que-vaut-une-sortie-en-long-tail-prive"]}, {"slug": "viewpoint-sunset", "title": "Phi Phi Viewpoint at sunset", "tag": "Hike", "blurb": "A steep stair climb above Tonsai to look down on the two curved bays of Phi Phi Don. Viewpoint 2 has the view in most photos, and Viewpoint 3 is higher and less busy.", "how": "The trail starts about five minutes' walk from Tonsai Pier.", "time": "1 to 2 hours", "cost": "Gate fees about ฿20 to ฿50", "tip": "Bring a torch if you plan to walk down after sunset.", "sources": ["https://www.insidesamui.com/koh-phi-phi/", "https://travelguidestip.com/phi-phi-islands-travel-guide/", "https://www.global-gallivanting.com/koh-phi-phi-travel-guide-is-it-worth-visiting/"]}, {"slug": "bamboo-island", "title": "Bamboo Island snorkel trip", "tag": "Snorkel", "blurb": "A small island ringed by white sand, about 5 km off the north tip of Phi Phi Don. Its shallow reef is easy for beginners, and turtles show up at times.", "how": "Join a group snorkel trip, or hire a longtail at Tonsai Pier.", "time": "Half day", "cost": "Group trip about ฿1,450; ask if the ฿400 park fee is included", "tip": "The ฿400 park ticket also covers Maya Bay and Pileh Lagoon on the same day, so you can combine them.", "sources": ["https://www.insidesamui.com/koh-phi-phi/snorkeling-phi-phi/", "https://travelguidestip.com/phi-phi-islands-travel-guide/", "https://www.travelwithpau.com/koh-phi-phi/"]}, {"slug": "monkey-beach-kayak", "title": "Kayak to Monkey Beach", "tag": "Nature", "blurb": "Rent a kayak on Loh Dalum Beach and paddle to a small cove where wild macaques live. The water off the sand is clear and shallow, with a reef close by.", "how": "Paddle from Loh Dalum Beach, about 15 to 20 minutes each way.", "time": "1 to 2 hours", "cost": "Kayak about ฿100 to ฿300 an hour; rangers may collect the ฿400 park fee", "tip": "Do not bring food or loose bags, because the monkeys grab them and can bite.", "sources": ["https://www.insidesamui.com/koh-phi-phi/snorkeling-phi-phi/", "https://us.trip.com/moments/detail/phi-phi-islands-565-149355733/", "https://www.travelwithpau.com/koh-phi-phi/", "https://www.global-gallivanting.com/koh-phi-phi-travel-guide-is-it-worth-visiting/", "https://thailande-et-asie.com/en/ko-phi-phi-en-une-journee-que-vaut-une-sortie-en-long-tail-prive"]}, {"slug": "scuba-diving", "title": "Scuba diving", "tag": "Dive", "blurb": "Dive shops in Tonsai run half-day boat trips to reef sites such as Bida Nok, where blacktip reef sharks are often seen. Certified divers do fun dives, and beginners can do a guided try dive.", "how": "Book at a dive shop in Tonsai village, and the boats leave from Tonsai Pier.", "time": "Half day", "cost": "Try dive about ฿3,600, fun dives from about ฿2,500, plus ฿600 park fee", "tip": "Book in person after you arrive, because Phi Phi Don has about 11 dive centres to compare.", "sources": ["https://www.blueviewdivers.com/discover-scuba-diving-ko-phi-phi-indian-tourists/", "https://www.travelwithpau.com/koh-phi-phi/", "https://travelguidestip.com/phi-phi-islands-travel-guide/", "https://www.blueviewdivers.com/product/shark-snorkel-phi-phi/"]}, {"slug": "long-beach-snorkel", "title": "Snorkel with reef sharks at Long Beach", "tag": "Snorkel", "blurb": "A rock about 200 m off Long Beach draws reef fish and blacktip reef sharks. You can swim out from the sand, with no boat.", "how": "Walk the path from Tonsai in about 30 minutes, or take a water taxi for about ฿200.", "time": "1 to 2 hours", "cost": "Free from the beach", "tip": "Go at about 06:30 to 07:00, when the sharks are most active, and swim with a buddy.", "sources": ["https://www.insidesamui.com/koh-phi-phi/snorkeling-phi-phi/", "https://www.blueviewdivers.com/product/shark-snorkel-phi-phi/", "https://travelguidestip.com/phi-phi-islands-travel-guide/"]}, {"slug": "loh-dalum-fire-show", "title": "Fire shows at Loh Dalum Beach", "tag": "Nightlife", "blurb": "Beach bars on Loh Dalum Bay put on fire shows most nights, starting at about 20:30 to 21:00. Music goes on until about 02:00, so it is loud and busy.", "how": "Walk a few minutes northeast from Tonsai Pier to the bay.", "time": "Evening", "cost": "Free to watch if you buy a drink", "tip": "For a calmer night, sit at Sunflower Beach Bar at the far end of the bay.", "sources": ["https://www.insidesamui.com/koh-phi-phi/phi-phi-nightlife/", "https://www.youtube.com/watch?v=zfSiDVQjgLE"]}, {"slug": "sunset-plankton", "title": "Sunset and plankton boat trip", "tag": "Boat trip", "blurb": "An afternoon boat trip with snorkel stops and sunset at sea, then a swim after dark. Tiny plankton in the water glow blue-green when you move.", "how": "Boats leave Tonsai Pier at about 15:00 and come back after dark.", "time": "About 4 hours", "cost": "Private longtail about ฿4,200 to ฿4,800 for two", "tip": "Early December evenings are dark, with a new moon on 9 December 2026, which makes the glow easier to see.", "sources": ["https://www.smartenplus.co.th/blog/discover-the-magic-your-professional-guide-to-bioluminescent-plankton-in-phi-phi-islands", "https://escapemoments.travel.blog/2026/06/10/phi-phi-don-sunset-plankton-snorkeling-a-helpfu/", "https://www.blueviewdivers.com/product/sunset-plankton-phi-phi/", "https://theskylive.com/moon-calendar?year=2026&month=12"]}, {"slug": "nui-beach", "title": "Nui Beach", "tag": "Beach", "blurb": "A small cove on the northwest coast of Phi Phi Don, with green water and a reef. You can reach it only by boat, kayak or a steep trail, so it stays quiet.", "how": "Take a 10-minute longtail from Loh Dalum, or kayak there in about 45 minutes.", "time": "Half day", "cost": "Private longtail ฿1,000 to ฿3,000; kayak ฿300 to ฿400 a day", "tip": "Bring water and snacks, because there are no shops or toilets.", "sources": ["https://www.thailandwanderlust.com/blog/nui-beach-koh-phi-phi", "https://travelguidestip.com/phi-phi-islands-travel-guide/", "https://thailandbeaches.org/nui-beach-phi-phi-don/"]}]</script>
+<script src="ideas.js"></script>
+</body>
+</html>

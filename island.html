@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex, nofollow">
+<title>Getting to Phi Phi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  /* Same tokens as the flights page. */
+  :root {
+    --bg: #0a111e;
+    --bg-glow: rgba(98, 227, 181, 0.07);
+    --surface: #111b2c;
+    --surface-2: #15223a;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #eaf0f8;
+    --text-dim: #97a6bd;
+    --gold: #f5bd4f;
+    --coral: #ff8466;
+    --sea: #62e3b5;
+    --on-accent: #0a111e;
+    --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    --map-text: #eaf0f8;
+    --map-dim: #8ea0bb;
+    --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f1ea;
+      --bg-glow: rgba(19, 138, 100, 0.08);
+      --surface: #fffdf8;
+      --surface-2: #f8f4ec;
+      --border: rgba(20, 32, 51, 0.10);
+      --text: #142033;
+      --text-dim: #5a6a80;
+      --gold: #a86b12;
+      --coral: #c8492d;
+      --sea: #138a64;
+      --on-accent: #ffffff;
+      --shadow: 0 18px 50px rgba(20, 32, 51, 0.12);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; font-family: var(--font); color: var(--text); line-height: 1.5; padding-bottom: 96px;
+    background:
+      radial-gradient(1100px 520px at 78% -8%, var(--bg-glow), transparent 70%),
+      radial-gradient(800px 420px at -10% 30%, rgba(245, 189, 79, 0.05), transparent 70%),
+      var(--bg);
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 28px; } }
+  h1, h2, h3 { margin: 0; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 800; line-height: 1.15; }
+  section { margin-top: 64px; min-width: 0; }
+  .section-label { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 8px; font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
+  .section-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--sea); }
+
+  /* Site nav (same on every page) */
+  .site-nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .site-nav__inner { display: flex; align-items: center; gap: 12px; height: 56px; }
+  .brand { flex: none; font-weight: 800; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
+  .brand::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--sea); margin-right: 8px; vertical-align: 1px; }
+  .tabs { margin-left: auto; min-width: 0; display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs a { flex: none; padding: 6px 12px; border-radius: 999px; font-size: 13.5px; font-weight: 600; text-decoration: none; color: var(--text-dim); white-space: nowrap; }
+  .tabs a:hover { color: var(--text); }
+  .tabs a[aria-current="page"] { background: var(--sea); color: var(--on-accent); }
+  @media (max-width: 760px) { .brand span { display: none; } }
+  /* Hero */
+  .hero { padding: 40px 0 8px; }
+  .kicker { margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--text-dim); }
+  .kicker b { color: var(--text); font-weight: 600; }
+  h1 { font-size: clamp(38px, 6.4vw, 72px); font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; max-width: 15ch; }
+  h1 .a { color: var(--gold); }
+  h1 .b { color: var(--sea); }
+  .lead { margin: 18px 0 0; max-width: 62ch; font-size: clamp(16px, 1.6vw, 19px); color: var(--text-dim); }
+  .lead b { color: var(--text); font-weight: 600; }
+  .kpis { margin-top: 32px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 760px) { .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .kpi { min-width: 0; padding: 18px 20px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); }
+  .kpi__value { display: block; font-size: clamp(24px, 2.6vw, 32px); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+  .kpi__label { display: block; margin-top: 2px; color: var(--text-dim); font-size: 14px; }
+  .kpi--hero { background: linear-gradient(135deg, rgba(98, 227, 181, 0.16), rgba(98, 227, 181, 0.04) 60%), var(--surface); border-color: rgba(98, 227, 181, 0.30); box-shadow: var(--shadow); }
+  .kpi--hero .kpi__value { color: var(--sea); }
+
+  /* Route card: satellite map + steps */
+  .route-card { margin-top: 28px; padding: 18px; border-radius: 22px; background: #0c1626; border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: var(--shadow); color: var(--map-text); }
+  @media (min-width: 720px) { .route-card { padding: 24px; } }
+  .route-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px 24px; margin-bottom: 14px; }
+  .route-head .section-label { color: var(--map-dim); }
+  .route-head .section-label::before { background: #62e3b5; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 14px; color: var(--map-dim); }
+  .legend span { display: inline-flex; align-items: center; gap: 8px; }
+  .legend i { width: 22px; height: 0; border-top: 3px solid var(--c); }
+  .legend i.dashed { border-top-style: dashed; }
+  .route-body { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 980px) { .route-body { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); } }
+  .map-wrap { position: relative; min-width: 0; }
+  #map { position: relative; z-index: 0; isolation: isolate; height: 440px; border-radius: 14px; overflow: hidden; background: #0a1424; }
+  @media (min-width: 980px) { #map { height: 600px; } }
+  .map-fallback { position: absolute; inset: 0; display: grid; place-items: center; margin: 0; padding: 24px; text-align: center; color: var(--map-dim); }
+  .map-fallback[hidden] { display: none; }
+  .leaflet-container { font-family: var(--font); background: #0a1424; }
+  .leaflet-tile-pane { filter: brightness(0.82) saturate(1.08); }
+  .leaflet-control-attribution { font-size: 10px; background: rgba(10, 17, 30, 0.7) !important; color: #8ea0bb; }
+  .leaflet-control-attribution a { color: #b8c6da; }
+  .leaflet-bar a { background: rgba(10, 17, 30, 0.85); color: #eaf0f8; border-color: rgba(255, 255, 255, 0.12); }
+  .leaflet-bar a:hover { background: rgba(30, 45, 70, 0.95); color: #fff; }
+  .route-base { fill: none; stroke-width: 2; stroke-dasharray: 2 7; stroke-linecap: round; opacity: 0.8; }
+  .route-glow { fill: none; stroke-width: 10; stroke-linecap: round; opacity: 0.22; }
+  .route-line { fill: none; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+  .route--road { stroke: #ffffff; }
+  .route--boat { stroke: #62e3b5; }
+  .route--longtail { stroke: #f5bd4f; }
+  .route-line.route--road { stroke-dasharray: 7 6; }
+  .place { fill: #ffffff; stroke: #0a111e; stroke-width: 2.5; }
+  .place--pier { fill: #62e3b5; }
+  .place--beach { fill: #f5bd4f; }
+  .leaflet-tooltip.map-label {
+    padding: 4px 9px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.16);
+    background: rgba(10, 17, 30, 0.86); color: #eaf0f8; box-shadow: none;
+    font: 600 12.5px/1.25 var(--font); white-space: nowrap;
+  }
+  .leaflet-tooltip.map-label::before { display: none; }
+  .leaflet-tooltip.map-label small { display: block; font-weight: 500; color: #9fb0c8; font-size: 11px; }
+  .mover { width: 18px !important; height: 18px !important; margin: -9px 0 0 -9px !important; border-radius: 50%; background: var(--c, #fff); border: 3px solid #0a111e; box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.25); }
+  .mover--road { --c: #ffffff; }
+  .mover--boat { --c: #62e3b5; }
+  .mover--longtail { --c: #f5bd4f; }
+
+  .player { margin-top: 12px; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 14px; }
+  .play { width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer; display: grid; place-items: center; background: #62e3b5; color: #0a111e; transition: transform 0.15s ease; }
+  .play:hover { transform: scale(1.06); }
+  .play svg { width: 20px; height: 20px; }
+  .now { margin: 0; font-size: 15px; color: var(--map-text); min-width: 0; }
+  .now small { display: block; font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--map-dim); }
+
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+  .step {
+    --c: #ffffff; width: 100%; text-align: left; cursor: pointer; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 4px 12px;
+    padding: 12px 14px; border-radius: 14px; font: inherit; color: var(--map-text);
+    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+  .step:hover { background: rgba(255, 255, 255, 0.08); }
+  .step.is-active { background: rgba(255, 255, 255, 0.09); border-color: var(--c); }
+  .step--boat { --c: #62e3b5; }
+  .step--island { --c: #f5bd4f; }
+  .step--home { --c: #ff8466; }
+  .step__num { grid-row: span 3; width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; font-family: var(--mono); font-weight: 600; font-size: 14px; color: #0a111e; background: var(--c); }
+  .step__when { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--map-dim); }
+  .step__title { font-weight: 700; font-size: 15.5px; }
+  .step__text { font-size: 14px; color: #c3cfdf; overflow-wrap: break-word; }
+
+  /* Boats table */
+  .table-wrap { margin-top: 20px; overflow-x: auto; border-radius: 16px; border: 1px solid var(--border); background: var(--surface); }
+  table { width: 100%; border-collapse: collapse; min-width: 620px; }
+  th, td { padding: 14px 16px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); font-size: 14.5px; }
+  th { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); font-weight: 600; background: var(--surface-2); }
+  tr:last-child td { border-bottom: 0; }
+  td b { font-weight: 700; }
+  td small { display: block; color: var(--text-dim); font-size: 12.5px; }
+  .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tr.pick td { background: color-mix(in srgb, var(--sea) 9%, transparent); }
+  .tag { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; margin-left: 8px; border-radius: 999px; color: var(--on-accent); background: var(--sea); vertical-align: 2px; white-space: nowrap; }
+  .note { margin: 12px 0 0; font-size: 14px; color: var(--text-dim); max-width: 80ch; }
+
+  /* Tiles */
+  .tile-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 720px) { .tile-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .tile-grid--4 { }
+  @media (min-width: 980px) { .tile-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .tile { min-width: 0; padding: 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); }
+  .tile h3 { font-size: 18px; font-weight: 800; }
+  .tile p { margin: 8px 0 0; font-size: 14.5px; color: var(--text-dim); }
+  .tile .meta { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-family: var(--mono); font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); }
+  .tile--sea { border-color: color-mix(in srgb, var(--sea) 45%, transparent); }
+  .tile--gold { border-color: color-mix(in srgb, var(--gold) 45%, transparent); }
+  .tile--small h3 { font-size: 16px; }
+
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13.5px; }
+  footer p { margin: 0 0 6px; }
+
+  /* Bottom bar */
+  .actions { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); border-top: 1px solid var(--border); }
+  .actions__inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .action { min-width: 0; display: flex; justify-content: center; align-items: center; gap: 8px; padding: 12px 16px; border-radius: 14px; text-decoration: none; font-weight: 700; font-size: 15px; transition: transform 0.15s ease; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .action:hover { transform: translateY(-1px); }
+  .action--primary { background: var(--sea); color: var(--on-accent); }
+  .action--ghost { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+  @media (max-width: 480px) { .action { padding: 12px; font-size: 14px; } }
+
+  .reveal { animation: fadeUp 0.7s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 90ms); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { animation: none; }
+    .play, .step, .action { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Trip pages">
+  <div class="wrap site-nav__inner">
+    <a class="brand" href="index.html"><span>Krabi Together</span></a>
+    <div class="tabs">
+      <a href="index.html">Flights</a>
+      <a href="island.html" aria-current="page">To Phi Phi</a>
+      <a href="ideas-krabi.html">Krabi ideas</a>
+      <a href="ideas-phiphi.html">Phi Phi ideas</a>
+      <a href="home.html">Going home</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker reveal" style="--i:0"><span>Page 2</span><b>Krabi airport to Ao Nang to Koh Phi Phi</b></p>
+    <h1 class="reveal" style="--i:1"><span class="a">Ao Nang first.</span> <span class="b">Then Koh Phi Phi.</span></h1>
+    <p class="lead reveal" style="--i:2">
+      You land in Krabi and stay in <b>Ao Nang</b>, Krabi's main beach town, about 30 minutes from the airport. For your island days, a <b>boat from Ao Nang</b> takes you to Koh Phi Phi in 1 to 2 hours. Phi Phi has no airport, so the boat is how you get there.
+    </p>
+    <div class="kpis">
+      <div class="kpi kpi--hero reveal" style="--i:3"><span class="kpi__value">About 2 h</span><span class="kpi__label">Ferry from Ao Nang to Phi Phi (50 min by speedboat)</span></div>
+      <div class="kpi reveal" style="--i:4"><span class="kpi__value">About 30 min</span><span class="kpi__label">Taxi from Krabi airport to Ao Nang</span></div>
+      <div class="kpi reveal" style="--i:5"><span class="kpi__value">฿650 each</span><span class="kpi__label">Ferry with hotel pickup, about $19</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="route-card reveal" style="--i:6" aria-labelledby="route-title">
+    <div class="route-head">
+      <div>
+        <p class="section-label">Watch the route</p>
+        <h2 id="route-title">Airport, hotel, boat, island</h2>
+      </div>
+      <div class="legend" aria-hidden="true">
+        <span><i class="dashed" style="--c:#ffffff"></i>Road</span>
+        <span><i style="--c:#62e3b5"></i>Boat</span>
+        <span><i style="--c:#f5bd4f"></i>Longtail</span>
+      </div>
+    </div>
+    <div class="route-body">
+      <div class="map-wrap">
+        <div id="map" role="region" aria-label="Satellite map of the route from Krabi airport to Ao Nang and Koh Phi Phi"></div>
+        <p class="map-fallback" id="map-fallback" hidden>The map could not load. The steps have every detail.</p>
+        <div class="player">
+          <button class="play" id="play" type="button" aria-label="Play the route"></button>
+          <p class="now" id="now" aria-live="polite"><small>Route</small>Press play, or tap a step.</p>
+        </div>
+      </div>
+      <ol class="steps" id="steps">
+        <li><button class="step" type="button" data-step="0">
+          <span class="step__num">1</span>
+          <span class="step__when">Mon Nov 30, after you land</span>
+          <span class="step__title">Krabi airport to Ao Nang</span>
+          <span class="step__text">Taxi, about 30 minutes (28 km). A metered taxi costs ฿350–450 (about $10–13). A shared minivan is ฿180 each, but it stops at other hotels.</span>
+        </button></li>
+        <li><button class="step" type="button" data-step="1">
+          <span class="step__num">2</span>
+          <span class="step__when">Your mainland days</span>
+          <span class="step__title">Stay in Ao Nang</span>
+          <span class="step__text">The boat pier, Nopparat Thara, is at the west end of Ao Nang, 5 minutes by car from the beach.</span>
+        </button></li>
+        <li><button class="step step--boat" type="button" data-step="2">
+          <span class="step__num">3</span>
+          <span class="step__when">Island day, 9:30 AM</span>
+          <span class="step__title">Boat to Koh Phi Phi</span>
+          <span class="step__text">The ferry company picks you up at your hotel. The ferry leaves Nopparat Thara pier at 9:30 AM and reaches Phi Phi at about 11:30 AM.</span>
+        </button></li>
+        <li><button class="step step--island" type="button" data-step="3">
+          <span class="step__num">4</span>
+          <span class="step__when">About 11:30 AM</span>
+          <span class="step__title">Arrive at Tonsai Pier</span>
+          <span class="step__text">Pay the ฿20 island fee in cash. Tonsai hotels are a short walk. For Long Beach, take a longtail boat: 5 to 10 minutes, ฿100–150 each.</span>
+        </button></li>
+        <li><button class="step step--home" type="button" data-step="4">
+          <span class="step__num">5</span>
+          <span class="step__when">Your last island day</span>
+          <span class="step__title">Back to Krabi airport</span>
+          <span class="step__text">Boats leave Phi Phi from morning to mid-afternoon. To fly from Krabi, take a morning boat to Krabi Town (Klong Jilad pier), then a 30-minute taxi.</span>
+        </button></li>
+      </ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="boats-title">
+    <p class="section-label">Which boat</p>
+    <h2 id="boats-title">Three boats from Ao Nang to Phi Phi</h2>
+    <div class="table-wrap reveal" style="--i:1">
+      <table>
+        <thead><tr><th>Boat</th><th>Leaves Ao Nang</th><th>On board</th><th>Fare each</th></tr></thead>
+        <tbody>
+          <tr class="pick">
+            <td><b>Ao Nang Princess ferry</b><span class="tag">Our pick</span><small>Hotel pickup included. A big boat, so it rocks less.</small></td>
+            <td class="num">9:30 AM</td>
+            <td class="num">About 2 h</td>
+            <td class="num">฿650 (about $19)<small>฿520 on 12Go, pickup not shown</small></td>
+          </tr>
+          <tr>
+            <td><b>Bundhaya speedboat</b><small>The fastest. A bumpier ride.</small></td>
+            <td class="num">10:10 AM, 2:40 PM</td>
+            <td class="num">About 50 min</td>
+            <td class="num">About ฿900 (about $26)</td>
+          </tr>
+          <tr>
+            <td><b>Koh Yao Sun Smile speedboat</b><small>More departures in high season.</small></td>
+            <td class="num">11:40 AM<small>Also 9:40 AM and 1:40 PM in high season</small></td>
+            <td class="num">About 1 h</td>
+            <td class="num">About ฿820–890 (about $24–26)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">All three leave from Nopparat Thara pier and land at Tonsai Pier. December is high season, so more boats run. Book a day or two ahead.</p>
+  </section>
+
+  <section aria-labelledby="stay-title">
+    <p class="section-label">Where you stay on Phi Phi</p>
+    <h2 id="stay-title">Tonsai or Long Beach</h2>
+    <div class="tile-grid">
+      <article class="tile tile--sea reveal" style="--i:1">
+        <h3>Tonsai village</h3>
+        <p>Next to the pier, so you walk to your hotel. It is the busy center of the island. Phi Phi Island Cabana is here, about 250 m from the pier.</p>
+        <div class="meta"><span class="chip">Walk from the pier</span><span class="chip">Busy</span></div>
+      </article>
+      <article class="tile tile--gold reveal" style="--i:2">
+        <h3>Long Beach</h3>
+        <p>Away from the village and quieter. A longtail boat from Tonsai Pier takes 5 to 10 minutes. Phi Phi Long Beach Resort &amp; Villa is here.</p>
+        <div class="meta"><span class="chip">Longtail ฿100–150 each</span><span class="chip">Quiet</span></div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="know-title">
+    <p class="section-label">Good to know</p>
+    <h2 id="know-title">Before the boat</h2>
+    <div class="tile-grid tile-grid--4">
+      <article class="tile tile--small reveal" style="--i:1"><h3>Bring cash</h3><p>The ฿20 island fee and the longtail fares are paid in cash.</p></article>
+      <article class="tile tile--small reveal" style="--i:2"><h3>Maya Bay</h3><p>Day tours from Phi Phi go to Maya Bay. The marine park fee is ฿400 each.</p></article>
+      <article class="tile tile--small reveal" style="--i:3"><h3>Book ahead</h3><p>December is high season. Book the boat a day or two before.</p></article>
+      <article class="tile tile--small reveal" style="--i:4"><h3>Money</h3><p>$1 is about ฿34.5. Prices here are in Thai baht (฿).</p></article>
+    </div>
+  </section>
+
+  <footer>
+    <p>Boat times and fares: visitthailandtoday.com, from 12Go listings for a mid-December date (Aug 2026). Airport transfers: travelguidestip.com (Oct 2026). Longtail fares: anantaayatra.com (Oct 2026). Road path: OpenStreetMap. Satellite images: Esri.</p>
+    <p>Checked Nov 7, 2026. Times and fares change, so confirm them when you book. The Ao Nang hotel and the Phi Phi days are not booked yet.</p>
+  </footer>
+</main>
+
+<nav class="actions" aria-label="Next steps">
+  <div class="actions__inner">
+    <a class="action action--ghost" href="index.html">Flights page</a>
+    <a class="action action--primary" href="https://12go.asia/en/travel/ao-nang/koh-phi-phi" target="_blank" rel="noopener">Find boats on 12Go</a>
+  </div>
+</nav>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const log = (...a) => console.log('[island]', ...a);
+  const fail = (...a) => console.error('[island]', ...a);
+  const bootStart = performance.now();
+  log('init: start', { leaflet: !!window.L });
+  const tabs = document.querySelector('.tabs'), current = tabs && tabs.querySelector('[aria-current="page"]');
+  if (current) tabs.scrollLeft = current.offsetLeft - (tabs.clientWidth - current.clientWidth) / 2;
+
+  // Places from OpenStreetMap; road paths from OSRM (OpenStreetMap); boat paths drawn over open water.
+  const P = {
+    airport: [8.0964, 98.9851],
+    hotel: [8.0311, 98.8219],
+    pier: [8.0476, 98.7985],
+    tonsai: [7.7374, 98.7705],
+    longBeach: [7.7288, 98.7862],
+    klongJilad: [8.0459, 98.9059],
+  };
+  const PATHS = {
+    road: [[8.0963,98.9832],[8.0951,98.9808],[8.0973,98.9793],[8.0966,98.9782],[8.1021,98.9713],[8.1041,98.9637],[8.1058,98.9487],[8.1086,98.9338],[8.1061,98.9196],[8.1067,98.9124],[8.1021,98.9077],[8.1035,98.8982],[8.1029,98.893],[8.1009,98.885],[8.0997,98.8852],[8.0933,98.8902],[8.0834,98.8955],[8.0827,98.8912],[8.0873,98.8799],[8.0852,98.8741],[8.0813,98.8727],[8.0807,98.872],[8.0804,98.8691],[8.0831,98.8677],[8.0823,98.8611],[8.078,98.8529],[8.0777,98.8512],[8.0788,98.8484],[8.0756,98.8429],[8.0731,98.8405],[8.0731,98.8379],[8.0707,98.8376],[8.0698,98.8411],[8.0658,98.8438],[8.0615,98.8417],[8.0603,98.8405],[8.0576,98.8402],[8.0561,98.839],[8.0415,98.8367],[8.0393,98.8349],[8.0387,98.8333],[8.0356,98.8331],[8.0313,98.822]],
+    pickup: [[8.0313,98.822],[8.0339,98.819],[8.0351,98.819],[8.0372,98.8186],[8.0382,98.818],[8.0384,98.8174],[8.0382,98.8168],[8.0383,98.8164],[8.0396,98.8152],[8.0411,98.8131],[8.0441,98.8078],[8.0461,98.8024],[8.0475,98.8014],[8.0468,98.8001],[8.0469,98.7994],[8.0469,98.7989],[8.0471,98.7987],[8.0473,98.7988]],
+    boat: [P.pier, [8.0430, 98.7890], [8.0000, 98.7880], [7.9200, 98.7930], [7.8300, 98.8060], [7.7600, 98.8120], [7.7230, 98.8020], [7.7215, 98.7860], [7.7250, 98.7765], [7.7330, 98.7720], P.tonsai],
+    longtail: [P.tonsai, [7.7330, 98.7735], [7.7262, 98.7790], [7.7255, 98.7850], P.longBeach],
+  };
+  const KIND = { road: 'road', pickup: 'road', boat: 'boat', longtail: 'longtail' };
+  const PHASES = [
+    { step: 0, route: 'road', ms: 2800, text: 'Mon Nov 30: taxi from Krabi airport to Ao Nang, about 30 minutes.' },
+    { step: 1, wait: 900, text: 'Your days in Ao Nang.' },
+    { step: 2, route: 'pickup', ms: 900, text: 'Island day: the hotel pickup drives you to Nopparat Thara pier.' },
+    { step: 2, route: 'boat', ms: 4600, text: 'Ferry to Koh Phi Phi, about 2 hours.' },
+    { step: 3, fly: 'phiphi', text: 'Land at Tonsai Pier and pay the ฿20 island fee.' },
+    { step: 3, route: 'longtail', ms: 2000, text: 'Longtail to Long Beach, 5 to 10 minutes.' },
+    { step: 3, done: true, text: 'You are on Koh Phi Phi.' },
+  ];
+  const ICONS = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg>',
+    stop: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 7h10v10H7z"/></svg>',
+    replay: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 5V2L7 6l5 4V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>',
+  };
+
+  const $ = id => document.getElementById(id);
+  const playBtn = $('play'), nowEl = $('now');
+  const stepEls = [...document.querySelectorAll('.step')];
+  const STEP_NAMES = ['Step 1', 'Step 2', 'Step 3', 'Step 4', 'Step 5'];
+  let klongMark = null; // its label shows only on step 5, where it matters (it covers Ao Nang at the wide view)
+  function setStep(i, text) {
+    stepEls.forEach((el, j) => el.classList.toggle('is-active', j === i));
+    if (klongMark) klongMark.getTooltip().setOpacity(i === 4 ? 1 : 0);
+    nowEl.innerHTML = `<small>${i >= 0 ? STEP_NAMES[i] : 'Route'}</small>`;
+    nowEl.appendChild(document.createTextNode(text));
+  }
+
+  if (!window.L) {
+    fail('leaflet did not load; the map is off, the steps still work');
+    $('map-fallback').hidden = false;
+    playBtn.hidden = true;
+    return;
+  }
+
+  const touch = window.matchMedia('(pointer: coarse)').matches;
+  const map = L.map('map', { scrollWheelZoom: false, dragging: !touch, tap: false, zoomSnap: 0.25, attributionControl: true });
+  let tileErrors = 0, firstTile = 0;
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 18,
+    attribution: 'Imagery &copy; Esri, Maxar, Earthstar Geographics',
+  })
+    .on('tileload', () => { if (!firstTile) { firstTile = Math.round(performance.now() - bootStart); log('tiles: first tile', { ms: firstTile }); } })
+    .on('tileerror', () => { tileErrors += 1; if (tileErrors === 1 || tileErrors % 10 === 0) console.warn('[island] tiles: errors so far', tileErrors); })
+    .addTo(map);
+
+  const allPoints = [...PATHS.road, ...PATHS.boat, ...PATHS.longtail];
+  const B = {
+    overview: L.latLngBounds(allPoints),
+    road: L.latLngBounds(PATHS.road),
+    aonang: L.latLngBounds([P.hotel, P.pier]).pad(0.6),
+    boat: L.latLngBounds(PATHS.boat),
+    phiphi: L.latLngBounds([P.tonsai, P.longBeach, [7.7200, 98.7660], [7.7440, 98.7900]]),
+    home: L.latLngBounds([P.tonsai, P.klongJilad, P.airport, [7.7200, 98.7800]]),
+  };
+  const STEP_BOUNDS = [B.road, B.aonang, B.boat, B.phiphi, B.home];
+  const pad = () => (window.innerWidth < 600 ? [18, 18] : [40, 40]);
+  map.fitBounds(B.overview, { padding: pad() });
+
+  // Places with labels; the Long Beach label shows only when zoomed in, so it never covers Tonsai.
+  const place = (ll, cls, html, dir, offset) => L.circleMarker(ll, { radius: 6, className: `place ${cls}`, interactive: false })
+    .bindTooltip(html, { permanent: true, direction: dir, offset, className: 'map-label' }).addTo(map);
+  place(P.airport, '', 'Krabi airport<small>KBV</small>', 'right', [10, 0]);
+  place(P.hotel, '', 'Ao Nang<small>your hotel</small>', 'right', [10, 0]);
+  place(P.pier, 'place--pier', 'Nopparat Thara pier<small>boats to Phi Phi</small>', 'left', [-10, 0]);
+  place(P.tonsai, 'place--pier', 'Tonsai Pier<small>Koh Phi Phi</small>', 'left', [-10, 0]);
+  const longBeachMark = place(P.longBeach, 'place--beach', 'Long Beach', 'right', [10, 0]);
+  klongMark = place(P.klongJilad, 'place--pier', 'Klong Jilad pier<small>boats to Krabi Town</small>', 'right', [10, 0]);
+  klongMark.getTooltip().setOpacity(0);
+  const syncLabels = () => {
+    const show = map.getZoom() >= 13;
+    longBeachMark.getTooltip().setOpacity(show ? 1 : 0);
+  };
+  map.on('zoomend', syncLabels);
+  syncLabels();
+
+  function makeRoute(name) {
+    const pts = PATHS[name], kind = KIND[name];
+    L.polyline(pts, { className: `route-base route--${kind}`, interactive: false }).addTo(map);
+    const glow = L.polyline([], { className: `route-glow route--${kind}`, interactive: false }).addTo(map);
+    const line = L.polyline([], { className: `route-line route--${kind}`, interactive: false }).addTo(map);
+    const cum = [0];
+    for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + map.distance(pts[i - 1], pts[i]));
+    return { name, pts, kind, glow, line, cum, total: cum[cum.length - 1] };
+  }
+  const R = Object.fromEntries(Object.keys(PATHS).map(n => [n, makeRoute(n)]));
+  log('routes', Object.fromEntries(Object.values(R).map(r => [r.name, `${(r.total / 1000).toFixed(1)} km`])));
+
+  // The drawn part of a route at fraction f (by distance), and its head point.
+  function drawRoute(r, f) {
+    let pts;
+    if (f <= 0) pts = [];
+    else if (f >= 1) pts = r.pts.slice();
+    else {
+      const d = f * r.total;
+      let i = 1;
+      while (r.cum[i] < d) i++;
+      const t = (d - r.cum[i - 1]) / (r.cum[i] - r.cum[i - 1]);
+      const a = r.pts[i - 1], b = r.pts[i];
+      pts = [...r.pts.slice(0, i), [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t]];
+    }
+    r.glow.setLatLngs(pts);
+    r.line.setLatLngs(pts);
+    return pts[pts.length - 1];
+  }
+  const drawAll = f => Object.values(R).forEach(r => drawRoute(r, f));
+
+  const moverIcon = kind => L.divIcon({ className: `mover mover--${kind}`, iconSize: [18, 18] });
+  const mover = L.marker(P.airport, { icon: moverIcon('road'), interactive: false, keyboard: false, zIndexOffset: 1000 });
+
+  // ---------- Playback ----------
+  let run = 0, playing = false, autoplayTimer = 0;
+  const ease = f => (f < 0.5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2);
+  const sleep = ms => new Promise(res => setTimeout(res, ms));
+  function flyTo(bounds) {
+    return new Promise(res => {
+      let done = false;
+      const finish = () => { if (!done) { done = true; res(); } };
+      map.once('moveend', finish);
+      setTimeout(finish, 1700); // moveend may not fire when the view does not change
+      map.flyToBounds(bounds, { padding: pad(), duration: 1.2 });
+    });
+  }
+  function animate(r, ms, id) {
+    mover.setIcon(moverIcon(r.kind));
+    return new Promise(res => {
+      const t0 = performance.now();
+      const frame = now => {
+        if (id !== run) return res();
+        const f = Math.min(1, (now - t0) / ms);
+        const head = drawRoute(r, ease(f));
+        if (head) mover.setLatLng(head);
+        if (f < 1) requestAnimationFrame(frame); else res();
+      };
+      requestAnimationFrame(frame);
+    });
+  }
+  function setIcon(state) {
+    playBtn.innerHTML = ICONS[state];
+    playBtn.setAttribute('aria-label', state === 'stop' ? 'Stop' : state === 'replay' ? 'Play again' : 'Play the route');
+  }
+  async function play() {
+    clearTimeout(autoplayTimer);
+    const id = ++run;
+    playing = true;
+    setIcon('stop');
+    log('playback: play');
+    drawAll(0);
+    mover.setLatLng(P.airport).addTo(map);
+    await flyTo(B.overview);
+    for (const ph of PHASES) {
+      if (id !== run) return;
+      setStep(ph.step, ph.text);
+      log('phase', ph.text);
+      if (ph.route) await animate(R[ph.route], ph.ms, id);
+      else if (ph.wait) await sleep(ph.wait);
+      else if (ph.fly) await flyTo(B[ph.fly]);
+    }
+    if (id !== run) return;
+    playing = false;
+    setIcon('replay');
+    log('playback: done', { ms: Math.round(performance.now() - bootStart) });
+  }
+  function stop() {
+    clearTimeout(autoplayTimer);
+    run++;
+    playing = false;
+    setIcon('play');
+    log('playback: stop');
+  }
+  playBtn.addEventListener('click', () => (playing ? stop() : play()));
+
+  stepEls.forEach((el, i) => el.addEventListener('click', () => {
+    stop();
+    drawAll(1);
+    map.removeLayer(mover);
+    setStep(i, el.querySelector('.step__title').textContent + '.');
+    log('step', i + 1);
+    map.flyToBounds(STEP_BOUNDS[i], { padding: pad(), duration: 1 });
+  }));
+
+  setIcon('play');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    drawAll(1);
+    setStep(-1, 'The whole route is drawn. Tap a step to zoom in.');
+    log('boot: reduced motion, showing the whole route');
+  } else {
+    autoplayTimer = setTimeout(play, 1000);
+  }
+  log('boot: ready', { ms: Math.round(performance.now() - bootStart) });
+})();
+</script>
+</body>
+</html>
