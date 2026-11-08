@@ -468,6 +468,7 @@
     day = i;
     const shift = i * DAY_MS;
     LEGS = BASE.map(l => ({ ...l, dep: l.dep + shift, arr: l.arr + shift }));
+    window.TRIP_LEGS = LEGS; // krabi-trip.check.cjs matches the booking links against these times
     [T1, Y1, W1] = LEGS;
     START = T1.dep - 60 * MIN;
     END = W1.arr + 30 * MIN;

@@ -219,7 +219,7 @@
 
   /* Day by day */
   .day-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 14px; }
-  @media (min-width: 900px) { .day-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 900px) { .day-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .day { min-width: 0; padding: 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); }
   .day--meet { border-color: color-mix(in srgb, var(--yana) 45%, transparent); }
   .day--together { border-color: color-mix(in srgb, var(--together) 50%, transparent); background: linear-gradient(160deg, color-mix(in srgb, var(--together) 12%, transparent), transparent 55%), var(--surface); }
@@ -344,16 +344,16 @@
 <header class="hero">
   <div class="wrap">
     <p class="kicker reveal" style="--i:0">
-      <span>Trip plan</span><b>Sat Nov 28 to Mon Nov 30, 2026</b><span class="pill" id="countdown">Will leaves Sat Nov 28</span>
+      <span>Trip plan</span><b>Sat Nov 28 to Tue Dec 1, 2026</b><span class="pill" id="countdown">Will leaves Sat Nov 28</span>
     </p>
     <h1 class="reveal" style="--i:1"><span class="meet">Meet in Abu Dhabi.</span> <span class="fly">Fly to Krabi together.</span></h1>
     <p class="lead reveal" style="--i:2">
-      <b>Will</b> flies from Salt Lake City. <b>Yana</b> flies from Moscow. You spend <b>Sunday night together in Abu Dhabi</b>, then take the same Etihad flight to Krabi on Monday morning.
+      <b>Will</b> flies from Salt Lake City. <b>Yana</b> flies from Moscow. You spend <b>Sunday night and Monday together in Abu Dhabi</b>, then take the same overnight Etihad flight to Krabi.
     </p>
     <div class="kpis">
-      <div class="kpi kpi--hero reveal" style="--i:3"><span class="kpi__value">Mon Nov 30, 6:10 PM</span><span class="kpi__label">You land in Krabi together</span></div>
-      <div class="kpi reveal" style="--i:4"><span class="kpi__value">1 night</span><span class="kpi__label">Together in Abu Dhabi, Sun Nov 29</span></div>
-      <div class="kpi reveal" style="--i:5"><span class="kpi__value">$2,129</span><span class="kpi__label">Both tickets, economy</span></div>
+      <div class="kpi kpi--hero reveal" style="--i:3"><span class="kpi__value">Tue Dec 1, 6:35 AM</span><span class="kpi__label">You land in Krabi together</span></div>
+      <div class="kpi reveal" style="--i:4"><span class="kpi__value">1 night, 1 day</span><span class="kpi__label">Together in Abu Dhabi, Sun and Mon</span></div>
+      <div class="kpi reveal" style="--i:5"><span class="kpi__value">$2,176</span><span class="kpi__label">Both tickets, economy</span></div>
     </div>
   </div>
 </header>
@@ -372,7 +372,7 @@
         <span><i style="--c: var(--together-map)"></i>Together</span>
       </div>
     </div>
-    <p class="map-caption">Press play to watch both trips in real time. Will reaches Abu Dhabi on <b>Sunday at 12:35 PM</b>, Yana at <b>7:25 PM</b>, and you leave together on <b>Monday at 8:35 AM</b>.</p>
+    <p class="map-caption">Press play to watch both trips in real time. Will reaches Abu Dhabi on <b>Sunday at 12:35 PM</b>, Yana at <b>7:25 PM</b>, and you leave together on <b>Monday at 8:55 PM</b>.</p>
     <div class="map-stage" id="map-stage">
       <svg id="map" role="img" aria-labelledby="map-svg-title map-svg-desc">
         <title id="map-svg-title">Route map</title>
@@ -397,7 +397,7 @@
 
   <section aria-labelledby="days-title">
     <p class="section-label">Day by day · local times</p>
-    <h2 id="days-title">Three days, one meeting point</h2>
+    <h2 id="days-title">Four days, one meeting point</h2>
     <div class="day-grid">
       <article class="day reveal" style="--i:1">
         <header><span class="day__dow">Sat</span><span class="day__date">Nov 28</span><span class="day__title">Will starts</span></header>
@@ -416,11 +416,18 @@
         </ol>
       </article>
       <article class="day day--together reveal" style="--i:3">
-        <header><span class="day__dow">Mon</span><span class="day__date">Nov 30</span><span class="day__title">Fly to Krabi together</span></header>
+        <header><span class="day__dow">Mon</span><span class="day__date">Nov 30</span><span class="day__title">A day in Abu Dhabi</span></header>
         <ol class="events">
-          <li class="ev ev--together"><time>6:35 AM<small>Abu Dhabi</small></time><p>Be at Abu Dhabi airport, Terminal A.</p></li>
-          <li class="ev ev--together"><time>8:35 AM<small>Abu Dhabi</small></time><p>Etihad <code>EY 424</code> to Krabi. Nonstop, 6 h 35 min.</p></li>
-          <li class="ev ev--together"><time>6:10 PM<small>Krabi</small></time><p>You land in Krabi.</p></li>
+          <li class="ev ev--together"><time>All day<small>Abu Dhabi</small></time><p>Your day together in Abu Dhabi. Ask the hotel for a late checkout.</p></li>
+          <li class="ev ev--together"><time>6:55 PM<small>Abu Dhabi</small></time><p>Be at Abu Dhabi airport, Terminal A.</p></li>
+          <li class="ev ev--together"><time>8:55 PM<small>Abu Dhabi</small></time><p>Etihad <code>EY 422</code> to Krabi. Nonstop overnight, 6 h 40 min.</p></li>
+        </ol>
+      </article>
+      <article class="day day--together reveal" style="--i:4">
+        <header><span class="day__dow">Tue</span><span class="day__date">Dec 1</span><span class="day__title">Land in Krabi together</span></header>
+        <ol class="events">
+          <li class="ev ev--together"><time>6:35 AM<small>Krabi</small></time><p>You land in Krabi.</p></li>
+          <li class="ev ev--together"><time>Next<small>Krabi</small></time><p>Taxi to Ao Nang, about 30 minutes. Ask the hotel for an early check-in.</p></li>
         </ol>
       </article>
     </div>
@@ -437,13 +444,13 @@
           <ul class="segs">
             <li><code>AA 1141</code><span>Sat Nov 28 · SLC 7:08 AM to Chicago 11:30 AM</span></li>
             <li><code>EY 10</code><span>Sat Nov 28 · Chicago 1:15 PM to AUH 12:35 PM Sun</span></li>
-            <li><code>EY 424</code><span>Mon Nov 30 · AUH 8:35 AM to KBV 6:10 PM</span></li>
+            <li><code>EY 422</code><span>Mon Nov 30 · AUH 8:55 PM to KBV 6:35 AM Tue</span></li>
           </ul>
         </div>
         <div class="pass__stub">
-          <span class="pass__price">$1,387</span>
+          <span class="pass__price">$1,410</span>
           <span class="pass__note">1 checked bag included</span>
-          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjRqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener">Book with Etihad</a>
+          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjJqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener">Book with Etihad</a>
         </div>
       </article>
       <article class="pass pass--yana reveal" style="--i:2">
@@ -452,13 +459,13 @@
           <div class="pass__route" aria-label="Moscow to Abu Dhabi to Krabi"><span class="code">SVO</span><span class="hop"></span><span class="code">AUH</span><span class="hop"></span><span class="code">KBV</span></div>
           <ul class="segs">
             <li><code>EY 842</code><span>Sun Nov 29 · SVO 12:35 PM to AUH 7:25 PM</span></li>
-            <li><code>EY 424</code><span>Mon Nov 30 · AUH 8:35 AM to KBV 6:10 PM</span></li>
+            <li><code>EY 422</code><span>Mon Nov 30 · AUH 8:55 PM to KBV 6:35 AM Tue</span></li>
           </ul>
         </div>
         <div class="pass__stub">
-          <span class="pass__price">$742</span>
+          <span class="pass__price">$766</span>
           <span class="pass__note">No checked bag on the Moscow flight</span>
-          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjRqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener">Book with Etihad</a>
+          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjJqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener">Book with Etihad</a>
         </div>
       </article>
     </div>
@@ -466,27 +473,22 @@
 
   <section aria-labelledby="why-title">
     <p class="section-label">Why this plan</p>
-    <h2 id="why-title">It costs the least of three options</h2>
+    <h2 id="why-title">It costs $241 less than the morning flight</h2>
     <div class="bars">
       <div class="bar bar--best reveal" style="--i:1">
-        <span class="bar__label">One night in Abu Dhabi, one ticket each<span class="tag">This plan</span></span>
-        <span class="bar__value">$2,129</span>
-        <span class="bar__track"><span class="bar__fill" style="--w: 88.1%"></span></span>
-        <span class="bar__sub">You land in Krabi on Mon Nov 30 at 6:10 PM.</span>
-      </div>
-      <div class="bar reveal" style="--i:2">
-        <span class="bar__label">No night: change planes in Abu Dhabi</span>
-        <span class="bar__value">$2,373</span>
-        <span class="bar__track"><span class="bar__fill" style="--w: 98.2%"></span></span>
+        <span class="bar__label">Monday night flight, one ticket each<span class="tag">This plan</span></span>
+        <span class="bar__value">$2,176</span>
+        <span class="bar__track"><span class="bar__fill" style="--w: 90%"></span></span>
         <span class="bar__sub">You land in Krabi on Tue Dec 1 at 6:35 AM, after a night flight.</span>
       </div>
-      <div class="bar reveal" style="--i:3">
-        <span class="bar__label">Same flights, separate tickets</span>
+      <div class="bar reveal" style="--i:2">
+        <span class="bar__label">Monday morning flight, separate tickets</span>
         <span class="bar__value">$2,417</span>
         <span class="bar__track"><span class="bar__fill" style="--w: 100%"></span></span>
-        <span class="bar__sub">No airline help if a flight is late.</span>
+        <span class="bar__sub">You land on Mon Nov 30 at 6:10 PM. No airline help if a flight is late.</span>
       </div>
     </div>
+    <p class="fineprint">Etihad's site would not sell the morning flight on Will's ticket. It showed "restricted connection" for that ticket, which had a 20-hour wait in Abu Dhabi. In this plan, both waits are more than 24 hours.</p>
   </section>
 
   <section aria-labelledby="tips-title">
@@ -494,24 +496,24 @@
     <h2 id="tips-title">Things to do</h2>
     <div class="tip-grid">
       <article class="tip reveal" style="--i:1"><span class="tip__num">1</span><h3>Book both tickets</h3><p>Use the two buttons. One ticket each means Etihad rebooks you if a flight is late.</p></article>
-      <article class="tip reveal" style="--i:2"><span class="tip__num">2</span><h3>Book a hotel near the airport</h3><p>One night, Sun Nov 29. The flight leaves at 8:35 AM. Not booked yet.</p></article>
-      <article class="tip reveal" style="--i:3"><span class="tip__num">3</span><h3>Sit together</h3><p>You have two bookings. Choose seats next to each other on EY 424 in both.</p></article>
+      <article class="tip reveal" style="--i:2"><span class="tip__num">2</span><h3>Book a hotel for Sunday night</h3><p>One night, Sun Nov 29. Ask for a late checkout on Monday. The flight leaves at 8:55 PM. Not booked yet.</p></article>
+      <article class="tip reveal" style="--i:3"><span class="tip__num">3</span><h3>Sit together</h3><p>You have two bookings. Choose seats next to each other on EY 422 in both.</p></article>
       <article class="tip reveal" style="--i:4"><span class="tip__num">4</span><h3>Bags</h3><p>Will has 1 checked bag. Yana must add a bag for the Moscow flight if she needs one.</p></article>
       <article class="tip reveal" style="--i:5"><span class="tip__num">5</span><h3>Payment</h3><p>If Yana's Russian card does not work on etihad.com, Will can pay with his card.</p></article>
       <article class="tip tip--info reveal" style="--i:6"><h3>Entry to the UAE</h3><p>Will gets a free visa when he lands. Yana needs no visa: Russian citizens can stay up to 90 days.</p></article>
     </div>
-    <p class="fineprint">Etihad's free stopover hotel does not apply to this plan. It needs a round-trip Etihad ticket and at least 24 hours in Abu Dhabi.</p>
+    <p class="fineprint">Etihad's free stopover hotel does not apply to this plan, because it needs a round-trip Etihad ticket.</p>
   </section>
 
   <footer>
-    Prices are from Google Flights booking pages, checked Nov 7, 2026. Fares can change. All times are local. Nothing is booked yet.
+    Prices are from Google Flights booking pages, checked Nov 8, 2026. Fares can change. All times are local. Nothing is booked yet.
   </footer>
 </main>
 
 <nav class="actions" aria-label="Book the tickets">
   <div class="actions__inner">
-    <a class="action" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjRqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener"><span>Book Will<span class="wide">'s ticket</span></span><b>$1,387</b></a>
-    <a class="action action--yana" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjRqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener"><span>Book Yana<span class="wide">'s ticket</span></span><b>$742</b></a>
+    <a class="action" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjJqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener"><span>Book Will<span class="wide">'s ticket</span></span><b>$1,410</b></a>
+    <a class="action action--yana" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjJqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener"><span>Book Yana<span class="wide">'s ticket</span></span><b>$766</b></a>
   </div>
 </nav>
 
@@ -540,12 +542,14 @@
     { who: 'will', from: 'SLC', to: 'ORD', flight: 'AA 1141', dep: at('2026-11-28T14:08:00Z'), arr: at('2026-11-28T17:30:00Z') },
     { who: 'will', from: 'ORD', to: 'AUH', flight: 'EY 10', dep: at('2026-11-28T19:15:00Z'), arr: at('2026-11-29T08:35:00Z') },
     { who: 'yana', from: 'SVO', to: 'AUH', flight: 'EY 842', dep: at('2026-11-29T09:35:00Z'), arr: at('2026-11-29T15:25:00Z') },
-    { who: 'together', from: 'AUH', to: 'KBV', flight: 'EY 424', dep: at('2026-11-30T04:35:00Z'), arr: at('2026-11-30T11:10:00Z') },
+    { who: 'together', from: 'AUH', to: 'KBV', flight: 'EY 422', dep: at('2026-11-30T16:55:00Z'), arr: at('2026-11-30T23:35:00Z') },
   ];
+  window.TRIP_LEGS = LEGS; // krabi-trip.check.cjs matches the booking links against these times
   const [W1, W2, Y1, T1] = LEGS;
   const START = at('2026-11-28T13:30:00Z');
-  const END = at('2026-11-30T11:40:00Z');
-  const PLAY_MS = 26000; // the whole trip plays in 26 seconds
+  const END = at('2026-12-01T00:05:00Z');
+  const MONDAY_MORNING = at('2026-11-30T04:00:00Z'); // 8:00 AM in Abu Dhabi: the night together becomes the day together
+  const PLAY_MS = 30000; // the whole trip plays in 30 seconds
   const MIN = 60000;
   const TZ = { SLC: 'America/Denver', MOW: 'Europe/Moscow', AUH: 'Asia/Dubai', KBV: 'Asia/Bangkok' };
   const CLOCKS = [['Salt Lake City', TZ.SLC], ['Moscow', TZ.MOW], ['Abu Dhabi', TZ.AUH], ['Krabi', TZ.KBV]];
@@ -578,14 +582,14 @@
     if (t < W2.arr) return 'Flying overnight to Abu Dhabi on EY 10.';
     if (t < Y1.arr) return 'In Abu Dhabi. Yana lands at 7:25 PM.';
     if (t < T1.dep) return 'Together with Yana in Abu Dhabi.';
-    if (t < T1.arr) return 'Flying to Krabi with Yana on EY 424.';
+    if (t < T1.arr) return 'Flying overnight to Krabi with Yana on EY 422.';
     return 'In Krabi.';
   }
   function statusYana(t) {
     if (t < Y1.dep) return 'In Moscow. Leaves Sunday at 12:35 PM.';
     if (t < Y1.arr) return 'Flying to Abu Dhabi on EY 842.';
     if (t < T1.dep) return 'Together with Will in Abu Dhabi.';
-    if (t < T1.arr) return 'Flying to Krabi with Will on EY 424.';
+    if (t < T1.arr) return 'Flying overnight to Krabi with Will on EY 422.';
     return 'In Krabi.';
   }
   // Who is where: separate markers until Yana lands, then one shared marker.
@@ -601,7 +605,8 @@
   }
   function noteAt(t) {
     if (t >= W2.arr && t < Y1.arr) return 'Will waits for Yana';
-    if (t >= Y1.arr && t < T1.dep) return 'Night together';
+    if (t >= Y1.arr && t < MONDAY_MORNING) return 'Night together';
+    if (t >= MONDAY_MORNING && t < T1.dep) return 'Day together';
     return '';
   }
 
