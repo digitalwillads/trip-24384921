@@ -241,6 +241,8 @@
   @media (min-width: 900px) { .ticket-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   .pass { --c: var(--will); position: relative; min-width: 0; display: grid; grid-template-columns: 1fr; border-radius: 20px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
   .pass--yana { --c: var(--yana); }
+  .pass--together { --c: var(--together); }
+  @media (min-width: 900px) { .pass--together { grid-column: 1 / -1; } }
   @media (min-width: 560px) { .pass { grid-template-columns: minmax(0, 1fr) 200px; } }
   .pass::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--c); }
   .pass__main { padding: 20px 20px 20px 26px; min-width: 0; }
@@ -301,7 +303,7 @@
     -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
     border-top: 1px solid var(--border);
   }
-  .actions__inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .actions__inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
   .action {
     --c: var(--will); min-width: 0; display: flex; justify-content: space-between; align-items: center; gap: 10px;
     padding: 12px 16px; border-radius: 14px; text-decoration: none; color: var(--on-accent); background: var(--c);
@@ -309,10 +311,12 @@
   }
   .action:hover { transform: translateY(-1px); }
   .action--yana { --c: var(--yana); }
+  .action--together { --c: var(--together); }
   .action span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .action b { font-family: var(--mono); font-size: 15px; }
-  @media (max-width: 480px) {
-    .action { padding: 12px; font-size: 14px; }
+  @media (max-width: 760px) {
+    .action { padding: 10px; gap: 6px; font-size: 13.5px; }
+    .action b { font-size: 13.5px; }
     .action .wide { display: none; }
   }
 
@@ -353,7 +357,7 @@
     <div class="kpis">
       <div class="kpi kpi--hero reveal" style="--i:3"><span class="kpi__value">Tue Dec 1, 6:35 AM</span><span class="kpi__label">You land in Krabi together</span></div>
       <div class="kpi reveal" style="--i:4"><span class="kpi__value">1 night, 1 day</span><span class="kpi__label">Together in Abu Dhabi, Sun and Mon</span></div>
-      <div class="kpi reveal" style="--i:5"><span class="kpi__value">$2,176</span><span class="kpi__label">Both tickets, economy</span></div>
+      <div class="kpi reveal" style="--i:5"><span class="kpi__value" id="kpi-total">$2,455</span><span class="kpi__label">Three tickets, economy</span></div>
     </div>
   </div>
 </header>
@@ -434,71 +438,83 @@
   </section>
 
   <section aria-labelledby="tickets-title">
-    <p class="section-label">Tickets · one each</p>
-    <h2 id="tickets-title">Two tickets, the same last flight</h2>
+    <p class="section-label">Tickets · three bookings</p>
+    <h2 id="tickets-title">Two tickets to Abu Dhabi, one to Krabi</h2>
     <div class="ticket-grid">
       <article class="pass reveal" style="--i:1">
         <div class="pass__main">
           <div class="pass__top"><span class="pass__name">Will</span><span class="pass__airline">American + Etihad</span></div>
-          <div class="pass__route" aria-label="Salt Lake City to Abu Dhabi to Krabi"><span class="code">SLC</span><span class="hop"></span><span class="code">AUH</span><span class="hop"></span><span class="code">KBV</span></div>
+          <div class="pass__route" aria-label="Salt Lake City to Abu Dhabi"><span class="code">SLC</span><span class="hop"></span><span class="code">AUH</span></div>
           <ul class="segs">
             <li><code>AA 1141</code><span>Sat Nov 28 · SLC 7:08 AM to Chicago 11:30 AM</span></li>
             <li><code>EY 10</code><span>Sat Nov 28 · Chicago 1:15 PM to AUH 12:35 PM Sun</span></li>
-            <li><code>EY 422</code><span>Mon Nov 30 · AUH 8:55 PM to KBV 6:35 AM Tue</span></li>
           </ul>
         </div>
         <div class="pass__stub">
-          <span class="pass__price">$1,410</span>
+          <span class="pass__price">$1,064</span>
           <span class="pass__note">1 checked bag included</span>
-          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjJqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener">Book with Etihad</a>
+          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIQAFIAXABmAEC" target="_blank" rel="noopener">Book with Etihad</a>
         </div>
       </article>
       <article class="pass pass--yana reveal" style="--i:2">
         <div class="pass__main">
           <div class="pass__top"><span class="pass__name">Yana</span><span class="pass__airline">Etihad</span></div>
-          <div class="pass__route" aria-label="Moscow to Abu Dhabi to Krabi"><span class="code">SVO</span><span class="hop"></span><span class="code">AUH</span><span class="hop"></span><span class="code">KBV</span></div>
+          <div class="pass__route" aria-label="Moscow to Abu Dhabi"><span class="code">SVO</span><span class="hop"></span><span class="code">AUH</span></div>
           <ul class="segs">
             <li><code>EY 842</code><span>Sun Nov 29 · SVO 12:35 PM to AUH 7:25 PM</span></li>
+          </ul>
+        </div>
+        <div class="pass__stub">
+          <span class="pass__price">$342</span>
+          <span class="pass__note">No checked bag</span>
+          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIQAFIAXABmAEC" target="_blank" rel="noopener">Book with Etihad</a>
+        </div>
+      </article>
+      <article class="pass pass--together reveal" style="--i:3">
+        <div class="pass__main">
+          <div class="pass__top"><span class="pass__name">Will + Yana</span><span class="pass__airline">Etihad · one booking for 2</span></div>
+          <div class="pass__route" aria-label="Abu Dhabi to Krabi"><span class="code">AUH</span><span class="hop"></span><span class="code">KBV</span></div>
+          <ul class="segs">
             <li><code>EY 422</code><span>Mon Nov 30 · AUH 8:55 PM to KBV 6:35 AM Tue</span></li>
           </ul>
         </div>
         <div class="pass__stub">
-          <span class="pass__price">$766</span>
-          <span class="pass__note">No checked bag on the Moscow flight</span>
-          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjJqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener">Book with Etihad</a>
+          <span class="pass__price">$1,049</span>
+          <span class="pass__note">For both of you. No checked bags.</span>
+          <a class="btn" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTMwIh8KA0FVSBIKMjAyNi0xMS0zMBoDS0JWKgJFWTIDNDIyagcIARIDQVVIcgcIARIDS0JWQAFAAUgBcAGYAQI" target="_blank" rel="noopener">Book with Etihad</a>
         </div>
       </article>
     </div>
   </section>
 
   <section aria-labelledby="why-title">
-    <p class="section-label">Why this plan</p>
-    <h2 id="why-title">It costs $241 less than the morning flight</h2>
+    <p class="section-label">Why three tickets</p>
+    <h2 id="why-title">Etihad will not sell the Abu Dhabi stop on one ticket</h2>
+    <p class="fineprint">On one ticket, Etihad's site refuses a stop in Abu Dhabi shorter than 96 hours. It shows "restricted connection within 96 hours". With separate tickets, there is no stop to refuse.</p>
     <div class="bars">
       <div class="bar bar--best reveal" style="--i:1">
-        <span class="bar__label">Monday night flight, one ticket each<span class="tag">This plan</span></span>
-        <span class="bar__value">$2,176</span>
-        <span class="bar__track"><span class="bar__fill" style="--w: 90%"></span></span>
-        <span class="bar__sub">You land in Krabi on Tue Dec 1 at 6:35 AM, after a night flight.</span>
+        <span class="bar__label">Monday night flight<span class="tag">This plan</span></span>
+        <span class="bar__value">$2,455</span>
+        <span class="bar__track"><span class="bar__fill" style="--w: 100%"></span></span>
+        <span class="bar__sub">A day together in Abu Dhabi. You land in Krabi on Tue Dec 1 at 6:35 AM.</span>
       </div>
       <div class="bar reveal" style="--i:2">
-        <span class="bar__label">Monday morning flight, separate tickets</span>
+        <span class="bar__label">Monday morning flight</span>
         <span class="bar__value">$2,417</span>
-        <span class="bar__track"><span class="bar__fill" style="--w: 100%"></span></span>
-        <span class="bar__sub">You land on Mon Nov 30 at 6:10 PM. No airline help if a flight is late.</span>
+        <span class="bar__track"><span class="bar__fill" style="--w: 98.5%"></span></span>
+        <span class="bar__sub">$38 less. You land on Mon Nov 30 at 6:10 PM, but you have no day in Abu Dhabi.</span>
       </div>
     </div>
-    <p class="fineprint">Etihad's site would not sell the morning flight on Will's ticket. It showed "restricted connection" for that ticket, which had a 20-hour wait in Abu Dhabi. In this plan, both waits are more than 24 hours.</p>
   </section>
 
   <section aria-labelledby="tips-title">
     <p class="section-label">Before you go</p>
     <h2 id="tips-title">Things to do</h2>
     <div class="tip-grid">
-      <article class="tip reveal" style="--i:1"><span class="tip__num">1</span><h3>Book both tickets</h3><p>Use the two buttons. One ticket each means Etihad rebooks you if a flight is late.</p></article>
+      <article class="tip reveal" style="--i:1"><span class="tip__num">1</span><h3>Book the three tickets</h3><p>Use the three buttons. Put both of you on the one Krabi booking. On separate tickets, Etihad does not rebook a missed flight, but you have more than a day of buffer.</p></article>
       <article class="tip reveal" style="--i:2"><span class="tip__num">2</span><h3>Book a hotel for Sunday night</h3><p>One night, Sun Nov 29. Ask for a late checkout on Monday. The flight leaves at 8:55 PM. Not booked yet.</p></article>
-      <article class="tip reveal" style="--i:3"><span class="tip__num">3</span><h3>Sit together</h3><p>You have two bookings. Choose seats next to each other on EY 422 in both.</p></article>
-      <article class="tip reveal" style="--i:4"><span class="tip__num">4</span><h3>Bags</h3><p>Will has 1 checked bag. Yana must add a bag for the Moscow flight if she needs one.</p></article>
+      <article class="tip reveal" style="--i:3"><span class="tip__num">3</span><h3>Sit together</h3><p>You share one booking on EY 422, so choose two seats next to each other.</p></article>
+      <article class="tip reveal" style="--i:4"><span class="tip__num">4</span><h3>Bags</h3><p>Will has 1 checked bag to Abu Dhabi. Yana's Moscow flight and the Krabi flight have no checked bags. Add bags if you need them.</p></article>
       <article class="tip reveal" style="--i:5"><span class="tip__num">5</span><h3>Payment</h3><p>If Yana's Russian card does not work on etihad.com, Will can pay with his card.</p></article>
       <article class="tip tip--info reveal" style="--i:6"><h3>Entry to the UAE</h3><p>Will gets a free visa when he lands. Yana needs no visa: Russian citizens can stay up to 90 days.</p></article>
     </div>
@@ -512,8 +528,9 @@
 
 <nav class="actions" aria-label="Book the tickets">
   <div class="actions__inner">
-    <a class="action" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjJqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener"><span>Book Will<span class="wide">'s ticket</span></span><b>$1,410</b></a>
-    <a class="action action--yana" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIGj8SCjIwMjYtMTEtMzAiHwoDQVVIEgoyMDI2LTExLTMwGgNLQlYqAkVZMgM0MjJqBwgBEgNBVUhyBwgBEgNLQlZAAUgBcAGYAQM" target="_blank" rel="noopener"><span>Book Yana<span class="wide">'s ticket</span></span><b>$766</b></a>
+    <a class="action" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAhpgEgoyMDI2LTExLTI4IiAKA1NMQxIKMjAyNi0xMS0yOBoDT1JEKgJBQTIEMTE0MSIeCgNPUkQSCjIwMjYtMTEtMjgaA0FVSCoCRVkyAjEwagcIARIDU0xDcgcIARIDQVVIQAFIAXABmAEC" target="_blank" rel="noopener"><span>Will<span class="wide"> to Abu Dhabi</span></span><b>$1,064</b></a>
+    <a class="action action--yana" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTI5Ih8KA1NWTxIKMjAyNi0xMS0yORoDQVVIKgJFWTIDODQyagcIARIDU1ZPcgcIARIDQVVIQAFIAXABmAEC" target="_blank" rel="noopener"><span>Yana<span class="wide"> to Abu Dhabi</span></span><b>$342</b></a>
+    <a class="action action--together" href="https://www.google.com/travel/flights?hl=en&amp;gl=us&amp;curr=USD&amp;tfs=CBwQAho_EgoyMDI2LTExLTMwIh8KA0FVSBIKMjAyNi0xMS0zMBoDS0JWKgJFWTIDNDIyagcIARIDQVVIcgcIARIDS0JWQAFAAUgBcAGYAQI" target="_blank" rel="noopener"><span>Both<span class="wide"> to Krabi</span></span><b>$1,049</b></a>
   </div>
 </nav>
 
