@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<meta name="robots" content="noindex, nofollow">
+<title>Trip Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a111e;
+    --bg-glow: rgba(98, 227, 181, 0.07);
+    --surface: #111b2c;
+    --surface-2: #15223a;
+    --border: rgba(255, 255, 255, 0.08);
+    --text: #eaf0f8;
+    --text-dim: #97a6bd;
+    --will: #f5bd4f;
+    --yana: #ff8466;
+    --together: #62e3b5;
+    --on-accent: #0a111e;
+    --auh: #b69cff;
+    --aonang: #4fc3f7;
+    --phiphi: #2dd4bf;
+    --air: #8796ad;
+    --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+    --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f4f1ea;
+      --bg-glow: rgba(19, 138, 100, 0.08);
+      --surface: #fffdf8;
+      --surface-2: #f8f4ec;
+      --border: rgba(20, 32, 51, 0.10);
+      --text: #142033;
+      --text-dim: #5a6a80;
+      --will: #a86b12;
+      --yana: #c8492d;
+      --together: #138a64;
+      --on-accent: #ffffff;
+      --auh: #6d4fc2;
+      --aonang: #0277bd;
+      --phiphi: #0f766e;
+      --air: #5a6a80;
+      --shadow: 0 18px 50px rgba(20, 32, 51, 0.12);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; font-family: var(--font); color: var(--text); line-height: 1.5; padding-bottom: 40px;
+    background:
+      radial-gradient(1100px 520px at 78% -8%, var(--bg-glow), transparent 70%),
+      radial-gradient(800px 420px at -10% 30%, rgba(245, 189, 79, 0.05), transparent 70%),
+      var(--bg);
+  }
+  a { color: inherit; }
+  button { font: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  @media (min-width: 720px) { .wrap { padding: 0 28px; } }
+  h1, h2, h3 { margin: 0; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(24px, 3vw, 32px); font-weight: 800; line-height: 1.15; }
+  code { font-family: var(--mono); font-size: 0.86em; font-weight: 600; padding: 1px 6px; border-radius: 6px; background: var(--surface-2); border: 1px solid var(--border); white-space: nowrap; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 0 0 8px; font-family: var(--mono); font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
+  }
+  .section-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--together); }
+  section { margin-top: 56px; min-width: 0; }
+  .note { margin: 8px 0 0; max-width: 62ch; font-size: 15px; color: var(--text-dim); }
+
+  /* Site nav (same on every page) */
+  .site-nav { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .site-nav__inner { display: flex; align-items: center; gap: 12px; height: 56px; }
+  .brand { flex: none; font-weight: 800; letter-spacing: -0.01em; text-decoration: none; white-space: nowrap; }
+  .brand::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--together); margin-right: 8px; vertical-align: 1px; }
+  .tabs { margin-left: auto; min-width: 0; display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs a { flex: none; padding: 6px 12px; border-radius: 999px; font-size: 13.5px; font-weight: 600; text-decoration: none; color: var(--text-dim); white-space: nowrap; }
+  .tabs a:hover { color: var(--text); }
+  .tabs a[aria-current="page"] { background: var(--together); color: var(--on-accent); }
+  @media (max-width: 760px) { .brand span { display: none; } }
+
+  /* Hero */
+  .hero { padding: 40px 0 0; }
+  .kicker { margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.06em; color: var(--text-dim); }
+  .kicker b { color: var(--text); font-weight: 600; }
+  h1 { font-size: clamp(38px, 6.4vw, 72px); font-weight: 800; line-height: 1.02; letter-spacing: -0.035em; max-width: 16ch; }
+  h1 .a { color: var(--will); }
+  h1 .b { color: var(--together); }
+  h1 .a, h1 .b { display: block; } /* one phrase per line, never one word alone */
+  .lead { margin: 18px 0 0; max-width: 62ch; font-size: clamp(16px, 1.6vw, 19px); color: var(--text-dim); }
+  .lead b { color: var(--text); font-weight: 600; }
+
+  /* Leave Thursday or Friday (same switch as the Going home page) */
+  .daypick { margin-top: 28px; display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); max-width: 100%; }
+  .daypick button { cursor: pointer; text-align: left; padding: 10px 16px; border-radius: 12px; border: 0; color: var(--text-dim); background: transparent; min-width: 0; }
+  .daypick button b { display: block; font-size: 16px; color: var(--text); font-weight: 700; }
+  .daypick button span { font-family: var(--mono); font-size: 12.5px; }
+  .daypick button[aria-pressed="true"] { background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--together); }
+  .daypick button[aria-pressed="true"] span { color: var(--together); }
+  @media (max-width: 559px) {
+    .daypick { display: grid; width: 100%; }
+    .daypick button { padding: 10px 12px; }
+    .daypick button span { font-size: 11.5px; white-space: nowrap; }
+  }
+
+  /* Places: the color of each night's band */
+  .place-air { --c: var(--air); }
+  .place-auh { --c: var(--auh); }
+  .place-aonang { --c: var(--aonang); }
+  .place-phiphi { --c: var(--phiphi); }
+  .place-home { --c: var(--text-dim); }
+  .stays { list-style: none; margin: 16px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .stays li { min-width: 0; display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); font-size: 13.5px; }
+  .stays i { flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--c); }
+  .stays span { color: var(--text-dim); }
+  .stays em { font-style: normal; }
+  @media (max-width: 639px) { .stays em { display: none; } } /* the dates show in the calendar right below */
+
+  /* Calendar grid. Cells and night bands share grid row 1, so a band lies across its cells under the dates. */
+  .cal { margin-top: 18px; display: grid; gap: 6px; }
+  .cal__head, .week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .cal__head span { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); text-align: center; }
+  .week { --pad: 9px; --date-h: 18px; --band-h: 24px; --gap: 6px; }
+  .cell {
+    grid-row: 1; min-width: 0; min-height: 124px; padding: var(--pad); display: flex; flex-direction: column; gap: var(--gap);
+    border-radius: 14px; border: 1px solid var(--border); background: var(--surface); color: var(--text); text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  a.cell:hover { border-color: color-mix(in srgb, var(--together) 55%, transparent); transform: translateY(-1px); }
+  .cell--off { background: transparent; border-color: transparent; color: var(--text-dim); opacity: 0.5; }
+  .cell--today { box-shadow: inset 0 0 0 2px var(--together); }
+  .cell__date { flex: none; height: var(--date-h); line-height: var(--date-h); font-family: var(--mono); font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; }
+  .cell__space { flex: none; height: var(--band-h); }
+  .cell__title { font-size: 13px; font-weight: 700; line-height: 1.25; overflow-wrap: break-word; }
+  .cell__icons { margin-top: auto; display: flex; flex-wrap: wrap; gap: 4px; }
+  .ico { --c: var(--text-dim); width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
+  .ico svg { width: 14px; height: 14px; }
+  .band {
+    grid-row: 1; align-self: start; z-index: 1; pointer-events: none; min-width: 0;
+    height: var(--band-h); margin: calc(1px + var(--pad) + var(--date-h) + var(--gap)) 5px 0; padding: 0 8px;
+    display: flex; align-items: center; gap: 6px; border-radius: 8px; background: var(--c); color: var(--on-accent);
+    font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden;
+  }
+  .band svg { flex: none; width: 13px; height: 13px; }
+  .band__label { overflow: hidden; text-overflow: ellipsis; }
+  @media (max-width: 999px) { .band--one { justify-content: center; padding: 0; } .band--one .band__label { display: none; } }
+  @media (max-width: 639px) {
+    .cal, .cal__head, .week { gap: 3px; }
+    .week { --pad: 4px; --date-h: 16px; --band-h: 18px; --gap: 4px; }
+    .cal__head span { font-size: 9.5px; letter-spacing: 0.04em; }
+    .cell { min-height: 76px; border-radius: 9px; }
+    .cell__date { font-size: 11px; }
+    .cell__title { display: none; }
+    .cell__icons { gap: 2px; }
+    .ico { width: 16px; height: 16px; border-radius: 5px; }
+    .ico svg { width: 11px; height: 11px; }
+    .band { margin-inline: 2px; padding: 0 5px; gap: 4px; border-radius: 6px; font-size: 10.5px; }
+    .band svg { width: 11px; height: 11px; }
+  }
+
+  /* Day by day */
+  .day-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 14px; }
+  @media (min-width: 900px) { .day-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .day { min-width: 0; padding: 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; scroll-margin-top: 72px; }
+  .day:target { border-color: var(--together); box-shadow: 0 0 0 1px var(--together); }
+  .day header { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: end; margin-bottom: 14px; }
+  .day__dow { grid-row: span 2; font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); }
+  .day__date { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .day__title { color: var(--text-dim); font-size: 14px; }
+  .events { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 12px; }
+  .ev { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; padding-left: 12px; border-left: 3px solid var(--c); }
+  .ev--will { --c: var(--will); }
+  .ev--yana { --c: var(--yana); }
+  .ev--together { --c: var(--together); }
+  .ev time { font-family: var(--mono); font-weight: 600; font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  .ev time small { display: block; color: var(--text-dim); font-weight: 400; font-size: 11.5px; }
+  .ev__body { min-width: 0; display: grid; gap: 8px; align-content: start; }
+  .ev p { margin: 0; font-size: 15px; overflow-wrap: break-word; }
+  @media (max-width: 559px) { /* on a phone the time goes above the text, so the text and idea boxes get the full width */
+    .ev { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .ev time small { display: inline; margin-left: 8px; }
+  }
+  .night { margin: auto 0 0; padding-top: 12px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text-dim); }
+  .night svg { flex: none; width: 16px; height: 16px; color: var(--c); }
+
+  /* An idea on a day, and an idea not on the calendar yet: both open the idea and its comments */
+  .idea, .chip { min-width: 0; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); border-radius: 12px; }
+  .idea { padding: 8px 10px; background: color-mix(in srgb, var(--c) 9%, var(--surface-2)); border: 1px solid color-mix(in srgb, var(--c) 32%, transparent); }
+  .chip { padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); }
+  .idea:hover, .chip:hover { border-color: color-mix(in srgb, var(--c) 65%, transparent); }
+  .idea__icon { flex: none; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
+  .idea__icon svg { width: 18px; height: 18px; }
+  .idea__title { min-width: 0; font-size: 14.5px; font-weight: 700; line-height: 1.25; }
+  .idea__title small { display: block; margin-top: 2px; font-family: var(--mono); font-size: 11.5px; font-weight: 400; color: var(--text-dim); }
+  .idea__go { flex: none; margin-left: auto; color: var(--c); }
+  .idea__go svg { display: block; width: 18px; height: 18px; }
+  .more { margin-top: 18px; display: grid; grid-template-columns: 1fr; gap: 10px; }
+  @media (min-width: 640px) { .more { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (min-width: 980px) { .more { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+  /* Idea tags: the same colors as the ideas pages */
+  .tag-beach { --c: #4fc3f7; }
+  .tag-boat-trip { --c: #62e3b5; }
+  .tag-snorkel { --c: #38bdf8; }
+  .tag-dive { --c: #60a5fa; }
+  .tag-hike { --c: #a3e635; }
+  .tag-nature { --c: #86efac; }
+  .tag-culture { --c: #f5bd4f; }
+  .tag-food { --c: #fb923c; }
+  .tag-nightlife { --c: #f472b6; }
+  @media (prefers-color-scheme: light) {
+    .tag-beach { --c: #0277bd; } .tag-boat-trip { --c: #138a64; } .tag-snorkel { --c: #0369a1; } .tag-dive { --c: #1d4ed8; }
+    .tag-hike { --c: #4d7c0f; } .tag-nature { --c: #15803d; } .tag-culture { --c: #a86b12; } .tag-food { --c: #c2410c; } .tag-nightlife { --c: #be185d; }
+  }
+
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13.5px; }
+  footer p { margin: 0 0 6px; }
+
+  .reveal { animation: fadeUp 0.7s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 90ms); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .reveal { animation: none; } .cell { transition: none; } }
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Trip pages">
+  <div class="wrap site-nav__inner">
+    <a class="brand" href="index.html"><span>Krabi Together</span></a>
+    <div class="tabs">
+      <a href="index.html">Flights</a>
+      <a href="island.html">To Phi Phi</a>
+      <a href="ideas-krabi.html">Krabi ideas</a>
+      <a href="ideas-phiphi.html">Phi Phi ideas</a>
+      <a href="home.html">Going home</a>
+      <a href="calendar.html" aria-current="page">Calendar</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker reveal" style="--i:0"><span>Page 6</span><b>Every day of the trip</b></p>
+    <h1 class="reveal" style="--i:1"><span class="a">The whole trip.</span> <span class="b">Day by day.</span></h1>
+    <p class="lead reveal" style="--i:2">The flights, the boats, where you sleep, and a <b>first plan</b> for your days. The plan uses your comments on the ideas pages. Tap a day to see its details.</p>
+    <div class="daypick reveal" style="--i:3" role="group" aria-label="Day you leave Krabi">
+      <button type="button" data-leave="thu" aria-pressed="true"><b>Leave Thu Dec 10</b><span>9 nights in Thailand</span></button>
+      <button type="button" data-leave="fri" aria-pressed="false"><b>Leave Fri Dec 11</b><span>10 nights in Thailand</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="calendar" aria-labelledby="cal-title">
+    <p class="section-label">Calendar · where you sleep</p>
+    <h2 id="cal-title">Two weeks, three places</h2>
+    <ul class="stays" id="stays"></ul>
+    <div class="cal" id="cal"></div>
+  </section>
+
+  <section aria-labelledby="days-title">
+    <p class="section-label">Day by day · local times</p>
+    <h2 id="days-title">What happens each day</h2>
+    <div class="day-grid" id="days"></div>
+  </section>
+
+  <section aria-labelledby="more-title">
+    <p class="section-label">More ideas</p>
+    <h2 id="more-title">Not on the calendar yet</h2>
+    <p class="note">Want a change? Leave a comment on the idea, and Will changes the calendar.</p>
+    <div class="more" id="more"></div>
+  </section>
+
+  <footer>
+    <p>A first plan, made on Nov 9, 2026 from your comments on the ideas pages. Opening days, start times and fees come from the ideas pages and the To Phi Phi page.</p>
+    <p>The flights are the same as on the Flights and Going home pages. All times are local.</p>
+  </footer>
+</main>
+
+<script>
+(() => {
+  'use strict';
+  const log = (...a) => console.log('[calendar]', ...a);
+  const fail = (...a) => console.error('[calendar]', ...a);
+  const boot = performance.now();
+  log('init: start');
+  const tabs = document.querySelector('.tabs'), current = tabs && tabs.querySelector('[aria-current="page"]');
+  if (current) tabs.scrollLeft = current.offsetLeft - (tabs.clientWidth - current.clientWidth) / 2;
+
+  // ---------- Facts ----------
+  const DAY_MS = 86400000;
+  const TZ = { SLC: 'America/Denver', ORD: 'America/Chicago', SVO: 'Europe/Moscow', AUH: 'Asia/Dubai', KBV: 'Asia/Bangkok', JFK: 'America/New_York' };
+  const CITY = { SLC: 'Salt Lake City', ORD: 'Chicago', SVO: 'Moscow', AUH: 'Abu Dhabi', KBV: 'Krabi', JFK: 'New York' };
+  const PLACES = {
+    air: { name: 'Night flight', night: 'Night on the plane' },
+    auh: { name: 'Abu Dhabi', night: 'Night in Abu Dhabi' },
+    aonang: { name: 'Ao Nang', night: 'Night in Ao Nang' },
+    phiphi: { name: 'Phi Phi', night: 'Night on Phi Phi' },
+  };
+  // slug: [ideas page, title, tag, time], as on ideas-krabi.html and ideas-phiphi.html.
+  const IDEAS = {
+    'railay': ['krabi', 'Railay and Phra Nang Cave Beach', 'Beach', 'Half day'],
+    'four-islands': ['krabi', '4 Islands boat tour', 'Boat trip', 'Half or full day'],
+    'hong-islands': ['krabi', 'Hong Islands tour', 'Boat trip', 'Full day'],
+    'tiger-cave-temple': ['krabi', 'Tiger Cave Temple climb', 'Hike', 'Half day'],
+    'emerald-pool': ['krabi', 'Emerald Pool and hot springs', 'Nature', 'Full day'],
+    'walking-street': ['krabi', 'Krabi Town Walking Street', 'Culture', 'Evening'],
+    'mangrove-kayak': ['krabi', 'Mangrove kayaking at Ao Thalane', 'Nature', 'Half day'],
+    'cooking-class': ['krabi', 'Thai cooking class', 'Food', '2 to 4 hours'],
+    'nopparat-thara-sunset': ['krabi', 'Sunset at Nopparat Thara Beach', 'Beach', 'Evening'],
+    'maya-bay-pileh': ['phiphi', 'Maya Bay and Pileh Lagoon by longtail', 'Boat trip', 'Half day'],
+    'viewpoint-sunset': ['phiphi', 'Phi Phi Viewpoint at sunset', 'Hike', '1 to 2 hours'],
+    'bamboo-island': ['phiphi', 'Bamboo Island snorkel trip', 'Snorkel', 'Half day'],
+    'monkey-beach-kayak': ['phiphi', 'Kayak to Monkey Beach', 'Nature', '1 to 2 hours'],
+    'scuba-diving': ['phiphi', 'Scuba diving', 'Dive', 'Half day'],
+    'long-beach-snorkel': ['phiphi', 'Snorkel with reef sharks at Long Beach', 'Snorkel', '1 to 2 hours'],
+    'loh-dalum-fire-show': ['phiphi', 'Fire shows at Loh Dalum Beach', 'Nightlife', 'Evening'],
+    'sunset-plankton': ['phiphi', 'Sunset and plankton boat trip', 'Boat trip', 'About 4 hours'],
+    'nui-beach': ['phiphi', 'Nui Beach', 'Beach', 'Half day'],
+  };
+
+  // Flights in UTC, the same as on the Flights page. Each flight gives two events: it leaves, and it lands.
+  const OUT_FLIGHTS = [
+    { who: 'will', flight: 'AA 1141', from: 'SLC', to: 'ORD', dep: '2026-11-28T14:08:00Z', arr: '2026-11-28T17:30:00Z',
+      depText: 'Will leaves Salt Lake City on American <code>AA 1141</code>.', arrText: 'Will lands in Chicago. 1 h 45 min to change planes.' },
+    { who: 'will', flight: 'EY 10', from: 'ORD', to: 'AUH', dep: '2026-11-28T19:15:00Z', arr: '2026-11-29T08:35:00Z',
+      depText: 'Will leaves on Etihad <code>EY 10</code>, overnight to Abu Dhabi.', arrText: 'Will lands in Abu Dhabi and checks in to the hotel.' },
+    { who: 'yana', flight: 'EY 842', from: 'SVO', to: 'AUH', dep: '2026-11-29T09:35:00Z', arr: '2026-11-29T15:25:00Z',
+      depText: 'Yana leaves Moscow Sheremetyevo on Etihad <code>EY 842</code>.', arrText: 'Yana lands in Abu Dhabi. Your night together starts.' },
+    { who: 'together', flight: 'EY 422', from: 'AUH', to: 'KBV', dep: '2026-11-30T16:55:00Z', arr: '2026-11-30T23:35:00Z',
+      depText: 'Etihad <code>EY 422</code> to Krabi. Nonstop overnight, 6 h 40 min.', arrText: 'You land in Krabi together.' },
+  ];
+
+  // The days between the flights: a first plan from your comments on the ideas pages (Nov 7).
+  // Walking Street is open Friday to Sunday only. Dec 9 is a new moon, the best night for the plankton glow.
+  const PLAN = [
+    { t: '2026-11-30T10:00:00+04:00', label: 'All day', tz: 'AUH', text: 'Your day together in Abu Dhabi. Ask the hotel for a late checkout.' },
+    { t: '2026-11-30T18:55:00+04:00', tz: 'AUH', text: 'Be at Abu Dhabi airport, Terminal A.' },
+    { t: '2026-12-01T07:15:00+07:00', label: 'After landing', tz: 'KBV', where: 'Krabi', text: 'Taxi to Ao Nang, about 30 minutes (฿350–450). Ask the hotel for an early check-in, then sleep.' },
+    { t: '2026-12-01T16:30:00+07:00', tz: 'KBV', where: 'Ao Nang', idea: 'nopparat-thara-sunset', text: 'Walk 10 to 15 minutes to the beach and watch the sun set over the sea.' },
+    { t: '2026-12-02T09:00:00+07:00', label: 'Morning', tz: 'KBV', where: 'Ao Nang', idea: 'mangrove-kayak', text: 'Half day. The tour picks you up in Ao Nang. Check the tide before you book.' },
+    { t: '2026-12-03T08:00:00+07:00', label: '8–9 AM', tz: 'KBV', where: 'Ao Nang', idea: 'four-islands', text: 'Hotel pickup. Choose a tour timed for low tide, when the sandbar shows. Bring ฿400 each in cash for the park fee.' },
+    { t: '2026-12-04T07:00:00+07:00', tz: 'KBV', where: 'Ao Nang', idea: 'emerald-pool', text: 'Full day, about 1.5 hours each way. Leave at 7:00 AM to be there when the gates open at 8:30, before the tour vans.' },
+    { t: '2026-12-05T10:00:00+07:00', label: 'Day', tz: 'KBV', where: 'Ao Nang', text: 'A free day at the beach. Pack for Phi Phi.' },
+    { t: '2026-12-05T17:00:00+07:00', tz: 'KBV', where: 'Krabi Town', idea: 'walking-street', text: 'Take the white songthaew to Krabi Town (฿60, or ฿80 after 6 PM). The last one back leaves at about 10 PM.' },
+    { t: '2026-12-06T09:30:00+07:00', tz: 'KBV', where: 'Ao Nang', boat: true, text: 'Ao Nang Princess ferry from Nopparat Thara pier, with hotel pickup. About 2 hours, ฿650 each. Book it a day or two before.' },
+    { t: '2026-12-06T11:30:00+07:00', tz: 'KBV', where: 'Phi Phi', text: 'Arrive at Tonsai Pier. Pay the ฿20 island fee in cash.' },
+    { t: '2026-12-06T20:00:00+07:00', label: 'Evening', tz: 'KBV', where: 'Phi Phi', idea: 'loh-dalum-fire-show', text: 'Walk a few minutes from Tonsai Pier to the bay.' },
+    { t: '2026-12-07T06:30:00+07:00', tz: 'KBV', where: 'Phi Phi', idea: 'long-beach-snorkel', text: 'Go early, when the sharks are most active. Swim together.' },
+    { t: '2026-12-07T17:00:00+07:00', label: 'Late afternoon', tz: 'KBV', where: 'Phi Phi', idea: 'viewpoint-sunset', text: 'Climb to the viewpoint for the sunset. Bring a torch for the walk down.' },
+    { t: '2026-12-08T07:00:00+07:00', tz: 'KBV', where: 'Phi Phi', idea: 'maya-bay-pileh', text: 'Take an early longtail to reach Maya Bay before the day-trip crowds. Park fee ฿400 each.' },
+    { t: '2026-12-09T15:00:00+07:00', tz: 'KBV', where: 'Phi Phi', idea: 'sunset-plankton', text: 'The boat leaves Tonsai Pier at about 3:00 PM and comes back after dark. Dec 9 is a new moon, so the glow is easy to see.' },
+  ];
+
+  // The last day, written for Thursday. Leaving on Friday moves all of it one day later, as on the Going home page.
+  const LEAVE = [
+    { t: '2026-12-10T09:00:00+07:00', label: 'Morning', tz: 'KBV', where: 'Phi Phi', boat: true, text: 'Boat from Tonsai Pier to Krabi Town (Klong Jilad pier), about 2 hours. Take a boat that reaches Krabi Town by mid-afternoon.' },
+    { t: '2026-12-10T14:00:00+07:00', label: 'Afternoon', tz: 'KBV', where: 'Krabi Town', text: 'Taxi from the pier to Krabi airport, about 30 minutes.' },
+    { t: '2026-12-10T18:00:00+07:00', tz: 'KBV', text: 'Be at Krabi airport.' },
+    { who: 'together', flight: 'EY 425', from: 'KBV', to: 'AUH', dep: '2026-12-10T13:55:00Z', arr: '2026-12-10T20:55:00Z',
+      depText: 'Etihad <code>EY 425</code> to Abu Dhabi, together. 7 hours.', arrText: 'You land in Abu Dhabi and wait together in the terminal.' },
+    { who: 'yana', flight: 'EY 841', from: 'AUH', to: 'SVO', dep: '2026-12-10T22:55:00Z', arr: '2026-12-11T04:45:00Z',
+      depText: 'Yana flies Etihad <code>EY 841</code> to Moscow.', arrText: 'Yana lands in Moscow.' },
+    { who: 'will', flight: 'EY 1', from: 'AUH', to: 'JFK', dep: '2026-12-10T23:35:00Z', arr: '2026-12-11T14:00:00Z',
+      depText: 'Will flies Etihad <code>EY 1</code> to New York.', arrText: 'Will lands in New York.' },
+  ];
+
+  // Where you sleep each night. The last day has no night: you are home.
+  const NIGHTS = {
+    '2026-11-28': 'air', '2026-11-29': 'auh', '2026-11-30': 'air',
+    '2026-12-01': 'aonang', '2026-12-02': 'aonang', '2026-12-03': 'aonang', '2026-12-04': 'aonang', '2026-12-05': 'aonang',
+    '2026-12-06': 'phiphi', '2026-12-07': 'phiphi', '2026-12-08': 'phiphi', '2026-12-09': 'phiphi',
+  };
+  const TITLES = {
+    '2026-11-28': 'Will starts', '2026-11-29': 'Meet in Abu Dhabi', '2026-11-30': 'A day in Abu Dhabi',
+    '2026-12-01': 'Land in Krabi', '2026-12-02': 'Mangrove kayaking', '2026-12-03': '4 Islands tour', '2026-12-04': 'Emerald Pool',
+    '2026-12-05': 'Walking Street', '2026-12-06': 'Boat to Phi Phi', '2026-12-07': 'Reef sharks', '2026-12-08': 'Maya Bay', '2026-12-09': 'Plankton boat',
+  };
+  const ENDS = {
+    thu: { shift: 0, nights: { '2026-12-10': 'air' }, titles: { '2026-12-10': 'Leave Krabi', '2026-12-11': 'Fly home' }, extra: [] },
+    fri: {
+      shift: DAY_MS,
+      nights: { '2026-12-10': 'phiphi', '2026-12-11': 'air' },
+      titles: { '2026-12-10': 'Free day on Phi Phi', '2026-12-11': 'Leave Krabi', '2026-12-12': 'Fly home' },
+      extra: [{ t: '2026-12-10T10:00:00+07:00', label: 'All day', tz: 'KBV', where: 'Phi Phi', text: 'A free day on Phi Phi. Rest, or pick an idea from the list at the bottom.' }],
+    },
+  };
+
+  // ---------- Dates ----------
+  const fmtCache = new Map();
+  const formatter = (tz, opts) => {
+    const key = tz + JSON.stringify(opts);
+    if (!fmtCache.has(key)) fmtCache.set(key, new Intl.DateTimeFormat('en-US', { timeZone: tz, ...opts }));
+    return fmtCache.get(key);
+  };
+  const dateIn = (ts, tz) => {
+    const p = Object.fromEntries(formatter(tz, { year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(ts).map(x => [x.type, x.value]));
+    return `${p.year}-${p.month}-${p.day}`;
+  };
+  const timeIn = (ts, tz) => formatter(tz, { hour: 'numeric', minute: '2-digit' }).format(ts);
+  const noon = iso => Date.parse(iso + 'T12:00:00Z');
+  const addDays = (iso, n) => new Date(noon(iso) + n * DAY_MS).toISOString().slice(0, 10);
+  const weekday = iso => new Date(noon(iso)).getUTCDay(); // 0 = Sunday
+  const dow = iso => formatter('UTC', { weekday: 'short' }).format(noon(iso));
+  const md = iso => formatter('UTC', { month: 'short', day: 'numeric' }).format(noon(iso));
+  const pad = n => String(n).padStart(2, '0');
+  const now = new Date();
+  const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`; // the device's own date: during the trip, the local day
+
+  // ---------- Build one version of the trip ----------
+  function build(leave) {
+    const end = ENDS[leave];
+    // Flights in the same shape as window.TRIP_LEGS on the Flights and Going home pages (dep and arr in ms, UTC).
+    const legs = [...OUT_FLIGHTS.map(f => [f, 0]), ...LEAVE.filter(e => e.dep).map(f => [f, end.shift])]
+      .map(([f, shift]) => ({ ...f, dep: Date.parse(f.dep) + shift, arr: Date.parse(f.arr) + shift }));
+    const typed = (e, shift) => ({ ts: Date.parse(e.t) + shift, tz: e.tz, where: e.where, label: e.label, who: 'together', html: e.text, idea: e.idea, kind: e.boat ? 'boat' : e.idea ? 'idea' : 'note' });
+    const events = [
+      ...legs.flatMap(l => [
+        { ts: l.dep, tz: l.from, who: l.who, html: l.depText, kind: 'flight' },
+        { ts: l.arr, tz: l.to, who: l.who, html: l.arrText, kind: 'flight' },
+      ]),
+      ...PLAN.map(e => typed(e, 0)),
+      ...end.extra.map(e => typed(e, 0)),
+      ...LEAVE.filter(e => !e.dep).map(e => typed(e, end.shift)),
+    ]
+      .map(e => ({ ...e, date: dateIn(e.ts, TZ[e.tz]), time: e.label || timeIn(e.ts, TZ[e.tz]), where: e.where || CITY[e.tz] }))
+      .sort((a, b) => a.ts - b.ts);
+    const nights = { ...NIGHTS, ...end.nights }, titles = { ...TITLES, ...end.titles };
+    const days = [];
+    for (let d = events[0].date; d <= events[events.length - 1].date; d = addDays(d, 1)) {
+      days.push({ date: d, title: titles[d] || '', night: nights[d] || null, events: events.filter(e => e.date === d) });
+    }
+    // A run is a stretch of nights in one place; its band shows the place and the number of nights.
+    let run = 0;
+    days.forEach((d, i) => { d.run = d.night ? (i > 0 && days[i - 1].night === d.night ? run : ++run) : 0; });
+    days.forEach(d => { d.runNights = d.run ? days.filter(x => x.run === d.run).length : 0; });
+    return { leave, days, legs };
+  }
+
+  // Rules the plan must keep. A broken rule logs an error, and krabi-trip.check.cjs fails on console errors.
+  function selfCheck(trip) {
+    const problems = [], placed = new Set();
+    trip.days.forEach((d, i) => {
+      if (!d.title) problems.push(`${d.date} has no title`);
+      if (!d.night && i < trip.days.length - 1) problems.push(`${d.date} has no place to sleep`);
+      d.events.forEach(e => {
+        if (!e.idea) return;
+        if (!IDEAS[e.idea]) problems.push(`${d.date}: no idea "${e.idea}" on the ideas pages`);
+        if (placed.has(e.idea)) problems.push(`${d.date}: "${e.idea}" is on the calendar twice`);
+        placed.add(e.idea);
+        if (e.idea === 'walking-street' && ![5, 6, 0].includes(weekday(d.date))) problems.push(`${d.date}: Walking Street is open Friday to Sunday only`);
+        const place = IDEAS[e.idea] && IDEAS[e.idea][0], night = d.night === 'air' && i > 0 ? trip.days[i - 1].night : d.night;
+        if (place && night !== (place === 'krabi' ? 'aonang' : 'phiphi')) problems.push(`${d.date}: "${e.idea}" is not where you sleep that night`);
+      });
+    });
+    if (trip.days[trip.days.length - 1].night) problems.push('the last day has a night away from home');
+    problems.forEach(p => fail('self-check:', p, { leave: trip.leave }));
+    log('self-check', { leave: trip.leave, days: trip.days.length, problems: problems.length });
+  }
+
+  // ---------- Icons ----------
+  const ICON_PATHS = {
+    'Beach': '<circle cx="17" cy="7" r="3"/><path d="M2 16c2 0 2-1.5 4-1.5S8 16 10 16s2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5M2 20.5c2 0 2-1.5 4-1.5s2 1.5 4 1.5 2-1.5 4-1.5 2 1.5 4 1.5 2-1.5 4-1.5"/>',
+    'Boat trip': '<path d="M3 15l2 5h14l2-5z"/><path d="M12 3v12M12 3l6 9h-6"/>',
+    'Snorkel': '<rect x="2.5" y="8" width="14" height="8" rx="3"/><path d="M9.5 16v-2M20 3v11a5 5 0 0 1-5 5h-1"/>',
+    'Dive': '<circle cx="8" cy="6" r="2"/><circle cx="13" cy="3.5" r="1.2"/><path d="M3 20c3-4 6-6 10-6 3 0 5 1 8 3M14 14l3-4"/>',
+    'Hike': '<path d="M3 20l6-10 4 6 3-4 5 8z"/>',
+    'Nature': '<path d="M5 19C5 11 11 5 20 5c0 9-6 15-14 15M5 19l8-8"/>',
+    'Culture': '<path d="M3 20h18M6 20v-9M18 20v-9M10 20v-5h4v5M2.5 11 12 4.5 21.5 11"/>',
+    'Food': '<path d="M3 11h18a9 9 0 0 1-18 0zM8 7.5c0-1.2 1-2 1-3.5M12 7.5c0-1.2 1-2 1-3.5M16 7.5c0-1.2 1-2 1-3.5"/>',
+    'Nightlife': '<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><path d="M17 3v3M15.5 4.5h3"/>',
+  };
+  const stroke = paths => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+  const PLANE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>';
+  const MOON = stroke('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>');
+  const HOUSE = stroke('<path d="M3 11.5 12 4l9 7.5M5.5 9.5V20h13V9.5"/>');
+  const CHEVRON = stroke('<path d="M9 6l6 6-6 6"/>');
+  const tagIcon = tag => stroke(ICON_PATHS[tag] || ICON_PATHS.Nature);
+  const tagClass = tag => `tag-${String(tag).toLowerCase().replace(/\s+/g, '-')}`;
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const ideaHref = slug => `ideas-${IDEAS[slug][0]}.html#${slug}`; // the ideas page opens this idea and its comments
+  const nightText = d => (d.night ? PLACES[d.night].night : 'Home: Will in New York, Yana in Moscow');
+
+  // ---------- Render ----------
+  const $ = id => document.getElementById(id);
+
+  function renderStays(trip) {
+    const runs = [];
+    trip.days.filter(d => d.night).forEach(d => {
+      const last = runs[runs.length - 1];
+      if (last && last.run === d.run) last.dates.push(d.date); else runs.push({ run: d.run, night: d.night, dates: [d.date] });
+    });
+    const when = dates => dates.length === 1 ? `${dow(dates[0])} ${md(dates[0])}` : `${dow(dates[0])} ${md(dates[0])} to ${dow(dates[dates.length - 1])} ${md(dates[dates.length - 1])}`;
+    const air = runs.filter(r => r.night === 'air');
+    $('stays').innerHTML = runs.filter(r => r.night !== 'air').map(r =>
+      `<li class="place-${r.night}"><i></i><b>${PLACES[r.night].name}</b><span>${r.dates.length} night${r.dates.length === 1 ? '' : 's'}<em> · ${when(r.dates)}</em></span></li>`).join('')
+      + `<li class="place-air"><i></i><b>Night flights</b><span>${air.length}<em> · ${air.map(r => `${dow(r.dates[0])} ${md(r.dates[0])}`).join(', ')}</em></span></li>`;
+  }
+
+  function renderCalendar(trip) {
+    const byDate = new Map(trip.days.map(d => [d.date, d]));
+    const first = trip.days[0].date, last = trip.days[trip.days.length - 1].date;
+    const start = addDays(first, -weekday(first)), stop = addDays(last, 6 - weekday(last));
+    let html = '<div class="cal__head" aria-hidden="true">' + ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<span>${d}</span>`).join('') + '</div>';
+    for (let w = start; w <= stop; w = addDays(w, 7)) {
+      const week = Array.from({ length: 7 }, (_, i) => addDays(w, i));
+      html += '<div class="week">';
+      week.forEach((d, i) => {
+        const day = byDate.get(d);
+        const label = d === first || d.endsWith('-01') ? md(d) : String(Number(d.slice(8)));
+        if (!day) { html += `<span class="cell cell--off" style="grid-column:${i + 1}" aria-hidden="true"><span class="cell__date">${label}</span></span>`; return; }
+        const icons = [];
+        if (day.events.some(e => e.kind === 'flight')) icons.push(`<span class="ico">${PLANE}</span>`);
+        if (day.events.some(e => e.kind === 'boat')) icons.push(`<span class="ico tag-boat-trip">${tagIcon('Boat trip')}</span>`);
+        day.events.filter(e => e.idea).forEach(e => icons.push(`<span class="ico ${tagClass(IDEAS[e.idea][2])}">${tagIcon(IDEAS[e.idea][2])}</span>`));
+        const aria = `${dow(d)} ${md(d)}: ${day.title}. ${nightText(day)}.`;
+        html += `<a class="cell${d === today ? ' cell--today' : ''}" style="grid-column:${i + 1}" href="#d-${d}" aria-label="${esc(aria)}">`
+          + `<span class="cell__date">${label}</span><span class="cell__space"></span><span class="cell__title">${esc(day.title)}</span><span class="cell__icons">${icons.join('')}</span></a>`;
+      });
+      for (let i = 0; i < 7;) {
+        const day = byDate.get(week[i]);
+        if (!day || !day.night) { i++; continue; }
+        let span = 1;
+        while (i + span < 7 && byDate.get(week[i + span]) && byDate.get(week[i + span]).run === day.run) span++;
+        const label = day.night === 'air' ? PLACES.air.name : `${PLACES[day.night].name}${day.runNights > 1 ? ` · ${day.runNights} nights` : ''}`;
+        html += `<span class="band place-${day.night}${span === 1 ? ' band--one' : ''}" style="grid-column:${i + 1} / span ${span}" aria-hidden="true">${day.night === 'air' ? PLANE : MOON}<span class="band__label">${esc(label)}</span></span>`;
+        i += span;
+      }
+      html += '</div>';
+    }
+    $('cal').innerHTML = html;
+  }
+
+  function ideaLink(slug) {
+    const [page, title, tag, time] = IDEAS[slug];
+    return `<a class="idea ${tagClass(tag)}" href="${ideaHref(slug)}"><span class="idea__icon">${tagIcon(tag)}</span>`
+      + `<span class="idea__title">${esc(title)}<small>${esc(tag)} · ${esc(time)}</small></span><span class="idea__go">${CHEVRON}</span></a>`;
+  }
+
+  function renderDays(trip) {
+    $('days').innerHTML = trip.days.map(d => `
+      <article class="day" id="d-${d.date}">
+        <header><span class="day__dow">${dow(d.date)}</span><span class="day__date">${md(d.date)}</span><span class="day__title">${esc(d.title)}</span></header>
+        <ol class="events">${d.events.map(e => `<li class="ev ev--${e.who}"><time>${esc(e.time)}<small>${esc(e.where)}</small></time><div class="ev__body">${e.idea ? ideaLink(e.idea) : ''}<p>${e.html}</p></div></li>`).join('')}</ol>
+        <p class="night place-${d.night || 'home'}">${d.night === 'air' ? PLANE : d.night ? MOON : HOUSE}${nightText(d)}</p>
+      </article>`).join('');
+  }
+
+  function renderMore(trip) {
+    const placed = new Set(trip.days.flatMap(d => d.events.map(e => e.idea).filter(Boolean)));
+    $('more').innerHTML = Object.keys(IDEAS).filter(slug => !placed.has(slug)).map(slug => {
+      const [page, title, tag, time] = IDEAS[slug];
+      return `<a class="chip ${tagClass(tag)}" href="${ideaHref(slug)}"><span class="idea__icon">${tagIcon(tag)}</span>`
+        + `<span class="idea__title">${esc(title)}<small>${page === 'krabi' ? 'Ao Nang' : 'Phi Phi'} · ${esc(time)}</small></span></a>`;
+    }).join('');
+  }
+
+  function render(leave, reason) {
+    const t0 = performance.now();
+    const trip = TRIPS[leave];
+    document.querySelectorAll('[data-leave]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.leave === leave)));
+    renderStays(trip);
+    renderCalendar(trip);
+    renderDays(trip);
+    renderMore(trip);
+    log('render', { leave, reason, days: trip.days.length, first: trip.days[0].date, last: trip.days[trip.days.length - 1].date, ms: Math.round(performance.now() - t0) });
+  }
+
+  // ---------- Boot ----------
+  let TRIPS;
+  try {
+    TRIPS = { thu: build('thu'), fri: build('fri') };
+    window.TRIP_CALENDAR = { trips: TRIPS, ideas: IDEAS }; // krabi-trip.check.cjs matches these to the flights and ideas pages
+    Object.values(TRIPS).forEach(selfCheck);
+    document.querySelectorAll('[data-leave]').forEach(b => {
+      const n = TRIPS[b.dataset.leave].days.filter(d => d.night === 'aonang' || d.night === 'phiphi').length;
+      b.querySelector('span').textContent = `${n} nights in Thailand`;
+      b.addEventListener('click', () => render(b.dataset.leave, 'switch'));
+    });
+    render('thu', 'page load');
+    const target = location.hash.startsWith('#d-') && document.getElementById(location.hash.slice(1));
+    if (target) { target.scrollIntoView(); log('jump: from link', location.hash); } // the cards exist only after render, so the browser cannot jump by itself
+    log('init: done', { today, ms: Math.round(performance.now() - boot) });
+  } catch (e) {
+    fail('init: failed', String(e && e.stack || e));
+  }
+})();
+</script>
+</body>
+</html>
