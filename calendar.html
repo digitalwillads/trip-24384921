@@ -21,6 +21,7 @@
     --will: #f5bd4f;
     --yana: #ff8466;
     --together: #62e3b5;
+    --warn: #fbbf24;
     --on-accent: #0a111e;
     --auh: #b69cff;
     --aonang: #4fc3f7;
@@ -42,6 +43,7 @@
       --will: #a86b12;
       --yana: #c8492d;
       --together: #138a64;
+      --warn: #b45309;
       --on-accent: #ffffff;
       --auh: #6d4fc2;
       --aonang: #0277bd;
@@ -52,6 +54,7 @@
   }
 
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; } /* some parts that hide also set display */
   html { -webkit-text-size-adjust: 100%; }
   body {
     margin: 0; font-family: var(--font); color: var(--text); line-height: 1.5; padding-bottom: 40px;
@@ -73,7 +76,7 @@
     letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim);
   }
   .section-label::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--together); }
-  section { margin-top: 56px; min-width: 0; }
+  section { margin-top: 48px; min-width: 0; }
   .note { margin: 8px 0 0; max-width: 62ch; font-size: 15px; color: var(--text-dim); }
 
   /* Site nav (same on every page) */
@@ -99,18 +102,17 @@
   .lead { margin: 18px 0 0; max-width: 62ch; font-size: clamp(16px, 1.6vw, 19px); color: var(--text-dim); }
   .lead b { color: var(--text); font-weight: 600; }
 
-  /* Leave Thursday or Friday (same switch as the Going home page) */
-  .daypick { margin-top: 28px; display: inline-grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); max-width: 100%; }
-  .daypick button { cursor: pointer; text-align: left; padding: 10px 16px; border-radius: 12px; border: 0; color: var(--text-dim); background: transparent; min-width: 0; }
-  .daypick button b { display: block; font-size: 16px; color: var(--text); font-weight: 700; }
-  .daypick button span { font-family: var(--mono); font-size: 12.5px; }
-  .daypick button[aria-pressed="true"] { background: var(--surface-2); box-shadow: inset 0 0 0 2px var(--together); }
-  .daypick button[aria-pressed="true"] span { color: var(--together); }
-  @media (max-width: 559px) {
-    .daypick { display: grid; width: 100%; }
-    .daypick button { padding: 10px 12px; }
-    .daypick button span { font-size: 11.5px; white-space: nowrap; }
-  }
+  /* Who is changing the plan (the same choice as on the ideas pages) */
+  .who { position: sticky; top: 56px; z-index: 15; margin-top: 24px; padding: 10px 0; background: color-mix(in srgb, var(--bg) 88%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .who__inner { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+  .who__label { font-size: 14px; color: var(--text-dim); }
+  .who__pick { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--border); }
+  .who__pick button { cursor: pointer; border: 0; padding: 7px 16px; border-radius: 999px; font-weight: 700; font-size: 14px; color: var(--text-dim); background: transparent; }
+  .who__pick button[data-name="Will"][aria-pressed="true"] { background: var(--will); color: var(--on-accent); }
+  .who__pick button[data-name="Yana"][aria-pressed="true"] { background: var(--yana); color: var(--on-accent); }
+  .who__status { font-size: 13px; color: var(--text-dim); }
+  .who__status.is-error { color: var(--yana); }
+  @media (max-width: 639px) { .who { position: static; } } /* on a phone the bar is two lines tall; the sheet asks for the name anyway */
 
   /* Places: the color of each night's band */
   .place-air { --c: var(--air); }
@@ -140,10 +142,11 @@
   .cell--today { box-shadow: inset 0 0 0 2px var(--together); }
   .cell__date { flex: none; height: var(--date-h); line-height: var(--date-h); font-family: var(--mono); font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; }
   .cell__space { flex: none; height: var(--band-h); }
-  .cell__title { font-size: 13px; font-weight: 700; line-height: 1.25; overflow-wrap: break-word; }
+  .cell__title { font-size: 13px; font-weight: 700; line-height: 1.25; overflow-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .cell__icons { margin-top: auto; display: flex; flex-wrap: wrap; gap: 4px; }
   .ico { --c: var(--text-dim); width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
   .ico svg { width: 14px; height: 14px; }
+  .ico--own { --c: var(--together); }
   .band {
     grid-row: 1; align-self: start; z-index: 1; pointer-events: none; min-width: 0;
     height: var(--band-h); margin: calc(1px + var(--pad) + var(--date-h) + var(--gap)) 5px 0; padding: 0 8px;
@@ -170,14 +173,15 @@
   /* Day by day */
   .day-grid { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 14px; }
   @media (min-width: 900px) { .day-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .day { min-width: 0; padding: 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; scroll-margin-top: 72px; }
+  .day { min-width: 0; padding: 20px; border-radius: 18px; background: var(--surface); border: 1px solid var(--border); display: flex; flex-direction: column; scroll-margin-top: 124px; }
   .day:target { border-color: var(--together); box-shadow: 0 0 0 1px var(--together); }
+  @media (max-width: 639px) { .day { scroll-margin-top: 72px; } } /* only the menu stays at the top on a phone */
   .day header { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: end; margin-bottom: 14px; }
   .day__dow { grid-row: span 2; font-family: var(--mono); font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); }
   .day__date { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
   .day__title { color: var(--text-dim); font-size: 14px; }
-  .events { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 12px; }
-  .ev { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; padding-left: 12px; border-left: 3px solid var(--c); }
+  .events { list-style: none; margin: 0 0 14px; padding: 0; display: grid; gap: 12px; }
+  .ev { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; padding: 2px 0 2px 12px; border-left: 3px solid var(--c); border-radius: 0 10px 10px 0; }
   .ev--will { --c: var(--will); }
   .ev--yana { --c: var(--yana); }
   .ev--together { --c: var(--together); }
@@ -185,17 +189,34 @@
   .ev time small { display: block; color: var(--text-dim); font-weight: 400; font-size: 11.5px; }
   .ev__body { min-width: 0; display: grid; gap: 8px; align-content: start; }
   .ev p { margin: 0; font-size: 15px; overflow-wrap: break-word; }
+  .ev .ev__title { font-size: 15.5px; font-weight: 800; line-height: 1.3; }
+  .ev__foot { display: flex; align-items: center; gap: 10px; }
+  .byline { font-size: 12.5px; color: var(--text-dim); }
+  .byline b { font-weight: 700; }
+  .byline--will b { color: var(--will); }
+  .byline--yana b { color: var(--yana); }
+  .ev .warn, .sheet .warn { display: flex; gap: 8px; align-items: flex-start; margin: 0; font-size: 14px; font-weight: 600; color: var(--warn); }
+  .warn svg { flex: none; width: 16px; height: 16px; margin-top: 2px; }
+  .booked { display: inline-block; margin-left: 6px; padding: 0 7px; border-radius: 999px; font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--together); border: 1px solid color-mix(in srgb, var(--together) 45%, transparent); vertical-align: 2px; white-space: nowrap; }
+  .edit-btn { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 13px; font-weight: 700; cursor: pointer; }
+  .edit-btn:hover { border-color: color-mix(in srgb, var(--together) 55%, transparent); }
+  .edit-btn svg { width: 14px; height: 14px; }
+  .add-btn { width: 100%; margin: 0 0 14px; padding: 10px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; border-radius: 12px; border: 1.5px dashed color-mix(in srgb, var(--together) 45%, var(--border)); background: transparent; color: var(--together); font-size: 14px; font-weight: 700; cursor: pointer; }
+  .add-btn:hover { background: color-mix(in srgb, var(--together) 8%, transparent); }
+  .add-btn svg { width: 16px; height: 16px; }
+  .ev.flash { animation: flash 1.8s ease; }
+  @keyframes flash { 0%, 45% { background: color-mix(in srgb, var(--together) 20%, transparent); } 100% { background: transparent; } }
+  .night { margin: auto 0 0; padding-top: 12px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text-dim); }
+  .night svg { flex: none; width: 16px; height: 16px; color: var(--c); }
   @media (max-width: 559px) { /* on a phone the time goes above the text, so the text and idea boxes get the full width */
     .ev { grid-template-columns: minmax(0, 1fr); gap: 6px; }
     .ev time small { display: inline; margin-left: 8px; }
   }
-  .night { margin: auto 0 0; padding-top: 12px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--text-dim); }
-  .night svg { flex: none; width: 16px; height: 16px; color: var(--c); }
 
-  /* An idea on a day, and an idea not on the calendar yet: both open the idea and its comments */
-  .idea, .chip { min-width: 0; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); border-radius: 12px; }
+  /* An idea on a day, and an idea not on the calendar yet */
+  .idea, .chip { min-width: 0; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); border-radius: 12px; text-align: left; }
   .idea { padding: 8px 10px; background: color-mix(in srgb, var(--c) 9%, var(--surface-2)); border: 1px solid color-mix(in srgb, var(--c) 32%, transparent); }
-  .chip { padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); }
+  .chip { width: 100%; padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); cursor: pointer; }
   .idea:hover, .chip:hover { border-color: color-mix(in srgb, var(--c) 65%, transparent); }
   .idea__icon { flex: none; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; background: color-mix(in srgb, var(--c) 18%, transparent); color: var(--c); }
   .idea__icon svg { width: 18px; height: 18px; }
@@ -206,6 +227,7 @@
   .more { margin-top: 18px; display: grid; grid-template-columns: 1fr; gap: 10px; }
   @media (min-width: 640px) { .more { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (min-width: 980px) { .more { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .more:empty::before { content: "Every idea is on the calendar."; color: var(--text-dim); font-size: 15px; }
 
   /* Idea tags: the same colors as the ideas pages */
   .tag-beach { --c: #4fc3f7; }
@@ -222,12 +244,61 @@
     .tag-hike { --c: #4d7c0f; } .tag-nature { --c: #15803d; } .tag-culture { --c: #a86b12; } .tag-food { --c: #c2410c; } .tag-nightlife { --c: #be185d; }
   }
 
+  /* The sheet: add, move or change one plan item. A bottom sheet on a phone, a dialog on a computer. */
+  dialog.sheet { width: min(560px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 0; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); color: var(--text); box-shadow: var(--shadow); overflow: hidden; }
+  dialog.sheet::backdrop { background: rgba(5, 9, 18, 0.62); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+  .sheet__form { margin: 0; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; max-height: calc(100dvh - 26px); }
+  @media (max-width: 559px) {
+    dialog.sheet { width: 100vw; max-width: 100vw; margin: auto 0 0; border-radius: 22px 22px 0 0; border-bottom: 0; max-height: 92dvh; }
+    .sheet__form { max-height: calc(92dvh - 2px); }
+  }
+  .sheet__head { padding: 18px 20px 12px; border-bottom: 1px solid var(--border); display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+  .sheet__kicker { display: block; font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+  .sheet__title { font-size: 20px; font-weight: 800; line-height: 1.2; overflow-wrap: break-word; }
+  .close { cursor: pointer; width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); display: grid; place-items: center; }
+  .close svg { width: 18px; height: 18px; }
+  .close:focus-visible, .edit-btn:focus-visible, .add-btn:focus-visible, .chip:focus-visible { outline: 2px solid color-mix(in srgb, var(--together) 70%, transparent); outline-offset: 2px; }
+  .sheet__body { overflow-y: auto; padding: 16px 20px 8px; display: grid; gap: 18px; align-content: start; }
+  .sheet__hint { margin: 0; font-size: 14px; color: var(--text-dim); }
+  .field { min-width: 0; display: grid; gap: 8px; }
+  .field[hidden] { display: none; }
+  .field__label { font-family: var(--mono); font-size: 11.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+  .seg { justify-self: start; display: inline-grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border); }
+  .seg button { cursor: pointer; padding: 8px 14px; border: 0; border-radius: 9px; background: transparent; color: var(--text-dim); font-weight: 700; }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: inset 0 0 0 2px var(--together); }
+  .pick-ideas { display: grid; gap: 6px; max-height: 236px; overflow-y: auto; padding: 2px; }
+  .pick-ideas .chip { padding: 9px 12px; background: var(--surface-2); }
+  .pick-ideas .chip[aria-pressed="true"] { border-color: var(--together); box-shadow: inset 0 0 0 1px var(--together); }
+  .text-in { width: 100%; padding: 11px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-size: 16px; } /* 16px stops the iPhone from zooming in */
+  textarea.text-in { resize: vertical; min-height: 64px; }
+  .text-in:focus, .time-in input:focus { outline: 2px solid color-mix(in srgb, var(--together) 70%, transparent); outline-offset: 1px; }
+  .dpick { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+  .dpick span { font-family: var(--mono); font-size: 10.5px; font-weight: 600; color: var(--text-dim); text-align: center; }
+  .dpick button { position: relative; min-width: 0; height: 46px; padding: 0 0 7px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-family: var(--mono); font-size: 14px; font-weight: 600; cursor: pointer; }
+  .dpick button i { position: absolute; left: 22%; right: 22%; bottom: 6px; height: 3px; border-radius: 2px; background: var(--c); }
+  .dpick button[aria-pressed="true"] { background: var(--together); color: var(--on-accent); border-color: transparent; }
+  .dpick button:disabled { opacity: 0.28; cursor: default; }
+  .parts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .parts button { cursor: pointer; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-weight: 700; font-size: 14px; }
+  .parts button[aria-pressed="true"] { background: var(--together); color: var(--on-accent); border-color: transparent; }
+  .time-in { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-dim); }
+  .time-in input { min-width: 128px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-size: 16px; }
+  .sheet__who { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; font-size: 14px; color: var(--text-dim); }
+  .sheet__link { font-size: 14px; color: var(--text-dim); }
+  .sheet__foot { padding: 12px 20px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--surface); display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .sheet__error { order: 3; width: 100%; margin: 0; font-size: 13.5px; font-weight: 600; color: var(--yana); }
+  .sheet__error:empty { display: none; }
+  .btn-remove { cursor: pointer; height: 46px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--border); background: transparent; color: var(--text-dim); font-weight: 700; }
+  .btn-remove.is-armed { color: var(--yana); border-color: var(--yana); }
+  .btn-save { cursor: pointer; margin-left: auto; height: 46px; padding: 0 24px; border: 0; border-radius: 14px; background: var(--together); color: var(--on-accent); font-weight: 800; }
+  .btn-save:disabled { opacity: 0.5; cursor: default; }
+
   footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--border); color: var(--text-dim); font-size: 13.5px; }
   footer p { margin: 0 0 6px; }
 
   .reveal { animation: fadeUp 0.7s cubic-bezier(.2, .7, .2, 1) both; animation-delay: calc(var(--i, 0) * 90ms); }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
-  @media (prefers-reduced-motion: reduce) { .reveal { animation: none; } .cell { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .reveal, .ev.flash { animation: none; } .cell { transition: none; } }
 </style>
 </head>
 <body>
@@ -250,13 +321,20 @@
   <div class="wrap">
     <p class="kicker reveal" style="--i:0"><span>Page 6</span><b>Every day of the trip</b></p>
     <h1 class="reveal" style="--i:1"><span class="a">The whole trip.</span> <span class="b">Day by day.</span></h1>
-    <p class="lead reveal" style="--i:2">The flights, the boats, where you sleep, and a <b>first plan</b> for your days. The plan uses your comments on the ideas pages. Tap a day to see its details.</p>
-    <div class="daypick reveal" style="--i:3" role="group" aria-label="Day you leave Krabi">
-      <button type="button" data-leave="thu" aria-pressed="true"><b>Leave Thu Dec 10</b><span>9 nights in Thailand</span></button>
-      <button type="button" data-leave="fri" aria-pressed="false"><b>Leave Fri Dec 11</b><span>10 nights in Thailand</span></button>
-    </div>
+    <p class="lead reveal" style="--i:2">Your flights are booked. Here is every day: the flights, the boats, where you sleep, and your plan. <b>You can both change the plan.</b> Tap <b>Edit</b> to move something, or <b>Add</b> to put something new on a day.</p>
   </div>
 </header>
+
+<div class="who">
+  <div class="wrap who__inner">
+    <span class="who__label">Who is on this device?</span>
+    <span class="who__pick" role="group" aria-label="Who is changing the plan">
+      <button type="button" data-name="Will" aria-pressed="false">Will</button>
+      <button type="button" data-name="Yana" aria-pressed="false">Yana</button>
+    </span>
+    <span class="who__status" id="plan-status" aria-live="polite">Loading your plan...</span>
+  </div>
+</div>
 
 <main class="wrap">
   <section id="calendar" aria-labelledby="cal-title">
@@ -275,23 +353,77 @@
   <section aria-labelledby="more-title">
     <p class="section-label">More ideas</p>
     <h2 id="more-title">Not on the calendar yet</h2>
-    <p class="note">Want a change? Leave a comment on the idea, and Will changes the calendar.</p>
+    <p class="note">Tap one to put it on a day.</p>
     <div class="more" id="more"></div>
   </section>
 
   <footer>
-    <p>A first plan, made on Nov 9, 2026 from your comments on the ideas pages. Opening days, start times and fees come from the ideas pages and the To Phi Phi page.</p>
-    <p>The flights are the same as on the Flights and Going home pages. All times are local.</p>
+    <p>The flights are your booked Etihad tickets. The first plan came from your comments on the ideas pages. Opening days, start times and fees come from the ideas pages and the To Phi Phi page.</p>
+    <p>Changes save on a small server, so you both see them on any device. Anyone with this page's link can see and change the plan. All times are local.</p>
   </footer>
 </main>
+
+<dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+  <form class="sheet__form" id="sheet-form" novalidate>
+    <div class="sheet__head">
+      <span id="sheet-icon"></span>
+      <div><span class="sheet__kicker" id="sheet-kicker"></span><h2 class="sheet__title" id="sheet-title"></h2></div>
+      <button class="close" type="button" id="sheet-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="sheet__body">
+      <p class="sheet__hint" id="sheet-hint" hidden></p>
+      <div class="field" id="field-what">
+        <span class="field__label">What</span>
+        <div class="seg" role="group" aria-label="What to add">
+          <button type="button" data-what="idea" aria-pressed="true">An idea</button>
+          <button type="button" data-what="own" aria-pressed="false">Your own</button>
+        </div>
+        <div class="pick-ideas" id="pick-ideas" role="group" aria-label="Ideas not on the calendar"></div>
+      </div>
+      <div class="field" id="field-own">
+        <label class="field__label" for="own-title">Name</label>
+        <input class="text-in" id="own-title" maxlength="80" autocomplete="off" placeholder="Dinner by the sea">
+        <label class="field__label" for="own-note">Note</label>
+        <textarea class="text-in" id="own-note" maxlength="500" rows="2" placeholder="Optional: where, who books, what to bring"></textarea>
+      </div>
+      <div class="field">
+        <span class="field__label">Day</span>
+        <div class="dpick" id="pick-day" role="group" aria-label="Day"></div>
+      </div>
+      <div class="field">
+        <span class="field__label">Time</span>
+        <div class="parts" id="pick-part" role="group" aria-label="Part of the day"></div>
+        <label class="time-in">Or an exact time <input type="time" id="pick-time" step="300"></label>
+      </div>
+      <div id="sheet-warn"></div>
+      <div class="sheet__who" id="sheet-who">
+        <span>Who is changing this?</span>
+        <span class="who__pick" role="group" aria-label="Who is changing this">
+          <button type="button" data-name="Will" aria-pressed="false">Will</button>
+          <button type="button" data-name="Yana" aria-pressed="false">Yana</button>
+        </span>
+      </div>
+      <a class="sheet__link" id="sheet-link" href="#">Read about this idea and its comments</a>
+    </div>
+    <div class="sheet__foot">
+      <button type="button" class="btn-remove" id="sheet-remove"></button>
+      <button type="submit" class="btn-save" id="sheet-save">Save</button>
+      <p class="sheet__error" id="sheet-error" role="alert"></p>
+    </div>
+  </form>
+</dialog>
 
 <script>
 (() => {
   'use strict';
   const log = (...a) => console.log('[calendar]', ...a);
+  const warn = (...a) => console.warn('[calendar]', ...a);
   const fail = (...a) => console.error('[calendar]', ...a);
   const boot = performance.now();
   log('init: start');
+  const API = 'https://trip-comments.digitalwillads.workers.dev'; // the trip server (~/Desktop/projects/trip-comments): GET /plan, PUT /plan/items/<id>
+  const NAMES = ['Will', 'Yana'];
+  const ME_KEY = 'krabi-trip-me'; // the same key as the ideas pages, so a device keeps one name
   const tabs = document.querySelector('.tabs'), current = tabs && tabs.querySelector('[aria-current="page"]');
   if (current) tabs.scrollLeft = current.offsetLeft - (tabs.clientWidth - current.clientWidth) / 2;
 
@@ -301,34 +433,40 @@
   const CITY = { SLC: 'Salt Lake City', ORD: 'Chicago', SVO: 'Moscow', AUH: 'Abu Dhabi', KBV: 'Krabi', JFK: 'New York' };
   const PLACES = {
     air: { name: 'Night flight', night: 'Night on the plane' },
-    auh: { name: 'Abu Dhabi', night: 'Night in Abu Dhabi' },
-    aonang: { name: 'Ao Nang', night: 'Night in Ao Nang' },
-    phiphi: { name: 'Phi Phi', night: 'Night on Phi Phi' },
+    auh: { name: 'Abu Dhabi', night: 'Night in Abu Dhabi', at: 'in Abu Dhabi' },
+    aonang: { name: 'Ao Nang', night: 'Night in Ao Nang', at: 'in Ao Nang' },
+    phiphi: { name: 'Phi Phi', night: 'Night on Phi Phi', at: 'on Phi Phi' },
   };
-  // slug: [ideas page, title, tag, time], as on ideas-krabi.html and ideas-phiphi.html.
+  const TRIP_FIRST = '2026-11-28', TRIP_LAST = '2026-12-11';
+  const PLAN_FIRST = '2026-11-29', PLAN_LAST = '2026-12-10'; // the days you can plan; the server keeps the same limits
+  const LAND = '2026-12-01', LEAVE = '2026-12-10', LEAVE_BOAT = '09:00';
+  const FERRY_FIRST = '2026-12-02', FERRY_LAST = '2026-12-09'; // at least one night in Ao Nang and one on Phi Phi
+  const PARTS = { 'Morning': '09:00', 'Afternoon': '14:00', 'Evening': '19:00', 'All day': '08:00' };
+
+  // slug: [ideas page, title, tag, time, short name], as on ideas-krabi.html and ideas-phiphi.html.
   const IDEAS = {
-    'railay': ['krabi', 'Railay and Phra Nang Cave Beach', 'Beach', 'Half day'],
-    'four-islands': ['krabi', '4 Islands boat tour', 'Boat trip', 'Half or full day'],
-    'hong-islands': ['krabi', 'Hong Islands tour', 'Boat trip', 'Full day'],
-    'tiger-cave-temple': ['krabi', 'Tiger Cave Temple climb', 'Hike', 'Half day'],
-    'emerald-pool': ['krabi', 'Emerald Pool and hot springs', 'Nature', 'Full day'],
-    'walking-street': ['krabi', 'Krabi Town Walking Street', 'Culture', 'Evening'],
-    'mangrove-kayak': ['krabi', 'Mangrove kayaking at Ao Thalane', 'Nature', 'Half day'],
-    'cooking-class': ['krabi', 'Thai cooking class', 'Food', '2 to 4 hours'],
-    'nopparat-thara-sunset': ['krabi', 'Sunset at Nopparat Thara Beach', 'Beach', 'Evening'],
-    'maya-bay-pileh': ['phiphi', 'Maya Bay and Pileh Lagoon by longtail', 'Boat trip', 'Half day'],
-    'viewpoint-sunset': ['phiphi', 'Phi Phi Viewpoint at sunset', 'Hike', '1 to 2 hours'],
-    'bamboo-island': ['phiphi', 'Bamboo Island snorkel trip', 'Snorkel', 'Half day'],
-    'monkey-beach-kayak': ['phiphi', 'Kayak to Monkey Beach', 'Nature', '1 to 2 hours'],
-    'scuba-diving': ['phiphi', 'Scuba diving', 'Dive', 'Half day'],
-    'long-beach-snorkel': ['phiphi', 'Snorkel with reef sharks at Long Beach', 'Snorkel', '1 to 2 hours'],
-    'loh-dalum-fire-show': ['phiphi', 'Fire shows at Loh Dalum Beach', 'Nightlife', 'Evening'],
-    'sunset-plankton': ['phiphi', 'Sunset and plankton boat trip', 'Boat trip', 'About 4 hours'],
-    'nui-beach': ['phiphi', 'Nui Beach', 'Beach', 'Half day'],
+    'railay': ['krabi', 'Railay and Phra Nang Cave Beach', 'Beach', 'Half day', 'Railay'],
+    'four-islands': ['krabi', '4 Islands boat tour', 'Boat trip', 'Half or full day', '4 Islands tour'],
+    'hong-islands': ['krabi', 'Hong Islands tour', 'Boat trip', 'Full day', 'Hong Islands'],
+    'tiger-cave-temple': ['krabi', 'Tiger Cave Temple climb', 'Hike', 'Half day', 'Tiger Cave Temple'],
+    'emerald-pool': ['krabi', 'Emerald Pool and hot springs', 'Nature', 'Full day', 'Emerald Pool'],
+    'walking-street': ['krabi', 'Krabi Town Walking Street', 'Culture', 'Evening', 'Walking Street'],
+    'mangrove-kayak': ['krabi', 'Mangrove kayaking at Ao Thalane', 'Nature', 'Half day', 'Mangrove kayaking'],
+    'cooking-class': ['krabi', 'Thai cooking class', 'Food', '2 to 4 hours', 'Cooking class'],
+    'nopparat-thara-sunset': ['krabi', 'Sunset at Nopparat Thara Beach', 'Beach', 'Evening', 'Beach sunset'],
+    'maya-bay-pileh': ['phiphi', 'Maya Bay and Pileh Lagoon by longtail', 'Boat trip', 'Half day', 'Maya Bay'],
+    'viewpoint-sunset': ['phiphi', 'Phi Phi Viewpoint at sunset', 'Hike', '1 to 2 hours', 'Viewpoint'],
+    'bamboo-island': ['phiphi', 'Bamboo Island snorkel trip', 'Snorkel', 'Half day', 'Bamboo Island'],
+    'monkey-beach-kayak': ['phiphi', 'Kayak to Monkey Beach', 'Nature', '1 to 2 hours', 'Monkey Beach'],
+    'scuba-diving': ['phiphi', 'Scuba diving', 'Dive', 'Half day', 'Scuba diving'],
+    'long-beach-snorkel': ['phiphi', 'Snorkel with reef sharks at Long Beach', 'Snorkel', '1 to 2 hours', 'Reef sharks'],
+    'loh-dalum-fire-show': ['phiphi', 'Fire shows at Loh Dalum Beach', 'Nightlife', 'Evening', 'Fire show'],
+    'sunset-plankton': ['phiphi', 'Sunset and plankton boat trip', 'Boat trip', 'About 4 hours', 'Plankton boat'],
+    'nui-beach': ['phiphi', 'Nui Beach', 'Beach', 'Half day', 'Nui Beach'],
   };
 
-  // Flights in UTC, the same as on the Flights page. Each flight gives two events: it leaves, and it lands.
-  const OUT_FLIGHTS = [
+  // Your booked flights (Etihad booking emails, Nov 8 and 9), in UTC; the page shows each city's local time.
+  const FLIGHTS = [
     { who: 'will', flight: 'AA 1141', from: 'SLC', to: 'ORD', dep: '2026-11-28T14:08:00Z', arr: '2026-11-28T17:30:00Z',
       depText: 'Will leaves Salt Lake City on American <code>AA 1141</code>.', arrText: 'Will lands in Chicago. 1 h 45 min to change planes.' },
     { who: 'will', flight: 'EY 10', from: 'ORD', to: 'AUH', dep: '2026-11-28T19:15:00Z', arr: '2026-11-29T08:35:00Z',
@@ -336,63 +474,44 @@
     { who: 'yana', flight: 'EY 842', from: 'SVO', to: 'AUH', dep: '2026-11-29T09:35:00Z', arr: '2026-11-29T15:25:00Z',
       depText: 'Yana leaves Moscow Sheremetyevo on Etihad <code>EY 842</code>.', arrText: 'Yana lands in Abu Dhabi. Your night together starts.' },
     { who: 'together', flight: 'EY 422', from: 'AUH', to: 'KBV', dep: '2026-11-30T16:55:00Z', arr: '2026-11-30T23:35:00Z',
-      depText: 'Etihad <code>EY 422</code> to Krabi. Nonstop overnight, 6 h 40 min.', arrText: 'You land in Krabi together.' },
-  ];
-
-  // The days between the flights: a first plan from your comments on the ideas pages (Nov 7).
-  // Walking Street is open Friday to Sunday only. Dec 9 is a new moon, the best night for the plankton glow.
-  const PLAN = [
-    { t: '2026-11-30T10:00:00+04:00', label: 'All day', tz: 'AUH', text: 'Your day together in Abu Dhabi. Ask the hotel for a late checkout.' },
-    { t: '2026-11-30T18:55:00+04:00', tz: 'AUH', text: 'Be at Abu Dhabi airport, Terminal A.' },
-    { t: '2026-12-01T07:15:00+07:00', label: 'After landing', tz: 'KBV', where: 'Krabi', text: 'Taxi to Ao Nang, about 30 minutes (฿350–450). Ask the hotel for an early check-in, then sleep.' },
-    { t: '2026-12-01T16:30:00+07:00', tz: 'KBV', where: 'Ao Nang', idea: 'nopparat-thara-sunset', text: 'Walk 10 to 15 minutes to the beach and watch the sun set over the sea.' },
-    { t: '2026-12-02T09:00:00+07:00', label: 'Morning', tz: 'KBV', where: 'Ao Nang', idea: 'mangrove-kayak', text: 'Half day. The tour picks you up in Ao Nang. Check the tide before you book.' },
-    { t: '2026-12-03T08:00:00+07:00', label: '8–9 AM', tz: 'KBV', where: 'Ao Nang', idea: 'four-islands', text: 'Hotel pickup. Choose a tour timed for low tide, when the sandbar shows. Bring ฿400 each in cash for the park fee.' },
-    { t: '2026-12-04T07:00:00+07:00', tz: 'KBV', where: 'Ao Nang', idea: 'emerald-pool', text: 'Full day, about 1.5 hours each way. Leave at 7:00 AM to be there when the gates open at 8:30, before the tour vans.' },
-    { t: '2026-12-05T10:00:00+07:00', label: 'Day', tz: 'KBV', where: 'Ao Nang', text: 'A free day at the beach. Pack for Phi Phi.' },
-    { t: '2026-12-05T17:00:00+07:00', tz: 'KBV', where: 'Krabi Town', idea: 'walking-street', text: 'Take the white songthaew to Krabi Town (฿60, or ฿80 after 6 PM). The last one back leaves at about 10 PM.' },
-    { t: '2026-12-06T09:30:00+07:00', tz: 'KBV', where: 'Ao Nang', boat: true, text: 'Ao Nang Princess ferry from Nopparat Thara pier, with hotel pickup. About 2 hours, ฿650 each. Book it a day or two before.' },
-    { t: '2026-12-06T11:30:00+07:00', tz: 'KBV', where: 'Phi Phi', text: 'Arrive at Tonsai Pier. Pay the ฿20 island fee in cash.' },
-    { t: '2026-12-06T20:00:00+07:00', label: 'Evening', tz: 'KBV', where: 'Phi Phi', idea: 'loh-dalum-fire-show', text: 'Walk a few minutes from Tonsai Pier to the bay.' },
-    { t: '2026-12-07T06:30:00+07:00', tz: 'KBV', where: 'Phi Phi', idea: 'long-beach-snorkel', text: 'Go early, when the sharks are most active. Swim together.' },
-    { t: '2026-12-07T17:00:00+07:00', label: 'Late afternoon', tz: 'KBV', where: 'Phi Phi', idea: 'viewpoint-sunset', text: 'Climb to the viewpoint for the sunset. Bring a torch for the walk down.' },
-    { t: '2026-12-08T07:00:00+07:00', tz: 'KBV', where: 'Phi Phi', idea: 'maya-bay-pileh', text: 'Take an early longtail to reach Maya Bay before the day-trip crowds. Park fee ฿400 each.' },
-    { t: '2026-12-09T15:00:00+07:00', tz: 'KBV', where: 'Phi Phi', idea: 'sunset-plankton', text: 'The boat leaves Tonsai Pier at about 3:00 PM and comes back after dark. Dec 9 is a new moon, so the glow is easy to see.' },
-  ];
-
-  // The last day, written for Thursday. Leaving on Friday moves all of it one day later, as on the Going home page.
-  const LEAVE = [
-    { t: '2026-12-10T09:00:00+07:00', label: 'Morning', tz: 'KBV', where: 'Phi Phi', boat: true, text: 'Boat from Tonsai Pier to Krabi Town (Klong Jilad pier), about 2 hours. Take a boat that reaches Krabi Town by mid-afternoon.' },
-    { t: '2026-12-10T14:00:00+07:00', label: 'Afternoon', tz: 'KBV', where: 'Krabi Town', text: 'Taxi from the pier to Krabi airport, about 30 minutes.' },
-    { t: '2026-12-10T18:00:00+07:00', tz: 'KBV', text: 'Be at Krabi airport.' },
+      depText: 'Etihad <code>EY 422</code> to Krabi. Nonstop overnight, 6 h 40 min. Seats 16E and 16F, together.', arrText: 'You land in Krabi together.' },
     { who: 'together', flight: 'EY 425', from: 'KBV', to: 'AUH', dep: '2026-12-10T13:55:00Z', arr: '2026-12-10T20:55:00Z',
       depText: 'Etihad <code>EY 425</code> to Abu Dhabi, together. 7 hours.', arrText: 'You land in Abu Dhabi and wait together in the terminal.' },
     { who: 'yana', flight: 'EY 841', from: 'AUH', to: 'SVO', dep: '2026-12-10T22:55:00Z', arr: '2026-12-11T04:45:00Z',
       depText: 'Yana flies Etihad <code>EY 841</code> to Moscow.', arrText: 'Yana lands in Moscow.' },
     { who: 'will', flight: 'EY 1', from: 'AUH', to: 'JFK', dep: '2026-12-10T23:35:00Z', arr: '2026-12-11T14:00:00Z',
       depText: 'Will flies Etihad <code>EY 1</code> to New York.', arrText: 'Will lands in New York.' },
-  ];
+  ].map(f => ({ ...f, dep: Date.parse(f.dep), arr: Date.parse(f.arr) }));
 
-  // Where you sleep each night. The last day has no night: you are home.
-  const NIGHTS = {
-    '2026-11-28': 'air', '2026-11-29': 'auh', '2026-11-30': 'air',
-    '2026-12-01': 'aonang', '2026-12-02': 'aonang', '2026-12-03': 'aonang', '2026-12-04': 'aonang', '2026-12-05': 'aonang',
-    '2026-12-06': 'phiphi', '2026-12-07': 'phiphi', '2026-12-08': 'phiphi', '2026-12-09': 'phiphi',
-  };
-  const TITLES = {
-    '2026-11-28': 'Will starts', '2026-11-29': 'Meet in Abu Dhabi', '2026-11-30': 'A day in Abu Dhabi',
-    '2026-12-01': 'Land in Krabi', '2026-12-02': 'Mangrove kayaking', '2026-12-03': '4 Islands tour', '2026-12-04': 'Emerald Pool',
-    '2026-12-05': 'Walking Street', '2026-12-06': 'Boat to Phi Phi', '2026-12-07': 'Reef sharks', '2026-12-08': 'Maya Bay', '2026-12-09': 'Plankton boat',
-  };
-  const ENDS = {
-    thu: { shift: 0, nights: { '2026-12-10': 'air' }, titles: { '2026-12-10': 'Leave Krabi', '2026-12-11': 'Fly home' }, extra: [] },
-    fri: {
-      shift: DAY_MS,
-      nights: { '2026-12-10': 'phiphi', '2026-12-11': 'air' },
-      titles: { '2026-12-10': 'Free day on Phi Phi', '2026-12-11': 'Leave Krabi', '2026-12-12': 'Fly home' },
-      extra: [{ t: '2026-12-10T10:00:00+07:00', label: 'All day', tz: 'KBV', where: 'Phi Phi', text: 'A free day on Phi Phi. Rest, or pick an idea from the list at the bottom.' }],
-    },
-  };
+  // Steps tied to the flights. They stay fixed.
+  const FIXED = [
+    { t: '2026-11-30T10:00:00+04:00', label: 'All day', tz: 'AUH', text: 'Your day together in Abu Dhabi. Ask the hotel for a late checkout.' },
+    { t: '2026-11-30T18:55:00+04:00', tz: 'AUH', text: 'Be at Abu Dhabi airport, Terminal A.' },
+    { t: '2026-12-01T07:15:00+07:00', label: 'After landing', tz: 'KBV', where: 'Krabi', text: 'Taxi to Ao Nang, about 30 minutes (฿350–450). Ask the hotel for an early check-in, then sleep.' },
+    { t: '2026-12-10T09:00:00+07:00', label: 'Morning', tz: 'KBV', where: 'Phi Phi', boat: true, text: 'Boat from Tonsai Pier to Krabi Town (Klong Jilad pier), about 2 hours. Take a boat that reaches Krabi Town by mid-afternoon.' },
+    { t: '2026-12-10T14:00:00+07:00', label: 'Afternoon', tz: 'KBV', where: 'Krabi Town', text: 'Taxi from the pier to Krabi airport, about 30 minutes.' },
+    { t: '2026-12-10T18:00:00+07:00', tz: 'KBV', text: 'Be at Krabi airport.' },
+  ];
+  const FIXED_TITLES = { '2026-11-28': 'Will starts', '2026-11-29': 'Meet in Abu Dhabi', '2026-11-30': 'A day in Abu Dhabi', '2026-12-01': 'Land in Krabi', '2026-12-10': 'Leave Krabi', '2026-12-11': 'Fly home' };
+
+  // The first plan, from your comments on the ideas pages. Both of you can move, add and remove plan items;
+  // the server keeps only the changes (one row per item). Times are local wall-clock times.
+  const FIRST_PLAN = [
+    { id: 'nopparat-thara-sunset', date: '2026-12-01', time: '16:30', note: 'Walk 10 to 15 minutes to the beach and watch the sun set over the sea.' },
+    { id: 'mangrove-kayak', date: '2026-12-02', time: '09:00', label: 'Morning', note: 'Half day. The tour picks you up in Ao Nang. Check the tide before you book.' },
+    { id: 'four-islands', date: '2026-12-03', time: '08:00', note: 'Hotel pickup between 8 and 9 AM. Choose a tour timed for low tide, so you can walk on the sandbar. Bring ฿400 each in cash for the park fee.' },
+    { id: 'emerald-pool', date: '2026-12-04', time: '07:00', note: 'Full day, about 1.5 hours each way. The gates open at 8:30. Get there before the tour vans come at about 10:00.' },
+    { id: 'tiger-cave-temple', date: '2026-12-05', time: '06:00', note: 'Climb the 1,260 steps before the heat and the crowds. It is about 30 minutes from Ao Nang by taxi or Grab.' },
+    { id: 'beach-day', date: '2026-12-05', time: '14:00', label: 'Afternoon', title: 'Beach afternoon', note: '' },
+    { id: 'walking-street', date: '2026-12-05', time: '17:00', note: 'Take the white songthaew to Krabi Town (฿60, or ฿80 after 6 PM). The last one back leaves at about 10 PM.' },
+    { id: 'ferry', date: '2026-12-06', time: '09:30', title: 'Ferry to Phi Phi', note: 'The Ao Nang Princess leaves Nopparat Thara pier at 9:30 AM, with hotel pickup, and takes about 2 hours (฿650 each). Pay the ฿20 island fee in cash at Tonsai Pier. Book it a day or two before.' },
+    { id: 'loh-dalum-fire-show', date: '2026-12-06', time: '20:00', label: 'Evening', note: 'Walk a few minutes from Tonsai Pier to the bay.' },
+    { id: 'long-beach-snorkel', date: '2026-12-07', time: '06:30', note: 'Go early: the sharks are most active from 6:30 to 7:00 AM. Swim together.' },
+    { id: 'viewpoint-sunset', date: '2026-12-07', time: '17:00', note: 'Climb to the viewpoint for the sunset. Bring a torch for the walk down.' },
+    { id: 'maya-bay-pileh', date: '2026-12-08', time: '07:00', note: 'Take an early longtail, before the day-trip crowds. Park fee ฿400 each.' },
+    { id: 'sunset-plankton', date: '2026-12-09', time: '15:00', note: 'The boat leaves Tonsai Pier at about 3:00 PM and comes back after dark. Dark nights show the glow best, and Dec 9 is a new moon.' },
+  ];
+  const kindOf = id => (id === 'ferry' ? 'ferry' : IDEAS[id] ? 'idea' : 'own');
 
   // ---------- Dates ----------
   const fmtCache = new Map();
@@ -411,59 +530,119 @@
   const weekday = iso => new Date(noon(iso)).getUTCDay(); // 0 = Sunday
   const dow = iso => formatter('UTC', { weekday: 'short' }).format(noon(iso));
   const md = iso => formatter('UTC', { month: 'short', day: 'numeric' }).format(noon(iso));
+  const clock = hhmm => { const [h, m] = hhmm.split(':').map(Number); return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`; };
+  const zoneOf = date => (date <= '2026-11-30' ? 'AUH' : 'KBV'); // plan days before Dec 1 are in Abu Dhabi, the rest in Thailand
+  const atLocal = (date, hhmm) => Date.parse(`${date}T${hhmm}:00${zoneOf(date) === 'AUH' ? '+04:00' : '+07:00'}`);
   const pad = n => String(n).padStart(2, '0');
   const now = new Date();
   const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`; // the device's own date: during the trip, the local day
 
-  // ---------- Build one version of the trip ----------
-  function build(leave) {
-    const end = ENDS[leave];
-    // Flights in the same shape as window.TRIP_LEGS on the Flights and Going home pages (dep and arr in ms, UTC).
-    const legs = [...OUT_FLIGHTS.map(f => [f, 0]), ...LEAVE.filter(e => e.dep).map(f => [f, end.shift])]
-      .map(([f, shift]) => ({ ...f, dep: Date.parse(f.dep) + shift, arr: Date.parse(f.arr) + shift }));
-    const typed = (e, shift) => ({ ts: Date.parse(e.t) + shift, tz: e.tz, where: e.where, label: e.label, who: 'together', html: e.text, idea: e.idea, kind: e.boat ? 'boat' : e.idea ? 'idea' : 'note' });
-    const events = [
-      ...legs.flatMap(l => [
-        { ts: l.dep, tz: l.from, who: l.who, html: l.depText, kind: 'flight' },
-        { ts: l.arr, tz: l.to, who: l.who, html: l.arrText, kind: 'flight' },
-      ]),
-      ...PLAN.map(e => typed(e, 0)),
-      ...end.extra.map(e => typed(e, 0)),
-      ...LEAVE.filter(e => !e.dep).map(e => typed(e, end.shift)),
-    ]
-      .map(e => ({ ...e, date: dateIn(e.ts, TZ[e.tz]), time: e.label || timeIn(e.ts, TZ[e.tz]), where: e.where || CITY[e.tz] }))
-      .sort((a, b) => a.ts - b.ts);
-    const nights = { ...NIGHTS, ...end.nights }, titles = { ...TITLES, ...end.titles };
-    const days = [];
-    for (let d = events[0].date; d <= events[events.length - 1].date; d = addDays(d, 1)) {
-      days.push({ date: d, title: titles[d] || '', night: nights[d] || null, events: events.filter(e => e.date === d) });
+  // ---------- State ----------
+  let me = null;
+  try { me = localStorage.getItem(ME_KEY); } catch (e) { /* storage blocked: ask each visit */ }
+  if (!NAMES.includes(me)) me = null;
+  let rows = new Map(); // id -> the server's latest change to that plan item
+  let planState = 'loading'; // loading | ready | failed
+  let trip = null;
+
+  // ---------- The plan: the first plan with the server's changes ----------
+  function currentPlan() {
+    const items = [];
+    for (const first of FIRST_PLAN) {
+      const row = rows.get(first.id);
+      if (row && row.removed) continue;
+      const item = { ...first, kind: kindOf(first.id), label: first.label || '', changedBy: row ? row.author : null, added: false };
+      if (row) Object.assign(item, { date: row.date, time: row.time, label: row.label || '' });
+      if (row && item.kind === 'own') Object.assign(item, { title: row.title || first.title, note: row.note || '' });
+      items.push(item);
     }
-    // A run is a stretch of nights in one place; its band shows the place and the number of nights.
+    for (const [id, row] of rows) {
+      if (row.removed || FIRST_PLAN.some(f => f.id === id)) continue;
+      const kind = kindOf(id);
+      if (kind === 'own' && !row.title) { warn('plan: a new item has no name, so it is not shown', id); continue; }
+      items.push({ id, kind, date: row.date, time: row.time, label: row.label || '', title: row.title || '', note: kind === 'own' ? row.note || '' : '', changedBy: row.author, added: true });
+    }
+    // A change from the server that this page cannot show (an old day, a bad time) falls back to the first plan.
+    return items.filter(i => {
+      const ok = i.date >= PLAN_FIRST && i.date <= PLAN_LAST && /^\d\d:\d\d$/.test(i.time || '') && (i.kind !== 'ferry' || (i.date >= FERRY_FIRST && i.date <= FERRY_LAST));
+      if (!ok) warn('plan: item outside the trip, not shown', i.id, i.date, i.time);
+      return ok;
+    }).map(i => ({ ...i, ts: atLocal(i.date, i.time) }));
+  }
+  const ferryOf = plan => plan.find(i => i.kind === 'ferry') || { ...FIRST_PLAN.find(f => f.id === 'ferry'), kind: 'ferry' };
+
+  // Where you are at a local day and time: the ferry day splits Ao Nang from Phi Phi.
+  function placeAt(date, hhmm, ferry) {
+    if (date <= '2026-11-30') return 'auh';
+    if (date < ferry.date) return 'aonang';
+    if (date === ferry.date) return hhmm < ferry.time ? 'aonang' : 'phiphi';
+    return 'phiphi';
+  }
+  function nightOf(date, ferry) {
+    if (date === '2026-11-28' || date === '2026-11-30' || date === LEAVE) return 'air';
+    if (date === '2026-11-29') return 'auh';
+    if (date > LEAVE) return null; // home
+    return date < ferry.date ? 'aonang' : 'phiphi';
+  }
+
+  // Rules a plan item should keep. A broken rule shows a warning on the item; it does not stop the change.
+  function warningsFor(item, ferry) {
+    const out = [];
+    if (item.id === 'walking-street' && ![5, 6, 0].includes(weekday(item.date))) out.push('Walking Street is open Friday to Sunday only.');
+    if (item.kind === 'idea') {
+      const near = IDEAS[item.id][0] === 'krabi' ? 'aonang' : 'phiphi', here = placeAt(item.date, item.time, ferry);
+      if (near !== here) out.push(`This idea is near ${PLACES[near].name}, but at that time you are ${PLACES[here].at}.`);
+    }
+    if (item.kind !== 'ferry' && item.date === LEAVE && item.time >= LEAVE_BOAT) out.push('This is the day you fly home. Your boat leaves Phi Phi in the morning.');
+    return out;
+  }
+
+  // ---------- Build the days ----------
+  const FLIGHT_EVENTS = FLIGHTS.flatMap(f => [
+    { ts: f.dep, tz: f.from, who: f.who, html: f.depText, kind: 'flight', booked: true },
+    { ts: f.arr, tz: f.to, who: f.who, html: f.arrText, kind: 'flight' },
+  ]);
+  const FIXED_EVENTS = FIXED.map(e => ({ ts: Date.parse(e.t), tz: e.tz, where: e.where, label: e.label, who: 'together', html: e.text, kind: e.boat ? 'boat' : 'note' }));
+
+  function build() {
+    const plan = currentPlan(), ferry = ferryOf(plan);
+    const events = [
+      ...[...FLIGHT_EVENTS, ...FIXED_EVENTS].map(e => ({ ...e, date: dateIn(e.ts, TZ[e.tz]), time: e.label || timeIn(e.ts, TZ[e.tz]), where: e.where || CITY[e.tz], order: 0 })),
+      ...plan.map(i => {
+        const where = i.kind === 'idea' ? (i.id === 'walking-street' ? 'Krabi Town' : IDEAS[i.id][0] === 'krabi' ? 'Ao Nang' : 'Phi Phi') : i.kind === 'ferry' ? 'Ao Nang' : PLACES[placeAt(i.date, i.time, ferry)].name;
+        return { ts: i.ts, date: i.date, time: i.label || clock(i.time), where, who: 'together', kind: i.kind === 'ferry' ? 'boat' : 'plan', item: i, warnings: warningsFor(i, ferry), order: 1 };
+      }),
+    ].sort((a, b) => a.ts - b.ts || a.order - b.order);
+    const days = [];
+    for (let d = TRIP_FIRST; d <= TRIP_LAST; d = addDays(d, 1)) {
+      const evs = events.filter(e => e.date === d);
+      const items = evs.filter(e => e.item).map(e => e.item);
+      const shorts = [...items.filter(i => i.kind === 'idea').map(i => IDEAS[i.id][4]), ...items.filter(i => i.kind === 'own').map(i => i.title)].slice(0, 2);
+      const title = FIXED_TITLES[d] || (d === ferry.date ? 'Boat to Phi Phi' : shorts.join(' · ') || 'Free day');
+      days.push({ date: d, title, night: nightOf(d, ferry), events: evs });
+    }
     let run = 0;
     days.forEach((d, i) => { d.run = d.night ? (i > 0 && days[i - 1].night === d.night ? run : ++run) : 0; });
     days.forEach(d => { d.runNights = d.run ? days.filter(x => x.run === d.run).length : 0; });
-    return { leave, days, legs };
+    return { days, plan, ferry };
   }
 
-  // Rules the plan must keep. A broken rule logs an error, and krabi-trip.check.cjs fails on console errors.
-  function selfCheck(trip) {
-    const problems = [], placed = new Set();
-    trip.days.forEach((d, i) => {
-      if (!d.title) problems.push(`${d.date} has no title`);
-      if (!d.night && i < trip.days.length - 1) problems.push(`${d.date} has no place to sleep`);
-      d.events.forEach(e => {
-        if (!e.idea) return;
-        if (!IDEAS[e.idea]) problems.push(`${d.date}: no idea "${e.idea}" on the ideas pages`);
-        if (placed.has(e.idea)) problems.push(`${d.date}: "${e.idea}" is on the calendar twice`);
-        placed.add(e.idea);
-        if (e.idea === 'walking-street' && ![5, 6, 0].includes(weekday(d.date))) problems.push(`${d.date}: Walking Street is open Friday to Sunday only`);
-        const place = IDEAS[e.idea] && IDEAS[e.idea][0], night = d.night === 'air' && i > 0 ? trip.days[i - 1].night : d.night;
-        if (place && night !== (place === 'krabi' ? 'aonang' : 'phiphi')) problems.push(`${d.date}: "${e.idea}" is not where you sleep that night`);
-      });
-    });
-    if (trip.days[trip.days.length - 1].night) problems.push('the last day has a night away from home');
-    problems.forEach(p => fail('self-check:', p, { leave: trip.leave }));
-    log('self-check', { leave: trip.leave, days: trip.days.length, problems: problems.length });
+  // Checks of this page's own facts, not of your changes. A broken one is a bug: it logs an error,
+  // and krabi-trip.check.cjs fails on console errors.
+  function selfCheck() {
+    const problems = [], ids = new Set();
+    for (const f of FIRST_PLAN) {
+      if (ids.has(f.id)) problems.push(`first plan: "${f.id}" is in it twice`);
+      ids.add(f.id);
+      if (kindOf(f.id) !== 'idea' && !f.title) problems.push(`first plan: "${f.id}" has no name (a misspelled idea slug lands here too)`);
+      if (f.date < PLAN_FIRST || f.date > PLAN_LAST) problems.push(`first plan: "${f.id}" is outside the days you can plan`);
+      if (f.label && !PARTS[f.label]) problems.push(`first plan: "${f.id}" has the label "${f.label}"`);
+    }
+    if (!FIRST_PLAN.some(f => f.id === 'ferry')) problems.push('first plan: no ferry, so the nights cannot be set');
+    const first = FIRST_PLAN.map(f => ({ ...f, kind: kindOf(f.id) }));
+    first.forEach(f => warningsFor(f, first.find(x => x.id === 'ferry')).forEach(w => problems.push(`first plan: ${f.id}: ${w}`)));
+    problems.forEach(p => fail('self-check:', p));
+    log('self-check', { problems: problems.length });
   }
 
   // ---------- Icons ----------
@@ -483,16 +662,31 @@
   const MOON = stroke('<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>');
   const HOUSE = stroke('<path d="M3 11.5 12 4l9 7.5M5.5 9.5V20h13V9.5"/>');
   const CHEVRON = stroke('<path d="M9 6l6 6-6 6"/>');
+  const PIN = stroke('<path d="M12 21s-6.5-5.8-6.5-11a6.5 6.5 0 0 1 13 0c0 5.2-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>');
+  const PENCIL = stroke('<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>');
+  const PLUS = stroke('<path d="M12 5v14M5 12h14"/>');
+  const ALERT = stroke('<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>');
   const tagIcon = tag => stroke(ICON_PATHS[tag] || ICON_PATHS.Nature);
   const tagClass = tag => `tag-${String(tag).toLowerCase().replace(/\s+/g, '-')}`;
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
   const ideaHref = slug => `ideas-${IDEAS[slug][0]}.html#${slug}`; // the ideas page opens this idea and its comments
   const nightText = d => (d.night ? PLACES[d.night].night : 'Home: Will in New York, Yana in Moscow');
+  const iconFor = item => (item.kind === 'idea' ? `<span class="idea__icon ${tagClass(IDEAS[item.id][2])}">${tagIcon(IDEAS[item.id][2])}</span>`
+    : item.kind === 'ferry' ? `<span class="idea__icon tag-boat-trip">${tagIcon('Boat trip')}</span>` : `<span class="idea__icon ico--own">${PIN}</span>`);
+  const titleOf = item => (item.kind === 'idea' ? IDEAS[item.id][1] : item.title);
 
-  // ---------- Render ----------
+  // ---------- Render the page ----------
   const $ = id => document.getElementById(id);
 
-  function renderStays(trip) {
+  function renderStatus(text, isError) {
+    const el = $('plan-status');
+    el.textContent = text || (planState === 'loading' ? 'Loading your plan...' : planState === 'failed'
+      ? 'Your changes did not load. You see the first plan. Check the connection, then reload.'
+      : 'Saved for both of you.');
+    el.classList.toggle('is-error', isError === undefined ? planState === 'failed' : isError);
+  }
+
+  function renderStays() {
     const runs = [];
     trip.days.filter(d => d.night).forEach(d => {
       const last = runs[runs.length - 1];
@@ -505,24 +699,23 @@
       + `<li class="place-air"><i></i><b>Night flights</b><span>${air.length}<em> · ${air.map(r => `${dow(r.dates[0])} ${md(r.dates[0])}`).join(', ')}</em></span></li>`;
   }
 
-  function renderCalendar(trip) {
+  function renderCalendar() {
     const byDate = new Map(trip.days.map(d => [d.date, d]));
-    const first = trip.days[0].date, last = trip.days[trip.days.length - 1].date;
-    const start = addDays(first, -weekday(first)), stop = addDays(last, 6 - weekday(last));
+    const start = addDays(TRIP_FIRST, -weekday(TRIP_FIRST)), stop = addDays(TRIP_LAST, 6 - weekday(TRIP_LAST));
     let html = '<div class="cal__head" aria-hidden="true">' + ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<span>${d}</span>`).join('') + '</div>';
     for (let w = start; w <= stop; w = addDays(w, 7)) {
       const week = Array.from({ length: 7 }, (_, i) => addDays(w, i));
       html += '<div class="week">';
       week.forEach((d, i) => {
         const day = byDate.get(d);
-        const label = d === first || d.endsWith('-01') ? md(d) : String(Number(d.slice(8)));
+        const label = d === TRIP_FIRST || d.endsWith('-01') ? md(d) : String(Number(d.slice(8)));
         if (!day) { html += `<span class="cell cell--off" style="grid-column:${i + 1}" aria-hidden="true"><span class="cell__date">${label}</span></span>`; return; }
         const icons = [];
         if (day.events.some(e => e.kind === 'flight')) icons.push(`<span class="ico">${PLANE}</span>`);
         if (day.events.some(e => e.kind === 'boat')) icons.push(`<span class="ico tag-boat-trip">${tagIcon('Boat trip')}</span>`);
-        day.events.filter(e => e.idea).forEach(e => icons.push(`<span class="ico ${tagClass(IDEAS[e.idea][2])}">${tagIcon(IDEAS[e.idea][2])}</span>`));
-        const aria = `${dow(d)} ${md(d)}: ${day.title}. ${nightText(day)}.`;
-        html += `<a class="cell${d === today ? ' cell--today' : ''}" style="grid-column:${i + 1}" href="#d-${d}" aria-label="${esc(aria)}">`
+        day.events.filter(e => e.item && e.item.kind === 'idea').forEach(e => icons.push(`<span class="ico ${tagClass(IDEAS[e.item.id][2])}">${tagIcon(IDEAS[e.item.id][2])}</span>`));
+        if (day.events.some(e => e.item && e.item.kind === 'own')) icons.push(`<span class="ico ico--own">${PIN}</span>`);
+        html += `<a class="cell${d === today ? ' cell--today' : ''}" style="grid-column:${i + 1}" href="#d-${d}" aria-label="${esc(`${dow(d)} ${md(d)}: ${day.title}. ${nightText(day)}.`)}">`
           + `<span class="cell__date">${label}</span><span class="cell__space"></span><span class="cell__title">${esc(day.title)}</span><span class="cell__icons">${icons.join('')}</span></a>`;
       });
       for (let i = 0; i < 7;) {
@@ -540,55 +733,264 @@
   }
 
   function ideaLink(slug) {
-    const [page, title, tag, time] = IDEAS[slug];
+    const [, title, tag, time] = IDEAS[slug];
     return `<a class="idea ${tagClass(tag)}" href="${ideaHref(slug)}"><span class="idea__icon">${tagIcon(tag)}</span>`
       + `<span class="idea__title">${esc(title)}<small>${esc(tag)} · ${esc(time)}</small></span><span class="idea__go">${CHEVRON}</span></a>`;
   }
-
-  function renderDays(trip) {
+  function planBody(e) {
+    const i = e.item;
+    const by = i.changedBy ? `<span class="byline byline--${i.changedBy.toLowerCase()}">${i.added ? 'Added' : 'Changed'} by <b>${esc(i.changedBy)}</b></span>` : '';
+    return (i.kind === 'idea' ? ideaLink(i.id) : `<p class="ev__title">${esc(i.title)}</p>`)
+      + (i.note ? `<p>${i.kind === 'own' ? esc(i.note) : i.note}</p>` : '')
+      + e.warnings.map(w => `<p class="warn">${ALERT}<span>${esc(w)}</span></p>`).join('')
+      + `<div class="ev__foot">${by}<button type="button" class="edit-btn" data-edit="${esc(i.id)}" aria-label="Edit ${esc(titleOf(i))}">${PENCIL}Edit</button></div>`;
+  }
+  function renderDays() {
     $('days').innerHTML = trip.days.map(d => `
       <article class="day" id="d-${d.date}">
         <header><span class="day__dow">${dow(d.date)}</span><span class="day__date">${md(d.date)}</span><span class="day__title">${esc(d.title)}</span></header>
-        <ol class="events">${d.events.map(e => `<li class="ev ev--${e.who}"><time>${esc(e.time)}<small>${esc(e.where)}</small></time><div class="ev__body">${e.idea ? ideaLink(e.idea) : ''}<p>${e.html}</p></div></li>`).join('')}</ol>
+        <ol class="events">${d.events.map(e => `<li class="ev ev--${e.who}${e.item ? ' ev--plan' : ''}"${e.item ? ` data-item="${esc(e.item.id)}"` : ''}><time>${esc(e.time)}<small>${esc(e.where)}</small></time>`
+          + `<div class="ev__body">${e.item ? planBody(e) : `<p>${e.html}${e.booked ? ' <span class="booked">Booked</span>' : ''}</p>`}</div></li>`).join('')}</ol>
+        ${d.date >= PLAN_FIRST && d.date <= PLAN_LAST ? `<button type="button" class="add-btn" data-add-day="${d.date}">${PLUS}Add to ${dow(d.date)} ${md(d.date)}</button>` : ''}
         <p class="night place-${d.night || 'home'}">${d.night === 'air' ? PLANE : d.night ? MOON : HOUSE}${nightText(d)}</p>
       </article>`).join('');
   }
 
-  function renderMore(trip) {
-    const placed = new Set(trip.days.flatMap(d => d.events.map(e => e.idea).filter(Boolean)));
-    $('more').innerHTML = Object.keys(IDEAS).filter(slug => !placed.has(slug)).map(slug => {
+  const unplacedIdeas = () => Object.keys(IDEAS).filter(slug => !trip.plan.some(i => i.id === slug));
+  function renderMore() {
+    $('more').innerHTML = unplacedIdeas().map(slug => {
       const [page, title, tag, time] = IDEAS[slug];
-      return `<a class="chip ${tagClass(tag)}" href="${ideaHref(slug)}"><span class="idea__icon">${tagIcon(tag)}</span>`
-        + `<span class="idea__title">${esc(title)}<small>${page === 'krabi' ? 'Ao Nang' : 'Phi Phi'} · ${esc(time)}</small></span></a>`;
+      return `<button type="button" class="chip ${tagClass(tag)}" data-add-idea="${slug}"><span class="idea__icon">${tagIcon(tag)}</span>`
+        + `<span class="idea__title">${esc(title)}<small>${page === 'krabi' ? 'Ao Nang' : 'Phi Phi'} · ${esc(time)}</small></span><span class="idea__go">${PLUS}</span></button>`;
     }).join('');
   }
 
-  function render(leave, reason) {
+  function render(reason) {
     const t0 = performance.now();
-    const trip = TRIPS[leave];
-    document.querySelectorAll('[data-leave]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.leave === leave)));
-    renderStays(trip);
-    renderCalendar(trip);
-    renderDays(trip);
-    renderMore(trip);
-    log('render', { leave, reason, days: trip.days.length, first: trip.days[0].date, last: trip.days[trip.days.length - 1].date, ms: Math.round(performance.now() - t0) });
+    trip = build();
+    renderStays();
+    renderCalendar();
+    renderDays();
+    renderMore();
+    const warnings = trip.days.reduce((n, d) => n + d.events.reduce((m, e) => m + (e.warnings ? e.warnings.length : 0), 0), 0);
+    log('render', { reason, items: trip.plan.length, changes: rows.size, ferry: trip.ferry.date, warnings, ms: Math.round(performance.now() - t0) });
   }
 
+  // ---------- Server ----------
+  async function loadPlan(reason) {
+    const t0 = performance.now();
+    log('fetch: plan', { reason });
+    try {
+      const r = await fetch(`${API}/plan`, { cache: 'no-store' });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const items = (await r.json()).items || [];
+      rows = new Map(items.map(x => [x.id, x]));
+      planState = 'ready';
+      log('fetch: plan ok', { changes: rows.size, ms: Math.round(performance.now() - t0) });
+      render(reason);
+      renderStatus();
+    } catch (e) {
+      fail('fetch: plan failed', { reason, error: String(e) });
+      if (planState !== 'ready') planState = 'failed';
+      renderStatus(planState === 'ready' ? 'Your newest changes did not load. Check the connection, then reload.' : '', true);
+    }
+  }
+  async function putItem(id, body) {
+    const t0 = performance.now();
+    log('put: plan item', { id, author: body.author, date: body.date, time: body.time, label: body.label, removed: !!body.removed });
+    const r = await fetch(`${API}/plan/items/${encodeURIComponent(id)}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(data.error || `HTTP ${r.status}`);
+    rows.set(id, data.item);
+    log('put: plan item ok', { id, ms: Math.round(performance.now() - t0) });
+    render('saved');
+    renderStatus(`Saved. ${NAMES.find(n => n !== body.author)} sees it too.`, false);
+    return data.item;
+  }
+
+  // ---------- Who is on this device ----------
+  function setMe(name) {
+    me = name;
+    try { localStorage.setItem(ME_KEY, name); } catch (e) { /* not saved: fine for this visit */ }
+    document.querySelectorAll('[data-name]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.name === me)));
+    $('sheet-who').hidden = true;
+    sheetError('');
+    log('me', me);
+  }
+  document.querySelectorAll('[data-name]').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.name === me));
+    b.addEventListener('click', () => setMe(b.dataset.name));
+  });
+
+  // ---------- The sheet: add, move, change or remove one plan item ----------
+  const sheet = $('sheet'), S = {};
+  const sheetError = text => { $('sheet-error').textContent = text; };
+  const newId = () => 'c-' + Array.from(crypto.getRandomValues(new Uint8Array(4)), b => b.toString(16).padStart(2, '0')).join('');
+
+  function openSheet(o) {
+    if (o.mode === 'edit') {
+      const item = trip.plan.find(i => i.id === o.id);
+      if (!item) { warn('sheet: no such item', o.id); return; }
+      Object.assign(S, { mode: 'edit', id: item.id, kind: item.kind, what: item.kind === 'idea' ? 'idea' : 'own', idea: item.kind === 'idea' ? item.id : null, date: item.date, time: item.time, label: item.label || '', armed: false, saving: false });
+      $('own-title').value = item.kind === 'own' ? item.title : '';
+      $('own-note').value = item.kind === 'own' ? item.note : '';
+    } else {
+      const part = o.idea && IDEAS[o.idea][3] === 'Evening' ? 'Evening' : o.idea ? 'Morning' : '';
+      Object.assign(S, { mode: 'add', id: null, kind: o.idea ? 'idea' : null, what: 'idea', idea: o.idea || null, fixedIdea: !!o.idea, date: o.date || null, time: part ? PARTS[part] : '', label: part, armed: false, saving: false });
+      $('own-title').value = '';
+      $('own-note').value = '';
+    }
+    sheetError('');
+    renderSheet();
+    if (!sheet.open) sheet.showModal();
+    log('sheet: open', { mode: S.mode, id: S.id || S.idea, date: S.date });
+  }
+
+  function candidate() {
+    const kind = S.mode === 'edit' ? S.kind : S.what === 'idea' ? 'idea' : 'own';
+    return { id: S.mode === 'edit' ? S.id : kind === 'idea' ? S.idea : 'new', kind, date: S.date, time: S.time };
+  }
+  // The warnings the choice so far would show. Moving the ferry also moves where you are, so it counts.
+  function sheetWarnings() {
+    const c = candidate();
+    if (!c.date || !c.time || (c.kind === 'idea' && !IDEAS[c.id])) return '';
+    const ferry = S.kind === 'ferry' ? { ...trip.ferry, date: c.date, time: c.time } : trip.ferry;
+    return warningsFor(c, ferry).map(x => `<p class="warn">${ALERT}<span>${esc(x)}</span></p>`).join('');
+  }
+
+  function renderSheet() {
+    const c = candidate();
+    const editing = S.mode === 'edit', ideaPicked = c.kind === 'idea' && !!IDEAS[c.id];
+    // Head
+    $('sheet-kicker').textContent = editing ? (S.kind === 'idea' ? 'Move or change' : 'Change') : 'Add';
+    $('sheet-title').textContent = editing ? titleOf(trip.plan.find(i => i.id === S.id)) : S.fixedIdea ? IDEAS[S.idea][1] : S.date ? `${dow(S.date)} ${md(S.date)}` : 'Something new';
+    $('sheet-icon').innerHTML = ideaPicked ? iconFor({ kind: 'idea', id: c.id }) : c.kind === 'idea' ? `<span class="idea__icon ico--own">${PLUS}</span>` : iconFor({ kind: c.kind });
+    $('sheet-hint').hidden = S.kind !== 'ferry';
+    $('sheet-hint').textContent = 'The ferry day sets where you sleep: Ao Nang before it, Phi Phi from that night.';
+    // What: an idea or your own (only when adding from a day)
+    $('field-what').hidden = editing || S.fixedIdea;
+    document.querySelectorAll('[data-what]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.what === S.what)));
+    $('pick-ideas').hidden = S.what !== 'idea';
+    $('pick-ideas').innerHTML = $('field-what').hidden ? '' : unplacedIdeas().map(slug => {
+      const [page, title, tag, time] = IDEAS[slug];
+      return `<button type="button" class="chip ${tagClass(tag)}" data-pick-idea="${slug}" aria-pressed="${S.idea === slug}"><span class="idea__icon">${tagIcon(tag)}</span><span class="idea__title">${esc(title)}<small>${page === 'krabi' ? 'Ao Nang' : 'Phi Phi'} · ${esc(time)}</small></span></button>`;
+    }).join('') || '<p class="sheet__hint">Every idea is on the calendar.</p>';
+    $('field-own').hidden = c.kind !== 'own';
+    // Day: the days you can plan; the ferry only on days that leave a night in each place
+    const ferry = S.kind === 'ferry' ? { ...trip.ferry, date: S.date || trip.ferry.date } : trip.ferry;
+    let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<span aria-hidden="true">${d[0]}</span>`).join('');
+    for (let d = addDays(PLAN_FIRST, -weekday(PLAN_FIRST)); d <= PLAN_LAST; d = addDays(d, 1)) {
+      if (d < PLAN_FIRST) { days += '<span></span>'; continue; }
+      const off = S.kind === 'ferry' && (d < FERRY_FIRST || d > FERRY_LAST);
+      const night = nightOf(d, ferry) || 'home';
+      days += `<button type="button" class="place-${night}" data-pick-day="${d}" aria-pressed="${S.date === d}" aria-label="${dow(d)} ${md(d)}"${off ? ' disabled' : ''}>${Number(d.slice(8))}<i></i></button>`;
+    }
+    $('pick-day').innerHTML = days;
+    // Time
+    $('pick-part').innerHTML = Object.keys(PARTS).map(p => `<button type="button" data-pick-part="${p}" aria-pressed="${S.label === p}">${p}</button>`).join('');
+    $('pick-time').value = S.label ? '' : S.time || '';
+    $('sheet-warn').innerHTML = sheetWarnings();
+    // Who, link, buttons
+    $('sheet-who').hidden = !!me;
+    $('sheet-link').hidden = !ideaPicked;
+    if (ideaPicked) $('sheet-link').href = ideaHref(c.id);
+    const remove = $('sheet-remove');
+    remove.hidden = !editing || S.kind === 'ferry';
+    remove.textContent = S.kind === 'own' ? (S.armed ? 'Tap again to delete' : 'Delete') : 'Take it off the calendar';
+    remove.classList.toggle('is-armed', S.armed);
+    $('sheet-save').textContent = S.saving ? 'Saving...' : editing ? 'Save' : 'Add';
+    $('sheet-save').disabled = S.saving;
+  }
+
+  sheet.addEventListener('click', e => {
+    if (e.target === sheet) { sheet.close(); return; } // a tap outside the sheet closes it
+    const t = e.target.closest('[data-what],[data-pick-idea],[data-pick-day],[data-pick-part]');
+    if (!t || t.disabled) return;
+    if (t.dataset.what) S.what = t.dataset.what;
+    if (t.dataset.pickIdea) {
+      S.idea = t.dataset.pickIdea;
+      if (!S.label && !S.time) { S.label = IDEAS[S.idea][3] === 'Evening' ? 'Evening' : 'Morning'; S.time = PARTS[S.label]; }
+    }
+    if (t.dataset.pickDay) S.date = t.dataset.pickDay;
+    if (t.dataset.pickPart) { S.label = t.dataset.pickPart; S.time = PARTS[S.label]; }
+    S.armed = false;
+    sheetError('');
+    renderSheet();
+  });
+  $('pick-time').addEventListener('input', e => {
+    if (!e.target.value) return;
+    S.time = e.target.value; S.label = '';
+    document.querySelectorAll('[data-pick-part]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    $('sheet-warn').innerHTML = sheetWarnings(); // no full re-render here: it would close the time wheel while it is in use
+  });
+  $('sheet-close').addEventListener('click', () => sheet.close());
+  sheet.addEventListener('close', () => log('sheet: close', { mode: S.mode, id: S.id || S.idea }));
+
+  $('sheet-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (S.saving) return;
+    const c = candidate();
+    const title = $('own-title').value.trim(), note = $('own-note').value.trim();
+    if (!me) return sheetError('Choose Will or Yana first.');
+    if (c.kind === 'idea' && !c.id) return sheetError('Choose an idea.');
+    if (c.kind === 'own' && !title) return sheetError('Write a name for it.');
+    if (!S.date) return sheetError('Choose a day.');
+    if (!S.time) return sheetError('Choose a time.');
+    const id = S.mode === 'edit' ? S.id : c.kind === 'idea' ? c.id : newId();
+    const body = { date: S.date, time: S.time, label: S.label, removed: false, author: me, ...(c.kind === 'own' ? { title, note } : {}) };
+    S.saving = true; renderSheet();
+    try {
+      await putItem(id, body);
+      sheet.close();
+      const el = document.querySelector(`[data-item="${CSS.escape(id)}"]`);
+      if (el) {
+        el.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        el.classList.add('flash');
+      }
+    } catch (err) {
+      fail('put: plan item failed', { id, error: String(err) });
+      sheetError('Could not save. Check the connection and try again.');
+    } finally {
+      S.saving = false;
+      if (sheet.open) renderSheet();
+    }
+  });
+  $('sheet-remove').addEventListener('click', async () => {
+    if (!me) return sheetError('Choose Will or Yana first.');
+    if (S.kind === 'own' && !S.armed) { S.armed = true; renderSheet(); return; } // your own items have no copy elsewhere, so ask twice
+    S.saving = true; renderSheet();
+    try {
+      await putItem(S.id, { removed: true, author: me });
+      sheet.close();
+    } catch (err) {
+      fail('put: remove failed', { id: S.id, error: String(err) });
+      sheetError('Could not save. Check the connection and try again.');
+    } finally {
+      S.saving = false;
+      if (sheet.open) renderSheet();
+    }
+  });
+
+  // Edit, Add and idea buttons on the page (the page re-renders, so one listener serves them all).
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-edit],[data-add-day],[data-add-idea]');
+    if (!t) return;
+    if (t.dataset.edit) openSheet({ mode: 'edit', id: t.dataset.edit });
+    else if (t.dataset.addDay) openSheet({ mode: 'add', date: t.dataset.addDay });
+    else openSheet({ mode: 'add', idea: t.dataset.addIdea });
+  });
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') loadPlan('tab visible again'); });
+
   // ---------- Boot ----------
-  let TRIPS;
   try {
-    TRIPS = { thu: build('thu'), fri: build('fri') };
-    window.TRIP_CALENDAR = { trips: TRIPS, ideas: IDEAS }; // krabi-trip.check.cjs matches these to the flights and ideas pages
-    Object.values(TRIPS).forEach(selfCheck);
-    document.querySelectorAll('[data-leave]').forEach(b => {
-      const n = TRIPS[b.dataset.leave].days.filter(d => d.night === 'aonang' || d.night === 'phiphi').length;
-      b.querySelector('span').textContent = `${n} nights in Thailand`;
-      b.addEventListener('click', () => render(b.dataset.leave, 'switch'));
-    });
-    render('thu', 'page load');
+    selfCheck();
+    window.TRIP_CALENDAR = { legs: FLIGHTS.map(({ who, from, to, flight, dep, arr }) => ({ who, from, to, flight, dep, arr })), ideas: IDEAS, firstPlan: FIRST_PLAN }; // for krabi-trip.check.cjs
+    render('page load'); // the first plan shows at once; your changes follow when the server answers
+    renderStatus();
     const target = location.hash.startsWith('#d-') && document.getElementById(location.hash.slice(1));
     if (target) { target.scrollIntoView(); log('jump: from link', location.hash); } // the cards exist only after render, so the browser cannot jump by itself
-    log('init: done', { today, ms: Math.round(performance.now() - boot) });
+    loadPlan('page load');
+    log('init: done', { today, me, ms: Math.round(performance.now() - boot) });
   } catch (e) {
     fail('init: failed', String(e && e.stack || e));
   }
