@@ -321,7 +321,7 @@
   <div class="wrap">
     <p class="kicker reveal" style="--i:0"><span>Page 6</span><b>Every day of the trip</b></p>
     <h1 class="reveal" style="--i:1"><span class="a">The whole trip.</span> <span class="b">Day by day.</span></h1>
-    <p class="lead reveal" style="--i:2">Your flights and hotels are booked. Here is every day: the flights, the boats, your hotels, and your plan. <b>You can both change the plan.</b> Tap <b>Edit</b> to move something, or <b>Add</b> to put something new on a day.</p>
+    <p class="lead reveal" style="--i:2">Your flights, hotels and island tour are booked. Here is every day: the flights, the boats, your hotels, and your plan. <b>You can both change the plan.</b> Tap <b>Edit</b> to move something, or <b>Add</b> to put something new on a day.</p>
   </div>
 </header>
 
@@ -358,7 +358,7 @@
   </section>
 
   <footer>
-    <p>The flights are your booked Etihad tickets. The hotels are your bookings at Aree Tara (Booking.com) and SAii. The first plan came from your comments on the ideas pages. Opening days, start times and fees come from the ideas pages and the To Phi Phi page.</p>
+    <p>The flights are your booked Etihad tickets. The hotels are your bookings at Aree Tara (Booking.com) and SAii. The island tour on Dec 2 is your Viator booking; its pickup, length and stops come from the tour's Viator page (Nov 14, 2026). The first plan came from your comments on the ideas pages. Opening days, start times and fees come from the ideas pages and the To Phi Phi page.</p>
     <p>Changes save on a small server, so you both see them on any device. Anyone with this page's link can see and change the plan. All times are local.</p>
   </footer>
 </main>
@@ -484,25 +484,27 @@
       depText: 'Will flies Etihad <code>EY 1</code> to New York.', arrText: 'Will lands in New York.' },
   ].map(f => ({ ...f, dep: Date.parse(f.dep), arr: Date.parse(f.arr) }));
 
-  // Steps tied to the flights and the hotels (Booking.com email Nov 14, SAii email Nov 13). They stay fixed.
+  // Steps tied to the flights, the hotels (Booking.com email Nov 14, SAii email Nov 13) and the tour (Viator email Nov 14). They stay fixed.
+  // A booked tour lists the ideas it covers: they show inside it, not as plan items.
   const FIXED = [
     { t: '2026-11-30T10:00:00+04:00', label: 'All day', tz: 'AUH', text: 'Your day together in Abu Dhabi. Ask the hotel for a late checkout.' },
     { t: '2026-11-30T18:55:00+04:00', tz: 'AUH', text: 'Be at Abu Dhabi airport, Terminal A.' },
     { t: '2026-12-01T07:15:00+07:00', label: 'After landing', tz: 'KBV', where: 'Krabi', text: 'Taxi to Aree Tara in Ao Nang, about 30 minutes (฿350–450). Ask for an early check-in, then sleep.' },
     { t: '2026-12-01T14:00:00+07:00', tz: 'KBV', where: 'Ao Nang', booked: true, text: 'Check in at Aree Tara: 5 nights, a Deluxe room with a pool view, breakfast included.' },
+    { t: '2026-12-02T10:45:00+07:00', tz: 'KBV', where: 'Ao Nang', boat: true, booked: true, ideas: ['hong-islands', 'four-islands', 'railay'],
+      text: 'Private longtail tour with Thalassa Tour: the Hong Islands, the 4 Islands and Phra Nang Cave Beach, then the sunset at Railay and a night snorkel. A free minivan picks you up at Aree Tara at 10:45 AM. The tour takes 7 to 9 hours, with lunch, drinks, snorkel gear and park fees included. Tell Thalassa Tour your hotel before the day: +66 84 304 3451. Free to cancel until 24 hours before.' },
     { t: '2026-12-06T14:00:00+07:00', tz: 'KBV', where: 'Phi Phi', booked: true, text: 'Check in at SAii Phi Phi Island Village: 4 nights, a Deluxe Garden Villa with 1 king bed.' },
     { t: '2026-12-10T09:00:00+07:00', label: 'Morning', tz: 'KBV', where: 'Phi Phi', boat: true, text: 'Check out of SAii by 11 AM. Take a longtail to Tonsai Pier, then a boat to Krabi Town (Klong Jilad pier), about 2 hours. Or ask SAii to book its speedboat to Krabi, at 9:00 AM or 1:30 PM.' },
     { t: '2026-12-10T14:00:00+07:00', label: 'Afternoon', tz: 'KBV', where: 'Krabi Town', text: 'Taxi from the pier to Krabi airport, about 30 minutes.' },
     { t: '2026-12-10T18:00:00+07:00', tz: 'KBV', text: 'Be at Krabi airport.' },
   ];
-  const FIXED_TITLES = { '2026-11-28': 'Will starts', '2026-11-29': 'Meet in Abu Dhabi', '2026-11-30': 'A day in Abu Dhabi', '2026-12-01': 'Land in Krabi', '2026-12-10': 'Leave Krabi', '2026-12-11': 'Fly home' };
+  const BOOKED_IDEAS = new Set(FIXED.flatMap(e => e.ideas || []));
+  const FIXED_TITLES = { '2026-11-28': 'Will starts', '2026-11-29': 'Meet in Abu Dhabi', '2026-11-30': 'A day in Abu Dhabi', '2026-12-01': 'Land in Krabi', '2026-12-02': 'Hong Islands · 4 Islands', '2026-12-10': 'Leave Krabi', '2026-12-11': 'Fly home' };
 
   // The first plan, from your comments on the ideas pages. Both of you can move, add and remove plan items;
   // the server keeps only the changes (one row per item). Times are local wall-clock times.
   const FIRST_PLAN = [
     { id: 'nopparat-thara-sunset', date: '2026-12-01', time: '16:30', note: 'Walk 10 to 15 minutes to the beach and watch the sun set over the sea.' },
-    { id: 'mangrove-kayak', date: '2026-12-02', time: '09:00', label: 'Morning', note: 'Half day. The tour picks you up in Ao Nang. Check the tide before you book.' },
-    { id: 'four-islands', date: '2026-12-03', time: '08:00', note: 'Hotel pickup between 8 and 9 AM. Choose a tour timed for low tide, so you can walk on the sandbar. Bring ฿400 each in cash for the park fee.' },
     { id: 'emerald-pool', date: '2026-12-04', time: '07:00', note: 'Full day, about 1.5 hours each way. The gates open at 8:30. Get there before the tour vans come at about 10:00.' },
     { id: 'tiger-cave-temple', date: '2026-12-05', time: '06:00', note: 'Climb the 1,260 steps before the heat and the crowds. It is about 30 minutes from Ao Nang by taxi or Grab.' },
     { id: 'beach-day', date: '2026-12-05', time: '14:00', label: 'Afternoon', title: 'Beach afternoon', note: '' },
@@ -561,6 +563,7 @@
     }
     for (const [id, row] of rows) {
       if (row.removed || FIRST_PLAN.some(f => f.id === id)) continue;
+      if (BOOKED_IDEAS.has(id)) { log('plan: this idea is part of a booked tour, so it shows with the booking', id, row.date); continue; }
       const kind = kindOf(id);
       if (kind === 'own' && !row.title) { warn('plan: a new item has no name, so it is not shown', id); continue; }
       items.push({ id, kind, date: row.date, time: row.time, label: row.label || '', title: row.title || '', note: kind === 'own' ? row.note || '' : '', changedBy: row.author, added: true });
@@ -605,7 +608,7 @@
     { ts: f.dep, tz: f.from, who: f.who, html: f.depText, kind: 'flight', booked: true },
     { ts: f.arr, tz: f.to, who: f.who, html: f.arrText, kind: 'flight' },
   ]);
-  const FIXED_EVENTS = FIXED.map(e => ({ ts: Date.parse(e.t), tz: e.tz, where: e.where, label: e.label, who: 'together', html: e.text, kind: e.boat ? 'boat' : 'note', booked: e.booked }));
+  const FIXED_EVENTS = FIXED.map(e => ({ ts: Date.parse(e.t), tz: e.tz, where: e.where, label: e.label, who: 'together', html: e.text, kind: e.boat ? 'boat' : 'note', booked: e.booked, ideas: e.ideas }));
 
   function build() {
     const plan = currentPlan(), ferry = ferryOf(plan);
@@ -640,7 +643,9 @@
       if (kindOf(f.id) !== 'idea' && !f.title) problems.push(`first plan: "${f.id}" has no name (a misspelled idea slug lands here too)`);
       if (f.date < PLAN_FIRST || f.date > PLAN_LAST) problems.push(`first plan: "${f.id}" is outside the days you can plan`);
       if (f.label && !PARTS[f.label]) problems.push(`first plan: "${f.id}" has the label "${f.label}"`);
+      if (BOOKED_IDEAS.has(f.id)) problems.push(`first plan: "${f.id}" is part of a booked tour, so it would show twice`);
     }
+    BOOKED_IDEAS.forEach(slug => { if (!IDEAS[slug]) problems.push(`booked tour: "${slug}" is not an idea`); });
     if (!FIRST_PLAN.some(f => f.id === 'ferry')) problems.push('first plan: no ferry, so the nights cannot be set');
     const first = FIRST_PLAN.map(f => ({ ...f, kind: kindOf(f.id) }));
     first.forEach(f => warningsFor(f, first.find(x => x.id === 'ferry')).forEach(w => problems.push(`first plan: ${f.id}: ${w}`)));
@@ -753,13 +758,13 @@
       <article class="day" id="d-${d.date}">
         <header><span class="day__dow">${dow(d.date)}</span><span class="day__date">${md(d.date)}</span><span class="day__title">${esc(d.title)}</span></header>
         <ol class="events">${d.events.map(e => `<li class="ev ev--${e.who}${e.item ? ' ev--plan' : ''}"${e.item ? ` data-item="${esc(e.item.id)}"` : ''}><time>${esc(e.time)}<small>${esc(e.where)}</small></time>`
-          + `<div class="ev__body">${e.item ? planBody(e) : `<p>${e.html}${e.booked ? ' <span class="booked">Booked</span>' : ''}</p>`}</div></li>`).join('')}</ol>
+          + `<div class="ev__body">${e.item ? planBody(e) : `<p>${e.html}${e.booked ? ' <span class="booked">Booked</span>' : ''}</p>${(e.ideas || []).map(ideaLink).join('')}`}</div></li>`).join('')}</ol>
         ${d.date >= PLAN_FIRST && d.date <= PLAN_LAST ? `<button type="button" class="add-btn" data-add-day="${d.date}">${PLUS}Add to ${dow(d.date)} ${md(d.date)}</button>` : ''}
         <p class="night place-${d.night || 'home'}">${d.night === 'air' ? PLANE : d.night ? MOON : HOUSE}${nightText(d)}</p>
       </article>`).join('');
   }
 
-  const unplacedIdeas = () => Object.keys(IDEAS).filter(slug => !trip.plan.some(i => i.id === slug));
+  const unplacedIdeas = () => Object.keys(IDEAS).filter(slug => !BOOKED_IDEAS.has(slug) && !trip.plan.some(i => i.id === slug));
   function renderMore() {
     $('more').innerHTML = unplacedIdeas().map(slug => {
       const [page, title, tag, time] = IDEAS[slug];
