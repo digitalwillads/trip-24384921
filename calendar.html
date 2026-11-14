@@ -321,7 +321,7 @@
   <div class="wrap">
     <p class="kicker reveal" style="--i:0"><span>Page 6</span><b>Every day of the trip</b></p>
     <h1 class="reveal" style="--i:1"><span class="a">The whole trip.</span> <span class="b">Day by day.</span></h1>
-    <p class="lead reveal" style="--i:2">Your flights are booked. Here is every day: the flights, the boats, where you sleep, and your plan. <b>You can both change the plan.</b> Tap <b>Edit</b> to move something, or <b>Add</b> to put something new on a day.</p>
+    <p class="lead reveal" style="--i:2">Your flights and hotels are booked. Here is every day: the flights, the boats, your hotels, and your plan. <b>You can both change the plan.</b> Tap <b>Edit</b> to move something, or <b>Add</b> to put something new on a day.</p>
   </div>
 </header>
 
@@ -358,7 +358,7 @@
   </section>
 
   <footer>
-    <p>The flights are your booked Etihad tickets. The first plan came from your comments on the ideas pages. Opening days, start times and fees come from the ideas pages and the To Phi Phi page.</p>
+    <p>The flights are your booked Etihad tickets. The hotels are your bookings at Aree Tara (Booking.com) and SAii. The first plan came from your comments on the ideas pages. Opening days, start times and fees come from the ideas pages and the To Phi Phi page.</p>
     <p>Changes save on a small server, so you both see them on any device. Anyone with this page's link can see and change the plan. All times are local.</p>
   </footer>
 </main>
@@ -434,13 +434,14 @@
   const PLACES = {
     air: { name: 'Night flight', night: 'Night on the plane' },
     auh: { name: 'Abu Dhabi', night: 'Night in Abu Dhabi', at: 'in Abu Dhabi' },
-    aonang: { name: 'Ao Nang', night: 'Night in Ao Nang', at: 'in Ao Nang' },
-    phiphi: { name: 'Phi Phi', night: 'Night on Phi Phi', at: 'on Phi Phi' },
+    aonang: { name: 'Ao Nang', hotel: 'Aree Tara', night: 'Night at Aree Tara, Ao Nang', at: 'in Ao Nang' },
+    phiphi: { name: 'Phi Phi', hotel: 'SAii', night: 'Night at SAii, Phi Phi', at: 'on Phi Phi' },
   };
   const TRIP_FIRST = '2026-11-28', TRIP_LAST = '2026-12-11';
   const PLAN_FIRST = '2026-11-29', PLAN_LAST = '2026-12-10'; // the days you can plan; the server keeps the same limits
   const LAND = '2026-12-01', LEAVE = '2026-12-10', LEAVE_BOAT = '09:00';
-  const FERRY_FIRST = '2026-12-02', FERRY_LAST = '2026-12-09'; // at least one night in Ao Nang and one on Phi Phi
+  // The booked hotels change on Sun Dec 6 (Aree Tara to Dec 6, SAii from Dec 6; both non-refundable), so the ferry keeps that day.
+  const FERRY_FIRST = '2026-12-06', FERRY_LAST = '2026-12-06';
   const PARTS = { 'Morning': '09:00', 'Afternoon': '14:00', 'Evening': '19:00', 'All day': '08:00' };
 
   // slug: [ideas page, title, tag, time, short name], as on ideas-krabi.html and ideas-phiphi.html.
@@ -483,12 +484,14 @@
       depText: 'Will flies Etihad <code>EY 1</code> to New York.', arrText: 'Will lands in New York.' },
   ].map(f => ({ ...f, dep: Date.parse(f.dep), arr: Date.parse(f.arr) }));
 
-  // Steps tied to the flights. They stay fixed.
+  // Steps tied to the flights and the hotels (Booking.com email Nov 14, SAii email Nov 13). They stay fixed.
   const FIXED = [
     { t: '2026-11-30T10:00:00+04:00', label: 'All day', tz: 'AUH', text: 'Your day together in Abu Dhabi. Ask the hotel for a late checkout.' },
     { t: '2026-11-30T18:55:00+04:00', tz: 'AUH', text: 'Be at Abu Dhabi airport, Terminal A.' },
-    { t: '2026-12-01T07:15:00+07:00', label: 'After landing', tz: 'KBV', where: 'Krabi', text: 'Taxi to Ao Nang, about 30 minutes (฿350–450). Ask the hotel for an early check-in, then sleep.' },
-    { t: '2026-12-10T09:00:00+07:00', label: 'Morning', tz: 'KBV', where: 'Phi Phi', boat: true, text: 'Boat from Tonsai Pier to Krabi Town (Klong Jilad pier), about 2 hours. Take a boat that reaches Krabi Town by mid-afternoon.' },
+    { t: '2026-12-01T07:15:00+07:00', label: 'After landing', tz: 'KBV', where: 'Krabi', text: 'Taxi to Aree Tara in Ao Nang, about 30 minutes (฿350–450). Ask for an early check-in, then sleep.' },
+    { t: '2026-12-01T14:00:00+07:00', tz: 'KBV', where: 'Ao Nang', booked: true, text: 'Check in at Aree Tara: 5 nights, a Deluxe room with a pool view, breakfast included.' },
+    { t: '2026-12-06T14:00:00+07:00', tz: 'KBV', where: 'Phi Phi', booked: true, text: 'Check in at SAii Phi Phi Island Village: 4 nights, a Deluxe Garden Villa with 1 king bed.' },
+    { t: '2026-12-10T09:00:00+07:00', label: 'Morning', tz: 'KBV', where: 'Phi Phi', boat: true, text: 'Check out of SAii by 11 AM. Take a longtail to Tonsai Pier, then a boat to Krabi Town (Klong Jilad pier), about 2 hours. Or ask SAii to book its speedboat to Krabi, at 9:00 AM or 1:30 PM.' },
     { t: '2026-12-10T14:00:00+07:00', label: 'Afternoon', tz: 'KBV', where: 'Krabi Town', text: 'Taxi from the pier to Krabi airport, about 30 minutes.' },
     { t: '2026-12-10T18:00:00+07:00', tz: 'KBV', text: 'Be at Krabi airport.' },
   ];
@@ -504,7 +507,7 @@
     { id: 'tiger-cave-temple', date: '2026-12-05', time: '06:00', note: 'Climb the 1,260 steps before the heat and the crowds. It is about 30 minutes from Ao Nang by taxi or Grab.' },
     { id: 'beach-day', date: '2026-12-05', time: '14:00', label: 'Afternoon', title: 'Beach afternoon', note: '' },
     { id: 'walking-street', date: '2026-12-05', time: '17:00', note: 'Take the white songthaew to Krabi Town (฿60, or ฿80 after 6 PM). The last one back leaves at about 10 PM.' },
-    { id: 'ferry', date: '2026-12-06', time: '09:30', title: 'Ferry to Phi Phi', note: 'The Ao Nang Princess leaves Nopparat Thara pier at 9:30 AM, with hotel pickup, and takes about 2 hours (฿650 each). Pay the ฿20 island fee in cash at Tonsai Pier. Book it a day or two before.' },
+    { id: 'ferry', date: '2026-12-06', time: '09:30', title: 'Ferry to Phi Phi', note: 'Check out of Aree Tara first (check-out is by 12 PM). The Ao Nang Princess leaves Nopparat Thara pier at 9:30 AM, with hotel pickup, and takes about 2 hours (฿650 each). Pay the ฿20 island fee in cash at Tonsai Pier, then take a longtail to SAii, about 20 minutes. Book the ferry a day or two before.' },
     { id: 'loh-dalum-fire-show', date: '2026-12-06', time: '20:00', label: 'Evening', note: 'Walk a few minutes from Tonsai Pier to the bay.' },
     { id: 'long-beach-snorkel', date: '2026-12-07', time: '06:30', note: 'Go early: the sharks are most active from 6:30 to 7:00 AM. Swim together.' },
     { id: 'viewpoint-sunset', date: '2026-12-07', time: '17:00', note: 'Climb to the viewpoint for the sunset. Bring a torch for the walk down.' },
@@ -602,7 +605,7 @@
     { ts: f.dep, tz: f.from, who: f.who, html: f.depText, kind: 'flight', booked: true },
     { ts: f.arr, tz: f.to, who: f.who, html: f.arrText, kind: 'flight' },
   ]);
-  const FIXED_EVENTS = FIXED.map(e => ({ ts: Date.parse(e.t), tz: e.tz, where: e.where, label: e.label, who: 'together', html: e.text, kind: e.boat ? 'boat' : 'note' }));
+  const FIXED_EVENTS = FIXED.map(e => ({ ts: Date.parse(e.t), tz: e.tz, where: e.where, label: e.label, who: 'together', html: e.text, kind: e.boat ? 'boat' : 'note', booked: e.booked }));
 
   function build() {
     const plan = currentPlan(), ferry = ferryOf(plan);
@@ -695,7 +698,7 @@
     const when = dates => dates.length === 1 ? `${dow(dates[0])} ${md(dates[0])}` : `${dow(dates[0])} ${md(dates[0])} to ${dow(dates[dates.length - 1])} ${md(dates[dates.length - 1])}`;
     const air = runs.filter(r => r.night === 'air');
     $('stays').innerHTML = runs.filter(r => r.night !== 'air').map(r =>
-      `<li class="place-${r.night}"><i></i><b>${PLACES[r.night].name}</b><span>${r.dates.length} night${r.dates.length === 1 ? '' : 's'}<em> · ${when(r.dates)}</em></span></li>`).join('')
+      `<li class="place-${r.night}"><i></i><b>${PLACES[r.night].name}</b><span>${PLACES[r.night].hotel ? `${PLACES[r.night].hotel} · ` : ''}${r.dates.length} night${r.dates.length === 1 ? '' : 's'}<em> · ${when(r.dates)}</em></span></li>`).join('')
       + `<li class="place-air"><i></i><b>Night flights</b><span>${air.length}<em> · ${air.map(r => `${dow(r.dates[0])} ${md(r.dates[0])}`).join(', ')}</em></span></li>`;
   }
 
@@ -866,7 +869,7 @@
     $('sheet-title').textContent = editing ? titleOf(trip.plan.find(i => i.id === S.id)) : S.fixedIdea ? IDEAS[S.idea][1] : S.date ? `${dow(S.date)} ${md(S.date)}` : 'Something new';
     $('sheet-icon').innerHTML = ideaPicked ? iconFor({ kind: 'idea', id: c.id }) : c.kind === 'idea' ? `<span class="idea__icon ico--own">${PLUS}</span>` : iconFor({ kind: c.kind });
     $('sheet-hint').hidden = S.kind !== 'ferry';
-    $('sheet-hint').textContent = 'The ferry day sets where you sleep: Ao Nang before it, Phi Phi from that night.';
+    $('sheet-hint').textContent = 'Your hotels change on Sun Dec 6, so the ferry stays on that day. You can change its time.';
     // What: an idea or your own (only when adding from a day)
     $('field-what').hidden = editing || S.fixedIdea;
     document.querySelectorAll('[data-what]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.what === S.what)));
@@ -876,7 +879,7 @@
       return `<button type="button" class="chip ${tagClass(tag)}" data-pick-idea="${slug}" aria-pressed="${S.idea === slug}"><span class="idea__icon">${tagIcon(tag)}</span><span class="idea__title">${esc(title)}<small>${page === 'krabi' ? 'Ao Nang' : 'Phi Phi'} · ${esc(time)}</small></span></button>`;
     }).join('') || '<p class="sheet__hint">Every idea is on the calendar.</p>';
     $('field-own').hidden = c.kind !== 'own';
-    // Day: the days you can plan; the ferry only on days that leave a night in each place
+    // Day: the days you can plan; the ferry only on the day the hotels change
     const ferry = S.kind === 'ferry' ? { ...trip.ferry, date: S.date || trip.ferry.date } : trip.ferry;
     let days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(d => `<span aria-hidden="true">${d[0]}</span>`).join('');
     for (let d = addDays(PLAN_FIRST, -weekday(PLAN_FIRST)); d <= PLAN_LAST; d = addDays(d, 1)) {
